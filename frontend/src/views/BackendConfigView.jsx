@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export const BackendConfigView = () => {
-  const { data, addApprovalLog } = useApp();
+  const { data, addApprovalLog, showToast } = useApp();
   const [activeTab, setActiveTab] = useState('a3_discounts');
 
   // Filter state for A7 Reporting
@@ -37,6 +37,7 @@ export const BackendConfigView = () => {
 
   const triggerSave = (msg) => {
     setSavedSuccessMsg(msg);
+    showToast(msg, 'success');
     setTimeout(() => setSavedSuccessMsg(''), 3000);
   };
 

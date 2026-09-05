@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Truck, Check, Sliders, Warehouse } from 'lucide-react';
 
 export const FulfillmentView = () => {
-  const { data, activeQuote } = useApp();
+  const { data, activeQuote, showToast } = useApp();
 
   return (
     <div className="space-y-6">
@@ -30,10 +30,10 @@ export const FulfillmentView = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <button onClick={() => alert('Fulfillment split accepted.')} className="btn btn-sm btn-primary">
+                <button onClick={() => showToast('Fulfillment split accepted.', 'success')} className="btn btn-sm btn-primary">
                   <Check className="w-4 h-4" /> Accept Suggested Split
                 </button>
-                <button onClick={() => alert('Manual override mode unlocked.')} className="btn btn-sm btn-outline">
+                <button onClick={() => showToast('Manual override mode unlocked.', 'info')} className="btn btn-sm btn-outline">
                   <Sliders className="w-4 h-4" /> Manual Override
                 </button>
               </div>

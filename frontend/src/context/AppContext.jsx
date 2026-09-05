@@ -128,6 +128,20 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('dealflow360_user', JSON.stringify(currentUser));
   }, [currentUser]);
 
+  const [toasts, setToasts] = useState([]);
+
+  const showToast = (message, type = 'info') => {
+    const id = 'toast-' + Date.now() + Math.random().toString(36).substring(2, 5);
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      removeToast(id);
+    }, 4000);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
   useEffect(() => {
     fetch('/api/products')
       .then(res => res.json())
@@ -212,6 +226,9 @@ export const AppProvider = ({ children }) => {
       currentRole: data.currentRole,
       currentView: data.currentView,
       activeQuote,
+      toasts,
+      showToast,
+      removeToast,
       setRole,
       setView,
       login,

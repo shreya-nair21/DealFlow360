@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { CheckCircle2, MessageSquare, Send } from 'lucide-react';
 
 export const CustomerPortalView = () => {
-  const { data, activeQuote, updateActiveQuote, addApprovalLog } = useApp();
+  const { data, activeQuote, updateActiveQuote, addApprovalLog, showToast } = useApp();
   const [commentText, setCommentText] = useState('');
   const [counterDiscount, setCounterDiscount] = useState('');
 
@@ -33,7 +33,7 @@ export const CustomerPortalView = () => {
                 blendedRiskScore: 0,
                 reason: 'Customer accepted terms and confirmed quote online.'
               });
-              alert('Thank you! Quotation confirmed successfully.');
+              showToast('Thank you! Quotation confirmed successfully.', 'success');
             }}
             className="btn btn-primary btn-md"
           >
@@ -90,7 +90,7 @@ export const CustomerPortalView = () => {
             <button 
               onClick={() => {
                 if (!commentText && !counterDiscount) {
-                  alert('Please enter a comment or counter discount.');
+                  showToast('Please enter a comment or counter discount.', 'warning');
                   return;
                 }
                 const fullText = commentText + (counterDiscount ? ` (Requested Counter Discount: ${counterDiscount}%)` : '');
@@ -106,10 +106,10 @@ export const CustomerPortalView = () => {
 
                   if (parseFloat(counterDiscount) > 10) {
                     q.status = 'Pending Approval';
-                    alert('Counter request submitted. Because it exceeds normal discount ceilings, it has been automatically routed to the Sales Manager for approval.');
+                    showToast('Counter request submitted. Automatically routed to Sales Manager for approval.', 'warning');
                   } else {
                     q.status = 'In Negotiation';
-                    alert('Negotiation request submitted to sales team.');
+                    showToast('Negotiation request submitted to sales team.', 'info');
                   }
                 });
 

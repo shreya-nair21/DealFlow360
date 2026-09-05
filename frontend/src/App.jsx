@@ -12,6 +12,8 @@ import { BackendConfigView } from './views/BackendConfigView';
 
 import { PipelineView } from './views/PipelineView';
 
+import { ToastContainer } from './components/ToastContainer';
+
 export const AppContent = () => {
   const { currentUser, currentView } = useApp();
 
@@ -51,6 +53,7 @@ export const AppContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream text-charcoal">
+      <ToastContainer />
       <Navbar />
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {renderView()}

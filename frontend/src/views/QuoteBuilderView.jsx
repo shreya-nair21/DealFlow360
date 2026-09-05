@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export const QuoteBuilderView = () => {
-  const { data, activeQuote, setActiveQuoteId, updateActiveQuote, addQuotation, addApprovalLog, setView, currentUser } = useApp();
+  const { data, activeQuote, setActiveQuoteId, updateActiveQuote, addQuotation, addApprovalLog, setView, currentUser, showToast } = useApp();
 
   const customer = data.customers.find(c => c.id === activeQuote.customerId);
   const tier = customer ? customer.tier : 'Bronze';
@@ -137,7 +137,7 @@ export const QuoteBuilderView = () => {
                     blendedRiskScore,
                     reason: `Service line discount exceeds allowed ceiling by ${maxSingleLineOverage} points.`
                   });
-                  alert('Risky quotation submitted into Manager Approval Queue.');
+                  showToast('Risky quotation submitted into Manager Approval Queue.', 'warning');
                 }}
                 className="btn btn-sm btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900 flex items-center gap-1.5"
               >
@@ -155,7 +155,7 @@ export const QuoteBuilderView = () => {
                     blendedRiskScore: 0,
                     reason: 'Quote passes pricing governance rules.'
                   });
-                  alert('Quotation submitted successfully!');
+                  showToast('Quotation submitted successfully!', 'success');
                 }}
                 className="btn btn-sm btn-primary flex items-center gap-1.5"
               >
@@ -357,7 +357,7 @@ export const QuoteBuilderView = () => {
                           blendedRiskScore,
                           reason: `Service line discount exceeds allowed ceiling by ${maxSingleLineOverage} points.`
                         });
-                        alert('Risky quotation submitted into Manager Approval Queue.');
+                        showToast('Risky quotation submitted into Manager Approval Queue.', 'warning');
                       }}
                       className="btn btn-md btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900 w-full flex items-center justify-center gap-2"
                     >
@@ -375,7 +375,7 @@ export const QuoteBuilderView = () => {
                           blendedRiskScore: 0,
                           reason: 'Quote passes pricing governance rules.'
                         });
-                        alert('Quotation submitted successfully!');
+                        showToast('Quotation submitted successfully!', 'success');
                       }}
                       className="btn btn-md btn-primary w-full flex items-center justify-center gap-2"
                     >

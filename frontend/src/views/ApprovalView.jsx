@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { ShieldCheck, XCircle, CheckCircle, History } from 'lucide-react';
 
 export const ApprovalView = () => {
-  const { data, activeQuote, setActiveQuoteId, updateActiveQuote, addApprovalLog, currentRole } = useApp();
+  const { data, activeQuote, setActiveQuoteId, updateActiveQuote, addApprovalLog, currentRole, showToast } = useApp();
   const [reason, setReason] = useState('');
 
   const pendingQuotes = data.quotations.filter(q => q.status === 'Pending Approval');
@@ -84,7 +84,7 @@ export const ApprovalView = () => {
                       blendedRiskScore: 6.4,
                       reason: reason || 'Rejected due to excessive margin erosion.'
                     });
-                    alert('Quotation rejected.');
+                    showToast('Quotation rejected.', 'error');
                   }}
                   className="btn btn-sm btn-danger"
                 >
@@ -102,7 +102,7 @@ export const ApprovalView = () => {
                       blendedRiskScore: 6.4,
                       reason: reason || 'Approved within manager discretion threshold.'
                     });
-                    alert('Quotation approved!');
+                    showToast('Quotation approved!', 'success');
                   }}
                   className="btn btn-sm btn-primary"
                 >

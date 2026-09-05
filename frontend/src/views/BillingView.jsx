@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { CreditCard, FileCheck, Calculator } from 'lucide-react';
 
 export const BillingView = () => {
-  const { activeQuote } = useApp();
+  const { activeQuote, showToast } = useApp();
   const [oldQty, setOldQty] = useState(10);
   const [newQty, setNewQty] = useState(15);
   const [days, setDays] = useState(12);
@@ -31,7 +31,7 @@ export const BillingView = () => {
           <div className="card">
             <div className="card-header border-b border-warm pb-3">
               <h3 className="text-base font-bold text-charcoal">Generated 12-Month Billing Schedule</h3>
-              <button onClick={() => alert('Invoice issued successfully.')} className="btn btn-sm btn-primary">
+              <button onClick={() => showToast('Invoice issued successfully.', 'success')} className="btn btn-sm btn-primary">
                 <FileCheck className="w-4 h-4" /> Issue Initial Invoice
               </button>
             </div>

@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Activity, Clock, AlertOctagon, Truck, Send } from 'lucide-react';
 
 export const DealHealthView = () => {
-  const { data, setActiveQuoteId, setView } = useApp();
+  const { data, setActiveQuoteId, setView, showToast } = useApp();
 
   const stalled = data.quotations.filter(q => q.daysInactive >= 5);
 
@@ -73,7 +73,7 @@ export const DealHealthView = () => {
                   Open Quote
                 </button>
 
-                <button onClick={() => alert('Automated email nudge sent to rep & customer.')} className="btn btn-sm btn-primary text-xs py-0.5 px-2">
+                <button onClick={() => showToast('Automated email nudge sent to rep & customer.', 'info')} className="btn btn-sm btn-primary text-xs py-0.5 px-2">
                   <Send className="w-3.5 h-3.5" /> Trigger Nudge
                 </button>
               </div>
