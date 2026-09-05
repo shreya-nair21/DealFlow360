@@ -143,14 +143,6 @@ export const QuoteBuilderView = () => {
               <ShieldAlert className="w-4 h-4" /> Submit Risky Quote for Approval
             </button>
           )}
-
-          <button onClick={() => setView('fulfillment')} className="btn btn-sm btn-cream">
-            <Truck className="w-4 h-4" /> Track Fulfillment Split
-          </button>
-
-          <button onClick={() => setView('portal')} className="btn btn-sm btn-cream">
-            <Send className="w-4 h-4" /> Interact with Customer
-          </button>
         </div>
       </div>
 

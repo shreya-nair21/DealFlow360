@@ -102,17 +102,6 @@ export const Navbar = () => {
                 <RotateCcw className="w-3.5 h-3.5 text-emerald-700" /> Reload Data
               </button>
 
-              {/* B1 Action: Go to Back-end */}
-              {(activeRole === 'admin' || activeRole === 'sales_manager') && (
-                <button
-                  onClick={() => setView('config')}
-                  title="Go to Back-end Configuration"
-                  className="btn btn-sm btn-cream text-xs flex items-center gap-1"
-                >
-                  <Settings className="w-3.5 h-3.5" /> Back-end
-                </button>
-              )}
-
               {/* B1 Action: Close Workspace / Sign Out */}
               <button
                 onClick={() => {
