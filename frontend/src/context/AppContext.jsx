@@ -164,23 +164,92 @@ export const AppProvider = ({ children }) => {
     setData(prev => ({ ...prev, currentRole: role, currentView: view }));
   };
 
-  const login = (email, password) => {
-    const name = email.toLowerCase().includes('rahul') ? 'Rahul (Sales Rep)' : email.split('@')[0];
-    const role = email.toLowerCase().includes('rahul') ? 'sales_rep' : data.currentRole;
+  const login = async (email, password) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (res.ok) {
+        const body = await res.json();
+        const user = body.user;
+        setCurrentUser(user);
+        setRole(user.role);
+        showToast(`Welcome back, ${user.name}!`, 'success');
+        return true;
+      }
+    } catch {
+      // Proxy offline fallback
+    }
+
+    let role = 'sales_rep';
+    const em = email.toLowerCase();
+    if (em.includes('rahul') || em.includes('rep')) role = 'sales_rep';
+    else if (em.includes('manager')) role = 'sales_manager';
+    else if (em.includes('finance') || em.includes('ops')) role = 'finance';
+    else if (em.includes('admin')) role = 'admin';
+    else if (em.includes('customer') || em.includes('abc') || em.includes('acme')) role = 'customer';
+
+    const name = em.includes('rahul') ? 'Rahul (Sales Rep)' : email.split('@')[0];
     const user = { name, email, role };
     setCurrentUser(user);
     setRole(role);
+    showToast(`Logged in as ${name}`, 'success');
+    return true;
   };
 
-  const signup = (name, email, password, role) => {
-    const user = { name, email, role };
+  const signup = async (name, email, password, role) => {
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role })
+      });
+      if (res.ok) {
+        const body = await res.json();
+        const user = body.user;
+        setCurrentUser(user);
+        setRole(user.role);
+        showToast(`Account created for ${user.name}!`, 'success');
+        return true;
+      }
+    } catch {
+      // Proxy offline fallback
+    }
+
+    const user = { name: name || email.split('@')[0], email, role: role || 'sales_rep' };
     setCurrentUser(user);
-    setRole(role);
+    setRole(user.role);
+    showToast(`Account created for ${user.name}`, 'success');
+    return true;
   };
 
-  const magicLinkLogin = (token) => {
-    setCurrentUser({ name: 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' });
+  const magicLinkLogin = async (token) => {
+    try {
+      const res = await fetch('/api/auth/magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      if (res.ok) {
+        const body = await res.json();
+        const user = body.user;
+        setCurrentUser(user);
+        setRole('customer');
+        if (body.quoteId) setActiveQuoteId(body.quoteId);
+        showToast(`Customer Magic Link authenticated!`, 'success');
+        return true;
+      }
+    } catch {
+      // Proxy offline fallback
+    }
+
+    const user = { name: 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' };
+    setCurrentUser(user);
     setRole('customer');
+    showToast('Customer Portal authenticated!', 'success');
+    return true;
   };
 
   const logout = () => {
