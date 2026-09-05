@@ -238,10 +238,10 @@ export const CustomerPortalView = () => {
         <div className="space-y-6">
           {/* Brand Header */}
           <div className="border-b border-purple-800/60 pb-5">
-            <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
               DealFlow360
             </h1>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-purple-300 block mt-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-purple-300 block mt-1">
               CLIENT PORTAL
             </span>
           </div>
@@ -383,7 +383,7 @@ export const CustomerPortalView = () => {
                   </span>
                   <span className="text-xs text-muted">Tier Status Engine</span>
                 </div>
-                <h3 className="text-xl font-bold text-charcoal tracking-tight flex items-center gap-2">
+                <h3 className="text-xl font-bold text-charcoal flex items-center gap-2">
                   <span>{tierInfo.emoji}</span>
                   <span>Customer Tier: {currentTier} Member ({currentOrders} Orders Completed)</span>
                 </h3>
@@ -543,7 +543,7 @@ export const CustomerPortalView = () => {
                 <span className="inline-block bg-[#e6f4ea] text-[#137333] text-[10px] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full mb-1.5">
                   CLIENT SELF-SERVICE PORTAL
                 </span>
-                <h3 className="text-2xl font-bold text-charcoal tracking-tight">
+                <h3 className="text-2xl font-bold text-charcoal">
                   My Quotations
                 </h3>
                 <p className="text-xs text-muted mt-0.5">
@@ -899,7 +899,7 @@ export const CustomerPortalView = () => {
             {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-[#eceae4] pb-3">
               <div>
-                <h3 className="text-2xl font-bold text-charcoal tracking-tight">
+                <h3 className="text-2xl font-bold text-charcoal">
                   Create New Quotation
                 </h3>
                 <p className="text-xs text-muted mt-0.5">

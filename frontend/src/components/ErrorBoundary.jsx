@@ -41,7 +41,7 @@ export class ErrorBoundary extends React.Component {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-charcoal tracking-tight font-heading">
+              <h2 className="text-2xl font-bold text-charcoal font-heading">
                 Something went wrong
               </h2>
               <p className="text-sm text-muted">

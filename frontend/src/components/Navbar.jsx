@@ -53,15 +53,12 @@ export const Navbar = () => {
             DF
           </div>
           <div>
-            <span className="font-heading font-bold text-lg text-charcoal tracking-tight">DealFlow360</span>
-            <span className="hidden sm:inline-block text-xs text-muted ml-2 px-2 py-0.5 rounded-full border border-warm bg-cream">
-              React Deal Engine
-            </span>
+            <span className="font-heading font-bold text-xl text-charcoal">DealFlow360</span>
           </div>
         </div>
 
         {/* Navigation Tabs (Filtered by Role) */}
-        <nav className="flex items-center gap-1 overflow-x-auto py-1">
+        <nav className="flex items-center gap-1.5 overflow-x-auto py-1">
           {visibleNavItems.map(item => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
@@ -69,9 +66,9 @@ export const Navbar = () => {
               <button
                 key={item.id}
                 onClick={() => setView(item.id)}
-                className={`btn btn-sm ${isActive ? 'btn-primary' : 'btn-ghost'} flex items-center gap-1.5`}
+                className={`btn btn-sm ${isActive ? 'btn-primary' : 'btn-ghost'} flex items-center gap-2 px-3 py-1.5`}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className="w-4 h-4" />
                 <span>{item.label}</span>
               </button>
             );
@@ -79,30 +76,19 @@ export const Navbar = () => {
         </nav>
 
         {/* B1 Actions & User Badge */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {currentUser && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               {/* User Name Pill */}
-              <span className="badge badge-neutral text-xs py-1 px-2.5 flex items-center gap-1">
+              <span className="badge badge-neutral text-xs py-1.5 px-3 flex items-center gap-1.5 font-medium">
                 <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="font-semibold">{currentUser.name}</span>
               </span>
               
               {/* Fixed Read-Only Role Badge */}
-              <span className={`badge ${activeRoleBadge.class} text-xs py-1 px-3 font-bold`}>
+              <span className={`badge ${activeRoleBadge.class} text-xs py-1.5 px-3 font-bold`}>
                 {activeRoleBadge.label}
               </span>
-
-              {/* B1 Action: Reload Data */}
-              <button
-                onClick={() => {
-                  window.location.reload();
-                }}
-                title="Reload Data (Refreshes pricing, stock & approvals)"
-                className="btn btn-sm btn-outline text-xs flex items-center gap-1"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-emerald-700" /> Reload Data
-              </button>
 
               {/* B1 Action: Close Workspace / Sign Out */}
               <button
@@ -110,10 +96,11 @@ export const Navbar = () => {
                   localStorage.removeItem('dealflow360_user');
                   logout();
                 }}
-                title="Close Workspace (Ends current session)"
-                className="btn btn-sm btn-outline text-xs text-red-600 border-red-200 hover:bg-red-50 flex items-center gap-1"
+                title="Sign out and close workspace"
+                className="btn btn-sm btn-outline text-xs text-red-600 border-red-200 hover:bg-red-50 flex items-center gap-1.5 px-3 py-1.5 ml-1"
               >
-                <LogOut className="w-3.5 h-3.5" /> Close Workspace
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
               </button>
             </div>
           )}
