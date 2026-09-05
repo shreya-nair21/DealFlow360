@@ -15,17 +15,19 @@ const PORT = process.env.PORT || 5000;
 // Seed Store in Memory
 let storeData = {
   users: [
+    { id: 'u-client', name: 'Saurav (Client)', email: 'client@dealflow.com', role: 'customer' },
+    { id: 'u-admin', name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' },
     { id: 'u-rahul', name: 'Rahul (Sales Rep)', email: 'rahul@dealflow.com', role: 'sales_rep' },
     { id: 'u-1', name: 'Sarah Rep', email: 'sarah@dealflow.com', role: 'sales_rep' },
     { id: 'u-2', name: 'Mark Manager', email: 'mark@dealflow.com', role: 'sales_manager' },
-    { id: 'u-3', name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' },
-    { id: 'u-4', name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' }
+    { id: 'u-3', name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' }
   ],
   customers: [
-    { id: 'c-abc', name: 'ABC Company', tier: 'Bronze', email: 'procurement@abccorp.com' },
-    { id: 'c-1', name: 'Acme Enterprises', tier: 'Gold', email: 'procurement@acme.com' },
-    { id: 'c-2', name: 'Beta Industries', tier: 'Silver', email: 'purchasing@betaind.com' },
-    { id: 'c-3', name: 'Gamma Logistics', tier: 'Bronze', email: 'ops@gammalog.com' }
+    { id: 'c-client', name: 'Saurav (Client)', tier: 'Silver', orderCount: 5, email: 'client@dealflow.com' },
+    { id: 'c-abc', name: 'ABC Company', tier: 'Gold', orderCount: 8, email: 'procurement@abccorp.com' },
+    { id: 'c-1', name: 'Acme Enterprises', tier: 'Platinum', orderCount: 11, email: 'procurement@acme.com' },
+    { id: 'c-2', name: 'Beta Industries', tier: 'Bronze', orderCount: 3, email: 'purchasing@betaind.com' },
+    { id: 'c-3', name: 'Gamma Logistics', tier: 'Standard', orderCount: 1, email: 'ops@gammalog.com' }
   ],
   products: [
     { id: 'p-101', sku: 'HW-SRV-X1', name: 'Enterprise Edge Server X1', category: 'Hardware', listPrice: 4500, costPrice: 2800, unit: 'Unit', description: 'High-density dual-socket rack server.' },
@@ -34,11 +36,11 @@ let storeData = {
     { id: 'p-104', sku: 'SUB-CLOUD-ADV', name: 'DealFlow Cloud Monitoring Suite', category: 'Subscription', listPrice: 450, costPrice: 120, unit: 'License/Mo', isRecurring: true }
   ],
   discountRules: {
-    globalTierCeilings: { Bronze: 5, Silver: 10, Gold: 15 },
+    globalTierCeilings: { Standard: 3, Bronze: 5, Silver: 10, Gold: 15, Platinum: 20 },
     categoryCeilings: {
-      Hardware: { Bronze: 5, Silver: 10, Gold: 15 },
-      Service: { Bronze: 3, Silver: 7, Gold: 10 },
-      Subscription: { Bronze: 5, Silver: 12, Gold: 20 }
+      Hardware: { Standard: 3, Bronze: 5, Silver: 10, Gold: 15, Platinum: 20 },
+      Service: { Standard: 2, Bronze: 3, Silver: 7, Gold: 10, Platinum: 15 },
+      Subscription: { Standard: 3, Bronze: 5, Silver: 12, Gold: 20, Platinum: 25 }
     },
     thresholds: { managerApprovalRiskScore: 0.01, financeApprovalRiskScore: 12.0 }
   },
@@ -75,45 +77,72 @@ app.get('/api/health', (req, res) => {
 
 // Auth Routes: Signup, Login, Magic Link
 app.post('/api/auth/signup', (req, res) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !password || !role) {
-    return res.status(400).json({ error: 'Name, email, password, and role are required.' });
+  const { name, email, password } = req.body;
+  const role = req.body.role || 'customer'; // Default is client/customer
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
-  const existing = storeData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  const cleanEmail = email.toLowerCase().trim();
+  const existing = storeData.users.find(u => u.email.toLowerCase() === cleanEmail);
   if (existing) {
     return res.status(400).json({ error: 'User with this email already exists.' });
   }
 
+  const userId = 'u-' + Date.now();
+  const userName = name || cleanEmail.split('@')[0];
   const newUser = {
-    id: 'u-' + Date.now(),
-    name,
-    email,
+    id: userId,
+    name: userName,
+    email: cleanEmail,
     role,
     createdAt: new Date().toISOString()
   };
 
   storeData.users.push(newUser);
+
+  if (role === 'customer') {
+    storeData.customers.push({
+      id: 'c-' + Date.now(),
+      name: userName,
+      tier: 'Gold',
+      email: cleanEmail
+    });
+  }
+
   res.status(201).json({ user: newUser, token: 'jwt-token-' + Date.now() });
 });
 
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required.' });
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required.' });
   }
 
-  const user = storeData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  const cleanEmail = email.toLowerCase().trim();
+  let user = storeData.users.find(u => u.email.toLowerCase() === cleanEmail);
+  
   if (!user) {
-    // Check if customer
-    const customer = storeData.customers.find(c => c.email.toLowerCase() === email.toLowerCase());
+    // Check if customer email exists in customers array
+    const customer = storeData.customers.find(c => c.email.toLowerCase() === cleanEmail);
     if (customer) {
-      return res.json({
-        user: { id: customer.id, name: customer.name, email: customer.email, role: 'customer' },
-        token: 'cust-token-' + Date.now()
+      user = { id: customer.id, name: customer.name, email: customer.email, role: 'customer' };
+    } else {
+      // Default: create and log in as client/customer automatically
+      user = {
+        id: 'u-' + Date.now(),
+        name: cleanEmail.split('@')[0],
+        email: cleanEmail,
+        role: 'customer'
+      };
+      storeData.users.push(user);
+      storeData.customers.push({
+        id: 'c-' + Date.now(),
+        name: user.name,
+        tier: 'Gold',
+        email: cleanEmail
       });
     }
-    return res.status(401).json({ error: 'Invalid email or password.' });
   }
 
   res.json({ user, token: 'jwt-token-' + Date.now() });
@@ -149,6 +178,19 @@ app.post('/api/auth/magic-link', (req, res) => {
 
 app.get('/api/products', (req, res) => {
   res.json(storeData.products);
+});
+
+app.get('/api/users', (req, res) => {
+  res.json(storeData.users);
+});
+
+app.put('/api/users/:id/role', (req, res) => {
+  const { role } = req.body;
+  if (!role) return res.status(400).json({ error: 'Role is required' });
+  const user = storeData.users.find(u => u.id === req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  user.role = role;
+  res.json({ message: 'Role updated successfully', user });
 });
 
 app.get('/api/customers', (req, res) => {
@@ -216,6 +258,34 @@ app.get('/api/portal/quote/:token', (req, res) => {
   if (!quote) return res.status(404).json({ error: 'Portal token invalid' });
   const metrics = calculateQuotationMetricsServer(quote, storeData.customers, storeData.products, storeData.discountRules);
   res.json({ quote, metrics });
+});
+
+// Tier calculation helper: 3 orders = Bronze, 5 = Silver, 8 = Gold, 10+ = Platinum
+function calculateCustomerTier(orderCount = 0) {
+  const count = Math.max(0, parseInt(orderCount, 10) || 0);
+  if (count >= 10) return 'Platinum';
+  if (count >= 8) return 'Gold';
+  if (count >= 5) return 'Silver';
+  if (count >= 3) return 'Bronze';
+  return 'Standard';
+}
+
+// Customers & Tier Management Endpoints
+app.get('/api/customers', (req, res) => {
+  res.json(storeData.customers);
+});
+
+app.put('/api/customers/:id/orders', (req, res) => {
+  const { orderCount } = req.body;
+  const custId = req.params.id;
+  let customer = storeData.customers.find(c => c.id === custId || c.email === custId);
+  if (!customer) {
+    customer = { id: custId, name: 'Customer', email: custId, orderCount: 0, tier: 'Standard' };
+    storeData.customers.push(customer);
+  }
+  customer.orderCount = Math.max(0, parseInt(orderCount, 10) || 0);
+  customer.tier = calculateCustomerTier(customer.orderCount);
+  res.json({ customer });
 });
 
 const server = app.listen(PORT, () => {

@@ -12,7 +12,8 @@ import {
   RotateCcw,
   UserCheck,
   LogOut,
-  Settings
+  Settings,
+  Users
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -28,10 +29,11 @@ export const Navbar = () => {
 
   const navItems = [
     { id: 'pipeline', label: 'Pipeline', icon: Kanban, roles: ['sales_rep', 'sales_manager', 'admin'] },
-    { id: 'builder', label: 'Quotations', icon: ShoppingCart, roles: ['sales_rep', 'sales_manager', 'admin'] },
+    { id: 'builder', label: 'Quotations', icon: ShoppingCart, roles: ['sales_rep', 'sales_manager', 'admin', 'customer'] },
     { id: 'approval', label: 'Approval Queue', icon: ShieldCheck, roles: ['sales_manager', 'finance', 'admin'] },
-    { id: 'fulfillment', label: 'Fulfillment & Split', icon: Truck, roles: ['finance', 'admin', 'sales_rep'] },
-    { id: 'billing', label: 'Hybrid Billing', icon: CreditCard, roles: ['finance', 'admin', 'sales_rep'] },
+    { id: 'fulfillment', label: 'Fulfillment & Split', icon: Truck, roles: ['finance', 'admin', 'sales_rep', 'customer'] },
+    { id: 'billing', label: 'Hybrid Billing', icon: CreditCard, roles: ['finance', 'admin', 'sales_rep', 'customer'] },
+    { id: 'users', label: 'Users & Roles', icon: Users, roles: ['admin'] },
     { id: 'portal', label: 'Customer Portal', icon: ExternalLink, roles: ['customer', 'sales_rep', 'admin'] },
     { id: 'deal_health', label: 'Deal Health', icon: Activity, roles: ['sales_manager', 'admin'] },
     { id: 'config', label: 'Backend Setup', icon: Sliders, roles: ['admin', 'sales_manager'] }

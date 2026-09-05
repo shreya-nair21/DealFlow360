@@ -2,15 +2,93 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
+export const calculateCustomerTier = (orderCount = 0) => {
+  const count = Math.max(0, parseInt(orderCount, 10) || 0);
+  if (count >= 10) return 'Platinum';
+  if (count >= 8) return 'Gold';
+  if (count >= 5) return 'Silver';
+  if (count >= 3) return 'Bronze';
+  return 'Standard';
+};
+
+export const TIER_CONFIG = {
+  Standard: {
+    label: 'Standard',
+    minOrders: 0,
+    nextTier: 'Bronze',
+    nextThreshold: 3,
+    discountCeiling: '3%',
+    badgeColor: 'bg-gray-100 text-gray-700 border-gray-300',
+    headerBadge: 'bg-gray-100 text-gray-800 border-gray-300',
+    accentColor: '#6b7280',
+    iconName: 'Shield',
+    emoji: '🛡️',
+    description: 'Entry-level customer tier (< 3 orders). 3 orders unlocks Bronze!'
+  },
+  Bronze: {
+    label: 'Bronze',
+    minOrders: 3,
+    nextTier: 'Silver',
+    nextThreshold: 5,
+    discountCeiling: '5%',
+    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+    headerBadge: 'bg-amber-100 text-amber-900 border-amber-300',
+    accentColor: '#b45309',
+    iconName: 'Medal',
+    emoji: '🥉',
+    description: 'Bronze Customer Tier (3–4 orders). 5 orders unlocks Silver!'
+  },
+  Silver: {
+    label: 'Silver',
+    minOrders: 5,
+    nextTier: 'Gold',
+    nextThreshold: 8,
+    discountCeiling: '10%',
+    badgeColor: 'bg-slate-200 text-slate-800 border-slate-400',
+    headerBadge: 'bg-slate-200 text-slate-900 border-slate-400',
+    accentColor: '#64748b',
+    iconName: 'Award',
+    emoji: '🥈',
+    description: 'Silver Customer Tier (5–7 orders). 8 orders unlocks Gold!'
+  },
+  Gold: {
+    label: 'Gold',
+    minOrders: 8,
+    nextTier: 'Platinum',
+    nextThreshold: 10,
+    discountCeiling: '15%',
+    badgeColor: 'bg-yellow-100 text-yellow-900 border-yellow-400',
+    headerBadge: 'bg-yellow-100 text-yellow-900 border-yellow-400',
+    accentColor: '#d97706',
+    iconName: 'Crown',
+    emoji: '🥇',
+    description: 'Gold Customer Tier (8–9 orders). 10 orders unlocks Platinum!'
+  },
+  Platinum: {
+    label: 'Platinum',
+    minOrders: 10,
+    nextTier: null,
+    nextThreshold: null,
+    discountCeiling: '20%',
+    badgeColor: 'bg-purple-100 text-purple-900 border-purple-400',
+    headerBadge: 'bg-purple-100 text-purple-900 border-purple-400 shadow-xs',
+    accentColor: '#7e22ce',
+    iconName: 'Sparkles',
+    emoji: '💎',
+    description: 'Platinum Elite Customer Tier (10+ orders). Maximum VIP discounts & priority fulfillment!'
+  }
+};
+
 const INITIAL_SEED_DATA = {
-  currentRole: 'sales_rep',
-  currentView: 'builder',
+  currentRole: 'customer',
+  currentView: 'portal',
   activeQuoteId: 'q-abc',
   
   customers: [
-    { id: 'c-abc', name: 'ABC Company', tier: 'Gold', email: 'procurement@abccorp.com', repId: 'u-rahul' },
-    { id: 'c-1', name: 'Acme Enterprises', tier: 'Gold', email: 'procurement@acme.com', repId: 'u-rahul' },
-    { id: 'c-2', name: 'Beta Industries', tier: 'Silver', email: 'purchasing@betaind.com', repId: 'u-rahul' }
+    { id: 'c-client', name: 'Saurav (Client)', tier: 'Silver', orderCount: 5, email: 'client@dealflow.com', repId: 'u-rahul' },
+    { id: 'c-abc', name: 'ABC Company', tier: 'Gold', orderCount: 8, email: 'procurement@abccorp.com', repId: 'u-rahul' },
+    { id: 'c-1', name: 'Acme Enterprises', tier: 'Platinum', orderCount: 11, email: 'procurement@acme.com', repId: 'u-rahul' },
+    { id: 'c-2', name: 'Beta Industries', tier: 'Bronze', orderCount: 3, email: 'purchasing@betaind.com', repId: 'u-rahul' }
   ],
 
   products: [
@@ -57,18 +135,52 @@ const INITIAL_SEED_DATA = {
   ],
 
   discountRules: {
-    globalTierCeilings: { Bronze: 5, Silver: 10, Gold: 15 },
+    globalTierCeilings: { Standard: 3, Bronze: 5, Silver: 10, Gold: 15, Platinum: 20 },
     categoryCeilings: {
-      Hardware: { Bronze: 5, Silver: 10, Gold: 15 },
-      Service: { Bronze: 3, Silver: 7, Gold: 10 }, // Stricter Service limit!
-      Subscription: { Bronze: 5, Silver: 12, Gold: 20 }
+      Hardware: { Standard: 3, Bronze: 5, Silver: 10, Gold: 15, Platinum: 20 },
+      Service: { Standard: 2, Bronze: 3, Silver: 7, Gold: 10, Platinum: 15 },
+      Subscription: { Standard: 3, Bronze: 5, Silver: 12, Gold: 20, Platinum: 25 }
     },
     thresholds: { managerApprovalRiskScore: 0.01, financeApprovalRiskScore: 12.0 }
   },
 
   warehouses: [
-    { id: 'wh-main', name: 'Main Distribution Center (Central)', location: 'Chicago, IL', shippingWeightCost: 1.0, stock: { 'p-laptop': 15, 'p-dock': 80 } },
-    { id: 'wh-east', name: 'East Coast Fast-Fulfillment Depot', location: 'Newark, NJ', shippingWeightCost: 1.4, stock: { 'p-laptop': 10, 'p-dock': 40 } }
+    { 
+      id: 'wh-main', 
+      name: 'Main Distribution Center (Central Hub)', 
+      location: 'Chicago, IL', 
+      shippingWeightCost: 1.0, 
+      baseCost: 15, 
+      perUnitCost: 4, 
+      eta: '2 Business Days',
+      carrier: 'FedEx Freight Direct',
+      isPrimary: true,
+      stock: { 'p-laptop': 12, 'p-dock': 60 } 
+    },
+    { 
+      id: 'wh-east', 
+      name: 'East Coast Fast-Fulfillment Depot', 
+      location: 'Newark, NJ', 
+      shippingWeightCost: 1.4, 
+      baseCost: 20, 
+      perUnitCost: 6, 
+      eta: '1-2 Business Days',
+      carrier: 'UPS Ground Regional',
+      isPrimary: false,
+      stock: { 'p-laptop': 6, 'p-dock': 30 } 
+    },
+    { 
+      id: 'wh-west', 
+      name: 'West Coast Logistics Hub', 
+      location: 'San Francisco, CA', 
+      shippingWeightCost: 1.6, 
+      baseCost: 25, 
+      perUnitCost: 7, 
+      eta: '3 Business Days',
+      carrier: 'OnTrac Express Freight',
+      isPrimary: false,
+      stock: { 'p-laptop': 8, 'p-dock': 25 } 
+    }
   ],
 
   subscriptionPlans: [
@@ -111,13 +223,52 @@ const INITIAL_SEED_DATA = {
 
 export const AppProvider = ({ children }) => {
   const [data, setData] = useState(() => {
-    const saved = localStorage.getItem('dealflow360_frontend_state');
-    return saved ? JSON.parse(saved) : INITIAL_SEED_DATA;
+    try {
+      const saved = localStorage.getItem('dealflow360_frontend_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.quotations) && Array.isArray(parsed.products)) {
+          // Synchronize Platinum ceilings
+          if (!parsed.discountRules?.globalTierCeilings?.Platinum) {
+            parsed.discountRules = INITIAL_SEED_DATA.discountRules;
+          }
+          // Synchronize orderCount & tier for all customers
+          if (Array.isArray(parsed.customers)) {
+            parsed.customers = parsed.customers.map(c => {
+              const count = c.orderCount !== undefined ? c.orderCount : (c.tier === 'Gold' ? 8 : c.tier === 'Platinum' ? 10 : c.tier === 'Bronze' ? 3 : 5);
+              return {
+                ...c,
+                orderCount: count,
+                tier: calculateCustomerTier(count)
+              };
+            });
+          }
+          // Synchronize multi-warehouse network data
+          if (!Array.isArray(parsed.warehouses) || parsed.warehouses.length < 3 || !parsed.warehouses[0]?.baseCost) {
+            parsed.warehouses = INITIAL_SEED_DATA.warehouses;
+          }
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Error loading dealflow360_frontend_state:', e);
+    }
+    return INITIAL_SEED_DATA;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    const savedUser = localStorage.getItem('dealflow360_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('dealflow360_user');
+      if (savedUser && savedUser !== 'null' && savedUser !== 'undefined') {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && (parsed.email || parsed.name)) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Error loading dealflow360_user:', e);
+    }
+    return null;
   });
 
   useEffect(() => {
@@ -167,13 +318,12 @@ export const AppProvider = ({ children }) => {
   const [registeredUsers, setRegisteredUsers] = useState(() => {
     const saved = localStorage.getItem('dealflow360_registered_users');
     return saved ? JSON.parse(saved) : [
-      { name: 'Rahul (Sales Rep)', email: 'rahul@dealflow.com', role: 'sales_rep' },
-      { name: 'Sarah Rep', email: 'sarah@dealflow.com', role: 'sales_rep' },
-      { name: 'Mark Manager', email: 'mark@dealflow.com', role: 'sales_manager' },
-      { name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' },
-      { name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' },
-      { name: 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' },
-      { name: 'Acme Enterprises', email: 'procurement@acme.com', role: 'customer' }
+      { id: 'u-client', name: 'Saurav (Client)', email: 'client@dealflow.com', role: 'customer' },
+      { id: 'u-admin', name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' },
+      { id: 'u-rahul', name: 'Rahul (Sales Rep)', email: 'rahul@dealflow.com', role: 'sales_rep' },
+      { id: 'u-1', name: 'Sarah Rep', email: 'sarah@dealflow.com', role: 'sales_rep' },
+      { id: 'u-2', name: 'Mark Manager', email: 'mark@dealflow.com', role: 'sales_manager' },
+      { id: 'u-3', name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' }
     ];
   });
 
@@ -197,7 +347,7 @@ export const AppProvider = ({ children }) => {
         const body = await res.json();
         const user = body.user;
         setCurrentUser(user);
-        setRole(user.role);
+        setRole(user.role || 'customer');
         showToast(`Welcome back, ${user.name}!`, 'success');
         return true;
       }
@@ -206,51 +356,58 @@ export const AppProvider = ({ children }) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const matchedUser = registeredUsers.find(u => u.email.toLowerCase() === cleanEmail);
+    let matchedUser = registeredUsers.find(u => u.email.toLowerCase() === cleanEmail);
 
     if (!matchedUser) {
-      showToast('Invalid email or password. Please check your credentials.', 'error');
-      return false;
+      // Default: create as a client/customer and proceed
+      matchedUser = {
+        id: 'u-' + Date.now(),
+        name: cleanEmail.split('@')[0],
+        email: cleanEmail,
+        role: 'customer'
+      };
+      setRegisteredUsers(prev => [...prev, matchedUser]);
     }
 
     setCurrentUser(matchedUser);
-    setRole(matchedUser.role);
-    showToast(`Welcome back, ${matchedUser.name}!`, 'success');
+    setRole(matchedUser.role || 'customer');
+    showToast(`Welcome, ${matchedUser.name}!`, 'success');
     return true;
   };
 
-  const signup = async (name, email, password, role) => {
+  const signup = async (name, email, password, role = 'customer') => {
     if (!email || !email.trim()) {
       showToast('Please provide a valid email address.', 'warning');
       return false;
     }
 
     const cleanEmail = email.trim().toLowerCase();
+    const assignedRole = role || 'customer';
 
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name || email.split('@')[0], email: cleanEmail, password, role })
+        body: JSON.stringify({ name: name || email.split('@')[0], email: cleanEmail, password, role: assignedRole })
       });
       if (res.ok) {
         const body = await res.json();
         const user = body.user;
         setRegisteredUsers(prev => [...prev.filter(u => u.email.toLowerCase() !== cleanEmail), user]);
         setCurrentUser(user);
-        setRole(user.role);
-        showToast(`Account created for ${user.name}!`, 'success');
+        setRole(user.role || 'customer');
+        showToast(`Client account created for ${user.name}!`, 'success');
         return true;
       }
     } catch {
       // Backend offline fallback
     }
 
-    const newUser = { name: name || email.split('@')[0], email: cleanEmail, role: role || 'sales_rep' };
+    const newUser = { id: 'u-' + Date.now(), name: name || email.split('@')[0], email: cleanEmail, role: assignedRole };
     setRegisteredUsers(prev => [...prev.filter(u => u.email.toLowerCase() !== cleanEmail), newUser]);
     setCurrentUser(newUser);
     setRole(newUser.role);
-    showToast(`Account created for ${newUser.name}!`, 'success');
+    showToast(`Client account created for ${newUser.name}!`, 'success');
     return true;
   };
 
@@ -328,7 +485,172 @@ export const AppProvider = ({ children }) => {
     }));
   };
 
-  const activeQuote = data.quotations.find(q => q.id === data.activeQuoteId) || data.quotations[0];
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      await fetch(`/api/users/${userId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole })
+      });
+    } catch {
+      // Offline fallback
+    }
+
+    setRegisteredUsers(prev => {
+      const updated = prev.map(u => {
+        if (u.id === userId || u.email === userId) {
+          return { ...u, role: newRole };
+        }
+        return u;
+      });
+      return updated;
+    });
+
+    if (currentUser && (currentUser.id === userId || currentUser.email === userId)) {
+      setCurrentUser(prev => ({ ...prev, role: newRole }));
+    }
+
+    const targetUser = registeredUsers.find(u => u.id === userId || u.email === userId);
+    const roleLabels = {
+      admin: 'Admin',
+      sales_manager: 'Sales Manager',
+      sales_rep: 'Sales Rep',
+      finance: 'Finance / Operations',
+      customer: 'Customer / Client'
+    };
+    showToast(`Role for ${targetUser?.name || 'User'} assigned to ${roleLabels[newRole] || newRole}!`, 'success');
+  };
+
+  const updateCustomerOrderCount = async (customerId, newCount) => {
+    const count = Math.max(0, parseInt(newCount, 10) || 0);
+    const newTier = calculateCustomerTier(count);
+
+    try {
+      await fetch(`/api/customers/${customerId}/orders`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderCount: count })
+      });
+    } catch {
+      // Offline fallback
+    }
+
+    setData(prev => {
+      let found = false;
+      const customers = (prev.customers || []).map(c => {
+        if (c.id === customerId || c.email === customerId) {
+          found = true;
+          return { ...c, orderCount: count, tier: newTier };
+        }
+        return c;
+      });
+      if (!found) {
+        customers.push({
+          id: customerId,
+          name: customerId,
+          email: customerId,
+          orderCount: count,
+          tier: newTier
+        });
+      }
+      return { ...prev, customers };
+    });
+
+    const oldCust = (data.customers || []).find(c => c.id === customerId || c.email === customerId);
+    if (oldCust && oldCust.tier !== newTier) {
+      showToast(`🎉 Tier Upgraded to ${newTier}! (${count} Orders)`, 'success');
+    } else {
+      showToast(`Customer orders updated to ${count} (${newTier} Tier)`, 'info');
+    }
+    return newTier;
+  };
+
+  const incrementCustomerOrders = (customerId) => {
+    const cust = (data.customers || []).find(c => c.id === customerId || c.email === customerId);
+    const currentCount = cust ? (cust.orderCount || 0) : 5;
+    return updateCustomerOrderCount(customerId, currentCount + 1);
+  };
+
+  const upsertCustomer = (customer) => {
+    const orderCount = customer.orderCount !== undefined ? Math.max(0, parseInt(customer.orderCount, 10) || 0) : 3;
+    const tier = customer.tier || calculateCustomerTier(orderCount);
+    const updatedCustomer = {
+      ...customer,
+      id: customer.id || 'c-' + Date.now(),
+      orderCount,
+      tier
+    };
+
+    setData(prev => {
+      const customers = [...(prev.customers || [])];
+      const idx = customers.findIndex(c => c.id === updatedCustomer.id || (updatedCustomer.email && c.email === updatedCustomer.email));
+      if (idx !== -1) {
+        customers[idx] = { ...customers[idx], ...updatedCustomer };
+      } else {
+        customers.push(updatedCustomer);
+      }
+      return { ...prev, customers };
+    });
+
+    return updatedCustomer;
+  };
+
+  const dispatchFulfillmentSplit = ({ quoteId, splitPlan, shipmentCount, totalFreightCost, isManualOverride }) => {
+    setData(prev => {
+      // 1. Deduct stock from warehouses
+      const updatedWarehouses = (prev.warehouses || []).map(wh => {
+        const whCopy = { ...wh, stock: { ...(wh.stock || {}) } };
+        (splitPlan || []).forEach(item => {
+          if (item.allocations && item.allocations[wh.id]) {
+            const deducted = item.allocations[wh.id];
+            whCopy.stock[item.productId] = Math.max(0, (whCopy.stock[item.productId] || 0) - deducted);
+          }
+        });
+        return whCopy;
+      });
+
+      // 2. Mark quote fulfillment status
+      const updatedQuotes = (prev.quotations || []).map(q => {
+        if (q.id === quoteId) {
+          return {
+            ...q,
+            fulfillmentStatus: 'Split Dispatched',
+            fulfillmentData: {
+              splitPlan,
+              shipmentCount,
+              totalFreightCost,
+              isManualOverride,
+              dispatchedAt: new Date().toISOString()
+            }
+          };
+        }
+        return q;
+      });
+
+      // 3. Log audit entry
+      const newLog = {
+        id: 'log-' + Date.now(),
+        quoteId,
+        user: currentUser?.name || 'Operations Officer',
+        role: currentUser?.role || 'finance',
+        action: isManualOverride ? 'Manual Warehouse Split Dispatched' : 'Automated AI Warehouse Split Accepted',
+        blendedRiskScore: 0,
+        reason: `Generated ${shipmentCount} multi-warehouse shipment(s) at total freight cost of $${totalFreightCost.toFixed(2)}.`,
+        timestamp: new Date().toISOString()
+      };
+
+      return {
+        ...prev,
+        warehouses: updatedWarehouses,
+        quotations: updatedQuotes,
+        approvalLogs: [newLog, ...(prev.approvalLogs || [])]
+      };
+    });
+
+    showToast(`📦 Multi-warehouse split confirmed! ${shipmentCount} shipment(s) scheduled ($${totalFreightCost.toFixed(2)} freight).`, 'success');
+  };
+
+  const activeQuote = (data.quotations || []).find(q => q.id === data.activeQuoteId) || (data.quotations || [])[0] || null;
 
   return (
     <AppContext.Provider value={{
@@ -337,6 +659,14 @@ export const AppProvider = ({ children }) => {
       currentRole: data.currentRole,
       currentView: data.currentView,
       activeQuote,
+      registeredUsers,
+      updateUserRole,
+      calculateCustomerTier,
+      TIER_CONFIG,
+      updateCustomerOrderCount,
+      incrementCustomerOrders,
+      upsertCustomer,
+      dispatchFulfillmentSplit,
       toasts,
       showToast,
       removeToast,

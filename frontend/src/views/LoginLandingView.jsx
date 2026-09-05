@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Lock, Mail, UserCheck, Shield, Sparkles, Send, ArrowRight } from 'lucide-react';
+import { Lock, Mail, Shield, Sparkles, ArrowRight, UserCheck, ShieldCheck } from 'lucide-react';
 
 export const LoginLandingView = () => {
-  const { login, signup, magicLinkLogin, setRole } = useApp();
-  const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup' | 'magic'
+  const { login, signup } = useApp();
+  const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup'
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('client@dealflow.com');
+  const [password, setPassword] = useState('client123');
   const [name, setName] = useState('');
-  const [role, setRoleSelect] = useState('sales_rep');
-  const [magicToken, setMagicToken] = useState('acme-secret-token-9988');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,18 +17,17 @@ export const LoginLandingView = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    await signup(name, email, password, role);
+    await signup(name, email, password);
   };
 
-  const handleMagic = async (e) => {
-    e.preventDefault();
-    await magicLinkLogin(magicToken);
-  };
-
-  // Demo Quick Login Shortcuts
-  const quickLogin = (selectedRole, demoName, demoEmail) => {
-    login(demoEmail, 'password');
-    setRole(selectedRole);
+  const fillCredentials = (type) => {
+    if (type === 'client') {
+      setEmail('client@dealflow.com');
+      setPassword('client123');
+    } else if (type === 'admin') {
+      setEmail('admin@dealflow.com');
+      setPassword('admin123');
+    }
   };
 
   return (
@@ -47,43 +44,62 @@ export const LoginLandingView = () => {
             DealFlow360
           </h1>
           
-          <p className="text-sm text-muted">
-            Intelligent, Self-Governing B2B Sales Operations Platform. Requires authenticated role access to open deal Engine workspace.
+          <p className="text-sm text-muted leading-relaxed">
+            Intelligent, Self-Governing B2B Sales Operations Platform. Sign in with client credentials for self-service portal, or admin credentials for full governance operations.
           </p>
 
-          <div className="p-3 bg-charcoal-03 border border-warm rounded-lg text-xs space-y-2">
-            <span className="font-bold text-charcoal block">⚡ Quick Demo Role Logins:</span>
-            <div className="flex flex-wrap gap-1.5">
-              <button 
-                onClick={() => quickLogin('sales_rep', 'Rahul (Sales Rep)', 'rahul@dealflow.com')}
-                className="btn btn-sm btn-primary text-[11px] py-1 px-2.5"
+          {/* Quick Credential Badges */}
+          <div className="p-3.5 bg-white border border-warm rounded-xl space-y-2.5 shadow-2xs">
+            <span className="text-[11px] font-bold text-charcoal block uppercase tracking-wider">
+              🔑 Configured Accounts:
+            </span>
+            <div className="space-y-2 text-xs">
+              <div 
+                onClick={() => fillCredentials('client')}
+                className="p-2 rounded-lg bg-emerald-50/70 border border-emerald-200 hover:bg-emerald-100/70 transition-all cursor-pointer flex items-center justify-between"
+                title="Click to fill Client credentials"
               >
-                👤 Sales Rep (Rahul)
-              </button>
-              <button 
-                onClick={() => quickLogin('sales_manager', 'Mark Manager', 'mark@dealflow.com')}
-                className="btn btn-sm btn-outline text-[11px] py-1 px-2.5"
+                <div>
+                  <div className="font-bold text-emerald-900 flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5" /> Client / Customer (Default)
+                  </div>
+                  <div className="text-[11px] text-emerald-700 font-mono mt-0.5">
+                    client@dealflow.com <span className="text-emerald-500 font-sans">/</span> client123
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold bg-emerald-200/80 text-emerald-800 px-2 py-0.5 rounded-full">
+                  Portal
+                </span>
+              </div>
+
+              <div 
+                onClick={() => fillCredentials('admin')}
+                className="p-2 rounded-lg bg-purple-50/70 border border-purple-200 hover:bg-purple-100/70 transition-all cursor-pointer flex items-center justify-between"
+                title="Click to fill Admin credentials"
               >
-                👔 Manager
-              </button>
-              <button 
-                onClick={() => quickLogin('finance', 'Fiona Finance', 'fiona@dealflow.com')}
-                className="btn btn-sm btn-outline text-[11px] py-1 px-2.5"
-              >
-                💰 Finance
-              </button>
-              <button 
-                onClick={() => quickLogin('customer', 'ABC Company Customer', 'procurement@abccorp.com')}
-                className="btn btn-sm btn-outline text-[11px] py-1 px-2.5"
-              >
-                🤝 Customer (ABC Corp)
-              </button>
-              <button 
-                onClick={() => quickLogin('admin', 'Alex Admin', 'admin@dealflow.com')}
-                className="btn btn-sm btn-outline text-[11px] py-1 px-2.5"
-              >
-                ⚙️ Admin
-              </button>
+                <div>
+                  <div className="font-bold text-purple-900 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5" /> Admin Account
+                  </div>
+                  <div className="text-[11px] text-purple-700 font-mono mt-0.5">
+                    admin@dealflow.com <span className="text-purple-500 font-sans">/</span> admin123
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold bg-purple-200/80 text-purple-800 px-2 py-0.5 rounded-full">
+                  Workspace
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2.5 pt-1">
+            <div className="flex items-start gap-2 text-xs text-muted">
+              <Shield className="w-3.5 h-3.5 text-charcoal shrink-0 mt-0.5" />
+              <span>Clients build custom quotes & counter-proposals with real-time feedback.</span>
+            </div>
+            <div className="flex items-start gap-2 text-xs text-muted">
+              <Sparkles className="w-3.5 h-3.5 text-charcoal shrink-0 mt-0.5" />
+              <span>Admins review, approve, and orchestrate split fulfillment and billing.</span>
             </div>
           </div>
         </div>
@@ -96,25 +112,27 @@ export const LoginLandingView = () => {
             <div className="flex border-b border-warm text-xs font-semibold">
               <button
                 onClick={() => setActiveTab('login')}
-                className={`pb-2.5 px-4 ${activeTab === 'login' ? 'border-b-2 border-charcoal text-charcoal font-bold' : 'text-muted'}`}
+                className={`pb-2.5 px-5 flex-1 text-center transition-all ${
+                  activeTab === 'login'
+                    ? 'border-b-2 border-charcoal text-charcoal font-bold'
+                    : 'text-muted hover:text-charcoal'
+                }`}
               >
-                Internal Sign In
+                Sign In
               </button>
               <button
                 onClick={() => setActiveTab('signup')}
-                className={`pb-2.5 px-4 ${activeTab === 'signup' ? 'border-b-2 border-charcoal text-charcoal font-bold' : 'text-muted'}`}
+                className={`pb-2.5 px-5 flex-1 text-center transition-all ${
+                  activeTab === 'signup'
+                    ? 'border-b-2 border-charcoal text-charcoal font-bold'
+                    : 'text-muted hover:text-charcoal'
+                }`}
               >
-                Team Sign Up
-              </button>
-              <button
-                onClick={() => setActiveTab('magic')}
-                className={`pb-2.5 px-4 ${activeTab === 'magic' ? 'border-b-2 border-charcoal text-charcoal font-bold' : 'text-muted'}`}
-              >
-                Customer Magic Link
+                Sign Up
               </button>
             </div>
 
-            {/* Tab 1: Internal Login */}
+            {/* Tab 1: Sign In */}
             {activeTab === 'login' && (
               <form onSubmit={handleLogin} className="space-y-4 text-left">
                 <div>
@@ -123,8 +141,9 @@ export const LoginLandingView = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="sarah@dealflow.com"
+                    placeholder="client@dealflow.com"
                     className="input text-xs"
+                    required
                   />
                 </div>
                 <div>
@@ -135,16 +154,17 @@ export const LoginLandingView = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="input text-xs"
+                    required
                   />
                 </div>
                 <button type="submit" className="btn btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2">
-                  <span>Authenticate & Open Workspace</span>
+                  <span>Sign In & Open Workspace</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             )}
 
-            {/* Tab 2: Internal Signup */}
+            {/* Tab 2: Sign Up (Defaults to Client/Customer) */}
             {activeTab === 'signup' && (
               <form onSubmit={handleSignup} className="space-y-3 text-left">
                 <div>
@@ -153,8 +173,9 @@ export const LoginLandingView = () => {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Sarah Jenkins"
+                    placeholder="Saurav Client"
                     className="input text-xs"
+                    required
                   />
                 </div>
                 <div>
@@ -163,8 +184,9 @@ export const LoginLandingView = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="sarah@dealflow.com"
+                    placeholder="saurav@client.com"
                     className="input text-xs"
+                    required
                   />
                 </div>
                 <div>
@@ -175,45 +197,15 @@ export const LoginLandingView = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="input text-xs"
+                    required
                   />
                 </div>
-                <div>
-                  <label className="label">Role Access Scope</label>
-                  <select
-                    value={role}
-                    onChange={(e) => setRoleSelect(e.target.value)}
-                    className="select text-xs"
-                  >
-                    <option value="sales_rep">Sales Rep</option>
-                    <option value="sales_manager">Sales Manager / Approver</option>
-                    <option value="finance">Finance / Operations</option>
-                    <option value="admin">Admin</option>
-                  </select>
+                <div className="p-2.5 bg-charcoal-03 border border-warm rounded-lg text-[11px] text-muted">
+                  ℹ️ New accounts are provisioned as <strong>Client Customer Accounts</strong> by default and connect directly to the Client Self-Service Portal.
                 </div>
-                <button type="submit" className="btn btn-primary w-full py-2.5 text-xs">
-                  Create Internal Account & Authenticate
-                </button>
-              </form>
-            )}
-
-            {/* Tab 3: Customer Magic Link */}
-            {activeTab === 'magic' && (
-              <form onSubmit={handleMagic} className="space-y-4 text-left">
-                <p className="text-xs text-muted">
-                  Enter your Customer Quote Magic Token or Email to access restricted online quotation negotiations.
-                </p>
-                <div>
-                  <label className="label">Quote Magic Token or Email</label>
-                  <input
-                    type="text"
-                    value={magicToken}
-                    onChange={(e) => setMagicToken(e.target.value)}
-                    placeholder="acme-secret-token-9988"
-                    className="input text-xs font-mono"
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary w-full py-2.5 text-xs">
-                  Open Customer Portal View
+                <button type="submit" className="btn btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2">
+                  <span>Create Account & Open Portal</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             )}

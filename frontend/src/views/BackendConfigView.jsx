@@ -18,6 +18,7 @@ import {
   Key,
   DollarSign
 } from 'lucide-react';
+import { UserManagementView } from './UserManagementView';
 
 export const BackendConfigView = () => {
   const { data, addApprovalLog, showToast } = useApp();
@@ -97,6 +98,12 @@ export const BackendConfigView = () => {
       {/* Configuration Sub-Navigation Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-warm pb-2">
         <button 
+          onClick={() => setActiveTab('users')}
+          className={`btn btn-sm ${activeTab === 'users' ? 'btn-primary' : 'btn-ghost'}`}
+        >
+          <Users className="w-3.5 h-3.5" /> Users & Roles
+        </button>
+        <button 
           onClick={() => setActiveTab('a1_auth')}
           className={`btn btn-sm ${activeTab === 'a1_auth' ? 'btn-primary' : 'btn-ghost'}`}
         >
@@ -139,6 +146,11 @@ export const BackendConfigView = () => {
           <BarChart3 className="w-3.5 h-3.5" /> A7. Reporting & Exports
         </button>
       </div>
+
+      {/* TAB USERS & ROLES */}
+      {activeTab === 'users' && (
+        <UserManagementView />
+      )}
 
       {/* TAB A1: AUTHENTICATION */}
       {activeTab === 'a1_auth' && (
@@ -247,9 +259,10 @@ export const BackendConfigView = () => {
                 <thead>
                   <tr>
                     <th>Product Category</th>
-                    <th>Bronze Tier Ceiling</th>
-                    <th>Silver Tier Ceiling</th>
-                    <th>Gold Tier Ceiling</th>
+                    <th>Bronze Tier (3+ Orders)</th>
+                    <th>Silver Tier (5+ Orders)</th>
+                    <th>Gold Tier (8+ Orders)</th>
+                    <th>Platinum Tier (10+ Orders)</th>
                     <th>Approval Chain Routing</th>
                   </tr>
                 </thead>
@@ -260,7 +273,7 @@ export const BackendConfigView = () => {
                       <td>
                         <input 
                           type="number" 
-                          value={ceilings.Bronze} 
+                          value={ceilings.Bronze !== undefined ? ceilings.Bronze : 5} 
                           onChange={(e) => {
                             const val = parseInt(e.target.value) || 0;
                             setDiscountRules(prev => ({
@@ -271,13 +284,13 @@ export const BackendConfigView = () => {
                               }
                             }));
                           }}
-                          className="input py-0.5 px-2 text-xs w-20 text-center" 
+                          className="input py-0.5 px-2 text-xs w-16 text-center" 
                         /> %
                       </td>
                       <td>
                         <input 
                           type="number" 
-                          value={ceilings.Silver} 
+                          value={ceilings.Silver !== undefined ? ceilings.Silver : 10} 
                           onChange={(e) => {
                             const val = parseInt(e.target.value) || 0;
                             setDiscountRules(prev => ({
@@ -288,13 +301,13 @@ export const BackendConfigView = () => {
                               }
                             }));
                           }}
-                          className="input py-0.5 px-2 text-xs w-20 text-center" 
+                          className="input py-0.5 px-2 text-xs w-16 text-center" 
                         /> %
                       </td>
                       <td>
                         <input 
                           type="number" 
-                          value={ceilings.Gold} 
+                          value={ceilings.Gold !== undefined ? ceilings.Gold : 15} 
                           onChange={(e) => {
                             const val = parseInt(e.target.value) || 0;
                             setDiscountRules(prev => ({
@@ -305,7 +318,24 @@ export const BackendConfigView = () => {
                               }
                             }));
                           }}
-                          className="input py-0.5 px-2 text-xs w-20 text-center" 
+                          className="input py-0.5 px-2 text-xs w-16 text-center" 
+                        /> %
+                      </td>
+                      <td>
+                        <input 
+                          type="number" 
+                          value={ceilings.Platinum !== undefined ? ceilings.Platinum : 20} 
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value) || 0;
+                            setDiscountRules(prev => ({
+                              ...prev,
+                              categoryCeilings: {
+                                ...prev.categoryCeilings,
+                                [cat]: { ...prev.categoryCeilings[cat], Platinum: val }
+                              }
+                            }));
+                          }}
+                          className="input py-0.5 px-2 text-xs w-16 text-center" 
                         /> %
                       </td>
                       <td>

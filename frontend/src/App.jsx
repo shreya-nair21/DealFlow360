@@ -11,6 +11,7 @@ import { DealHealthView } from './views/DealHealthView';
 import { BackendConfigView } from './views/BackendConfigView';
 
 import { PipelineView } from './views/PipelineView';
+import { UserManagementView } from './views/UserManagementView';
 
 import { ToastContainer } from './components/ToastContainer';
 
@@ -22,18 +23,30 @@ export const AppContent = () => {
     return <LoginLandingView />;
   }
 
+  // Client / Customer Workspace: opens directly to Customer Portal by default
+  if (currentUser.role === 'customer' && currentView !== 'builder' && currentView !== 'fulfillment') {
+    return (
+      <div className="min-h-screen bg-[#faf8f5]">
+        <ToastContainer />
+        <CustomerPortalView />
+      </div>
+    );
+  }
+
+  // Internal Staff / Admin Workspace: Full Operations Dashboard
   const navItems = [
     { id: 'pipeline', roles: ['sales_rep', 'sales_manager', 'admin'] },
-    { id: 'builder', roles: ['sales_rep', 'sales_manager', 'admin'] },
+    { id: 'builder', roles: ['sales_rep', 'sales_manager', 'admin', 'customer'] },
     { id: 'approval', roles: ['sales_manager', 'finance', 'admin'] },
-    { id: 'fulfillment', roles: ['finance', 'admin', 'sales_rep'] },
+    { id: 'fulfillment', roles: ['finance', 'admin', 'sales_rep', 'customer'] },
     { id: 'billing', roles: ['finance', 'admin', 'sales_rep'] },
+    { id: 'users', roles: ['admin'] },
     { id: 'portal', roles: ['customer', 'sales_rep', 'admin'] },
     { id: 'deal_health', roles: ['sales_manager', 'admin'] },
     { id: 'config', roles: ['admin', 'sales_manager'] }
   ];
 
-  const userRole = currentUser?.role || 'sales_rep';
+  const userRole = currentUser?.role || 'admin';
   const allowedViews = navItems.filter(item => item.roles.includes(userRole)).map(i => i.id);
   const activeView = allowedViews.includes(currentView) ? currentView : (allowedViews[0] || 'builder');
 
@@ -44,6 +57,7 @@ export const AppContent = () => {
       case 'approval': return <ApprovalView />;
       case 'fulfillment': return <FulfillmentView />;
       case 'billing': return <BillingView />;
+      case 'users': return <UserManagementView />;
       case 'portal': return <CustomerPortalView />;
       case 'deal_health': return <DealHealthView />;
       case 'config': return <BackendConfigView />;
