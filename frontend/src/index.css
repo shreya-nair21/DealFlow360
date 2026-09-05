@@ -1,0 +1,244 @@
+/* ==========================================================================
+   DealFlow360 React Design System (DESIGN.md Aesthetic)
+   ========================================================================== */
+
+:root {
+  --bg-cream: #f7f4ed;
+  --text-charcoal: #1c1c1c;
+  --text-muted: #5f5f5d;
+  --text-light: #fcfbf8;
+  --border-warm: #eceae4;
+  --border-interactive: rgba(28, 28, 28, 0.4);
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--text-charcoal);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-charcoal);
+  letter-spacing: -0.02em;
+}
+
+/* Custom Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  border: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: #1c1c1c;
+  color: #fcfbf8;
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0.5px 0px 0px inset, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #1c1c1c;
+  border: 1px solid rgba(28, 28, 28, 0.4);
+}
+
+.btn-outline:hover {
+  background-color: rgba(28, 28, 28, 0.04);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: #1c1c1c;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(28, 28, 28, 0.04);
+}
+
+.btn-cream {
+  background-color: #f7f4ed;
+  color: #1c1c1c;
+  border: 1px solid #eceae4;
+}
+
+.btn-cream:hover {
+  background-color: #f1ebd9;
+}
+
+.btn-pill {
+  border-radius: 9999px;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+}
+
+.btn-md {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.btn-danger {
+  background-color: #b91c1c;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+/* Custom Cards */
+.card {
+  background-color: #f7f4ed;
+  border: 1px solid #eceae4;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Form Controls */
+.input, .select, .textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: #f7f4ed;
+  border: 1px solid #eceae4;
+  border-radius: 6px;
+  color: #1c1c1c;
+  font-size: 0.875rem;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: #1c1c1c;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #5f5f5d;
+  margin-bottom: 0.375rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.badge-success {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-warning {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fef08a;
+}
+
+.badge-danger {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.badge-info {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-neutral {
+  background-color: rgba(28, 28, 28, 0.04);
+  color: #1c1c1c;
+  border: 1px solid #eceae4;
+}
+
+/* Tables */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eceae4;
+  border-radius: 12px;
+  background-color: #f7f4ed;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.table th {
+  background-color: rgba(28, 28, 28, 0.03);
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #5f5f5d;
+  border-bottom: 1px solid #eceae4;
+}
+
+.table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #eceae4;
+  color: #1c1c1c;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background-color: rgba(28, 28, 28, 0.04);
+}
+
+/* Risk Bar */
+.risk-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #eceae4;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
