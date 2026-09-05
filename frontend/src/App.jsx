@@ -26,7 +26,7 @@ export const AppContent = () => {
   // Client / Customer Workspace: opens directly to Customer Portal by default
   if (currentUser.role === 'customer' && currentView !== 'builder' && currentView !== 'fulfillment') {
     return (
-      <div className="min-h-screen bg-[#faf8f5]">
+      <div className="min-h-screen bg-white">
         <ToastContainer />
         <CustomerPortalView />
       </div>

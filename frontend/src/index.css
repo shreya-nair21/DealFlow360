@@ -1,14 +1,24 @@
 /* ==========================================================================
-   DealFlow360 React Design System (DESIGN.md Aesthetic)
+   DealFlow360 React Design System (DESIGN.md Uber-Inspired Specification)
    ========================================================================== */
 
 :root {
-  --bg-cream: #f7f4ed;
-  --text-charcoal: #1c1c1c;
-  --text-muted: #5f5f5d;
-  --text-light: #fcfbf8;
-  --border-warm: #eceae4;
-  --border-interactive: rgba(28, 28, 28, 0.4);
+  --primary: #000000;
+  --on-primary: #ffffff;
+  --ink: #000000;
+  --body: #5e5e5e;
+  --mute: #afafaf;
+  --hairline-mid: #4b4b4b;
+  --canvas: #ffffff;
+  --canvas-soft: #efefef;
+  --canvas-softer: #f3f3f3;
+  --surface-pressed: #e2e2e2;
+  --bg-cream: #ffffff;
+  --text-charcoal: #000000;
+  --text-muted: #5e5e5e;
+  --text-light: #ffffff;
+  --border-warm: #e2e2e2;
+  --border-interactive: #000000;
 }
 
 html {
@@ -16,31 +26,33 @@ html {
 }
 
 body {
-  background-color: var(--bg-cream);
-  color: var(--text-charcoal);
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: 'Roboto', 'UberMoveText', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem;
-  line-height: 1.65;
-  letter-spacing: 0.025em;
-  word-spacing: 0.18em;
+  line-height: 1.6;
+  letter-spacing: 0.015em;
+  word-spacing: 0.12em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto', sans-serif;
-  color: var(--text-charcoal);
-  letter-spacing: 0.015em;
-  word-spacing: 0.14em;
+  font-family: 'Roboto', 'UberMove', sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  word-spacing: 0.1em;
   font-weight: 700;
 }
 
 p, span, div, a, button, input, select, textarea, label {
-  letter-spacing: 0.015em;
-  word-spacing: 0.12em;
+  letter-spacing: 0.012em;
+  word-spacing: 0.1em;
 }
 
-/* Custom Buttons */
+/* ==========================================================================
+   Signature Buttons (DESIGN.md: 999px Pill Shape on Every Interactive Element)
+   ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -48,83 +60,92 @@ p, span, div, a, button, input, select, textarea, label {
   gap: 0.5rem;
   font-size: 0.95rem;
   font-weight: 500;
-  padding: 0.6rem 1.1rem;
-  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px; /* DESIGN.md signature pill shape */
   cursor: pointer;
   transition: all 0.15s ease-in-out;
   border: none;
   white-space: nowrap;
 }
 
+/* button-primary (Black Conversion Pill) */
 .btn-primary {
-  background-color: #1c1c1c;
-  color: #fcfbf8;
-  box-shadow: rgba(255, 255, 255, 0.2) 0px 0.5px 0px 0px inset, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+  background-color: #000000;
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background-color: #282828;
   transform: translateY(-1px);
 }
 
+/* button-secondary (White Pill with Hairline) */
 .btn-outline {
-  background-color: transparent;
-  color: #1c1c1c;
-  border: 1px solid rgba(28, 28, 28, 0.4);
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #e2e2e2;
 }
 
 .btn-outline:hover {
-  background-color: rgba(28, 28, 28, 0.04);
+  background-color: #f3f3f3;
 }
 
+/* button-subtle (Canvas-Soft Pill) */
 .btn-ghost {
-  background-color: transparent;
-  color: #1c1c1c;
+  background-color: #efefef;
+  color: #000000;
 }
 
 .btn-ghost:hover {
-  background-color: rgba(28, 28, 28, 0.04);
+  background-color: #e2e2e2;
 }
 
 .btn-cream {
-  background-color: #f7f4ed;
-  color: #1c1c1c;
-  border: 1px solid #eceae4;
+  background-color: #f3f3f3;
+  color: #000000;
+  border: 1px solid #e2e2e2;
 }
 
 .btn-cream:hover {
-  background-color: #f1ebd9;
+  background-color: #e2e2e2;
 }
 
 .btn-pill {
-  border-radius: 9999px;
+  border-radius: 999px;
 }
 
 .btn-sm {
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   font-size: 0.85rem;
+  border-radius: 999px;
 }
 
 .btn-md {
-  padding: 0.6rem 1.35rem;
+  padding: 0.6rem 1.4rem;
   font-size: 0.95rem;
+  border-radius: 999px;
 }
 
 .btn-danger {
-  background-color: #b91c1c;
+  background-color: #111111;
   color: #ffffff;
+  border: 1px solid #e2e2e2;
 }
 
 .btn-danger:hover {
-  opacity: 0.9;
+  background-color: #b91c1c;
 }
 
-/* Custom Cards */
+/* ==========================================================================
+   Cards & Surfaces (DESIGN.md: 16px Rounded-xl with Subtle Elevation)
+   ========================================================================== */
 .card {
-  background-color: #f7f4ed;
-  border: 1px solid #eceae4;
-  border-radius: 12px;
-  padding: 1.25rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px; /* DESIGN.md rounded.xl */
+  padding: 1.5rem;
+  box-shadow: rgba(0, 0, 0, 0.03) 0px 2px 8px 0px;
 }
 
 .card-header {
@@ -133,41 +154,47 @@ p, span, div, a, button, input, select, textarea, label {
   justify-content: space-between;
 }
 
-/* Form Controls */
+/* ==========================================================================
+   Form Controls (DESIGN.md: Canvas-Soft #efefef, 8px Rounded-md)
+   ========================================================================== */
 .input, .select, .textarea {
   width: 100%;
-  padding: 0.625rem 0.875rem;
-  background-color: #f7f4ed;
-  border: 1px solid #eceae4;
-  border-radius: 8px;
-  color: #1c1c1c;
+  padding: 0.65rem 0.9rem;
+  background-color: #efefef;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px; /* DESIGN.md rounded.md */
+  color: #000000;
   font-family: 'Roboto', sans-serif;
   font-size: 0.95rem;
+  transition: all 0.15s ease-in-out;
 }
 
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
-  border-color: #1c1c1c;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  background-color: #ffffff;
+  border-color: #000000;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px 0px;
 }
 
 .label {
   display: block;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #5f5f5d;
+  letter-spacing: 0.04em;
+  color: #5e5e5e;
   margin-bottom: 0.4rem;
 }
 
-/* Badges */
+/* ==========================================================================
+   Badges (DESIGN.md: Pill 999px with High Contrast)
+   ========================================================================== */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 9999px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px; /* DESIGN.md pill */
   font-size: 0.825rem;
   font-weight: 600;
   line-height: 1;
@@ -192,24 +219,26 @@ p, span, div, a, button, input, select, textarea, label {
 }
 
 .badge-info {
-  background-color: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
+  background-color: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
 }
 
 .badge-neutral {
-  background-color: rgba(28, 28, 28, 0.04);
-  color: #1c1c1c;
-  border: 1px solid #eceae4;
+  background-color: #efefef;
+  color: #000000;
+  border: 1px solid #e2e2e2;
 }
 
-/* Tables */
+/* ==========================================================================
+   Data Tables (DESIGN.md: Clean White Canvas, Soft Header, 16px Container)
+   ========================================================================== */
 .table-container {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #eceae4;
-  border-radius: 12px;
-  background-color: #f7f4ed;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  background-color: #ffffff;
 }
 
 .table {
@@ -220,20 +249,20 @@ p, span, div, a, button, input, select, textarea, label {
 }
 
 .table th {
-  background-color: rgba(28, 28, 28, 0.03);
-  padding: 0.85rem 1.1rem;
+  background-color: #efefef;
+  padding: 0.85rem 1.15rem;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #5f5f5d;
-  border-bottom: 1px solid #eceae4;
+  color: #000000;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .table td {
-  padding: 0.95rem 1.1rem;
-  border-bottom: 1px solid #eceae4;
-  color: #1c1c1c;
+  padding: 0.95rem 1.15rem;
+  border-bottom: 1px solid #e2e2e2;
+  color: #000000;
 }
 
 .table tr:last-child td {
@@ -241,20 +270,22 @@ p, span, div, a, button, input, select, textarea, label {
 }
 
 .table tr:hover td {
-  background-color: rgba(28, 28, 28, 0.04);
+  background-color: #f3f3f3;
 }
 
-/* Risk Bar */
+/* ==========================================================================
+   Progress & Metrics Bars
+   ========================================================================== */
 .risk-bar-container {
   width: 100%;
   height: 8px;
-  background-color: #eceae4;
-  border-radius: 9999px;
+  background-color: #efefef;
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .risk-bar-fill {
   height: 100%;
-  border-radius: 9999px;
+  border-radius: 999px;
   transition: width 0.3s ease, background-color 0.3s ease;
 }
