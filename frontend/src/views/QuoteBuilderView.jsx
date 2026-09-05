@@ -124,24 +124,48 @@ export const QuoteBuilderView = () => {
             <Plus className="w-4 h-4" /> Create New Quote
           </button>
 
-          {requiresApproval && (
-            <button 
-              onClick={() => {
-                updateActiveQuote(q => { q.status = 'Pending Approval'; });
-                addApprovalLog({
-                  quoteId: activeQuote.id,
-                  user: 'Sales Rep (Rahul)',
-                  role: 'sales_rep',
-                  action: 'Routed Risky Quote for Approval',
-                  blendedRiskScore,
-                  reason: `Service line discount exceeds allowed ceiling by ${maxSingleLineOverage} points.`
-                });
-                alert('Risky quotation submitted into Manager Approval Queue.');
-              }}
-              className="btn btn-sm btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900"
-            >
-              <ShieldAlert className="w-4 h-4" /> Submit Risky Quote for Approval
-            </button>
+          {activeQuote.status === 'Draft' ? (
+            requiresApproval ? (
+              <button 
+                onClick={() => {
+                  updateActiveQuote(q => { q.status = 'Pending Approval'; });
+                  addApprovalLog({
+                    quoteId: activeQuote.id,
+                    user: activeQuote.repName || currentUser?.name || 'Rahul',
+                    role: 'sales_rep',
+                    action: 'Routed Risky Quote for Approval',
+                    blendedRiskScore,
+                    reason: `Service line discount exceeds allowed ceiling by ${maxSingleLineOverage} points.`
+                  });
+                  alert('Risky quotation submitted into Manager Approval Queue.');
+                }}
+                className="btn btn-sm btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900 flex items-center gap-1.5"
+              >
+                <ShieldAlert className="w-4 h-4" /> Submit Risky Quote for Approval
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  updateActiveQuote(q => { q.status = 'Approved'; });
+                  addApprovalLog({
+                    quoteId: activeQuote.id,
+                    user: activeQuote.repName || currentUser?.name || 'Rahul',
+                    role: 'sales_rep',
+                    action: 'Submitted Standard Quote',
+                    blendedRiskScore: 0,
+                    reason: 'Quote passes pricing governance rules.'
+                  });
+                  alert('Quotation submitted successfully!');
+                }}
+                className="btn btn-sm btn-primary flex items-center gap-1.5"
+              >
+                <Send className="w-4 h-4" /> Submit Quotation
+              </button>
+            )
+          ) : (
+            <span className="badge badge-success text-xs py-1 px-3 font-semibold">
+              Quotation Submitted ({activeQuote.status})
+            </span>
           )}
         </div>
       </div>
@@ -316,6 +340,48 @@ export const QuoteBuilderView = () => {
                 <div className="p-2.5 rounded bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Quote passes pricing governance rules. Ready for fulfillment or customer send.</span>
+                </div>
+              )}
+
+              {activeQuote.status === 'Draft' && (
+                <div className="pt-2">
+                  {requiresApproval ? (
+                    <button 
+                      onClick={() => {
+                        updateActiveQuote(q => { q.status = 'Pending Approval'; });
+                        addApprovalLog({
+                          quoteId: activeQuote.id,
+                          user: activeQuote.repName || currentUser?.name || 'Rahul',
+                          role: 'sales_rep',
+                          action: 'Routed Risky Quote for Approval',
+                          blendedRiskScore,
+                          reason: `Service line discount exceeds allowed ceiling by ${maxSingleLineOverage} points.`
+                        });
+                        alert('Risky quotation submitted into Manager Approval Queue.');
+                      }}
+                      className="btn btn-md btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900 w-full flex items-center justify-center gap-2"
+                    >
+                      <ShieldAlert className="w-4 h-4" /> Submit Risky Quote for Approval
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => {
+                        updateActiveQuote(q => { q.status = 'Approved'; });
+                        addApprovalLog({
+                          quoteId: activeQuote.id,
+                          user: activeQuote.repName || currentUser?.name || 'Rahul',
+                          role: 'sales_rep',
+                          action: 'Submitted Standard Quote',
+                          blendedRiskScore: 0,
+                          reason: 'Quote passes pricing governance rules.'
+                        });
+                        alert('Quotation submitted successfully!');
+                      }}
+                      className="btn btn-md btn-primary w-full flex items-center justify-center gap-2"
+                    >
+                      <Send className="w-4 h-4" /> Submit Quotation
+                    </button>
+                  )}
                 </div>
               )}
             </div>
