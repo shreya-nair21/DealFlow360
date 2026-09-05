@@ -14,22 +14,22 @@ export const AuthModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    login(email || 'sarah@dealflow.com', password || 'password');
-    onClose();
+    const ok = await login(email, password);
+    if (ok) onClose();
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    signup(name || 'New Team Member', email || 'member@dealflow.com', password || 'pass', role);
-    onClose();
+    const ok = await signup(name, email, password, role);
+    if (ok) onClose();
   };
 
-  const handleMagic = (e) => {
+  const handleMagic = async (e) => {
     e.preventDefault();
-    magicLinkLogin(magicToken);
-    onClose();
+    const ok = await magicLinkLogin(magicToken);
+    if (ok) onClose();
   };
 
   return (

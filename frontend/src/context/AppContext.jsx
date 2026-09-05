@@ -164,12 +164,34 @@ export const AppProvider = ({ children }) => {
     setData(prev => ({ ...prev, currentRole: role, currentView: view }));
   };
 
+  const [registeredUsers, setRegisteredUsers] = useState(() => {
+    const saved = localStorage.getItem('dealflow360_registered_users');
+    return saved ? JSON.parse(saved) : [
+      { name: 'Rahul (Sales Rep)', email: 'rahul@dealflow.com', role: 'sales_rep' },
+      { name: 'Sarah Rep', email: 'sarah@dealflow.com', role: 'sales_rep' },
+      { name: 'Mark Manager', email: 'mark@dealflow.com', role: 'sales_manager' },
+      { name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' },
+      { name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' },
+      { name: 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' },
+      { name: 'Acme Enterprises', email: 'procurement@acme.com', role: 'customer' }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dealflow360_registered_users', JSON.stringify(registeredUsers));
+  }, [registeredUsers]);
+
   const login = async (email, password) => {
+    if (!email || !email.trim()) {
+      showToast('Please enter your email address.', 'warning');
+      return false;
+    }
+
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email: email.trim(), password })
       });
       if (res.ok) {
         const body = await res.json();
@@ -180,57 +202,69 @@ export const AppProvider = ({ children }) => {
         return true;
       }
     } catch {
-      // Proxy offline fallback
+      // Backend offline fallback
     }
 
-    let role = 'sales_rep';
-    const em = email.toLowerCase();
-    if (em.includes('rahul') || em.includes('rep')) role = 'sales_rep';
-    else if (em.includes('manager')) role = 'sales_manager';
-    else if (em.includes('finance') || em.includes('ops')) role = 'finance';
-    else if (em.includes('admin')) role = 'admin';
-    else if (em.includes('customer') || em.includes('abc') || em.includes('acme')) role = 'customer';
+    const cleanEmail = email.trim().toLowerCase();
+    const matchedUser = registeredUsers.find(u => u.email.toLowerCase() === cleanEmail);
 
-    const name = em.includes('rahul') ? 'Rahul (Sales Rep)' : email.split('@')[0];
-    const user = { name, email, role };
-    setCurrentUser(user);
-    setRole(role);
-    showToast(`Logged in as ${name}`, 'success');
+    if (!matchedUser) {
+      showToast('Invalid email or password. Please check your credentials.', 'error');
+      return false;
+    }
+
+    setCurrentUser(matchedUser);
+    setRole(matchedUser.role);
+    showToast(`Welcome back, ${matchedUser.name}!`, 'success');
     return true;
   };
 
   const signup = async (name, email, password, role) => {
+    if (!email || !email.trim()) {
+      showToast('Please provide a valid email address.', 'warning');
+      return false;
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role })
+        body: JSON.stringify({ name: name || email.split('@')[0], email: cleanEmail, password, role })
       });
       if (res.ok) {
         const body = await res.json();
         const user = body.user;
+        setRegisteredUsers(prev => [...prev.filter(u => u.email.toLowerCase() !== cleanEmail), user]);
         setCurrentUser(user);
         setRole(user.role);
         showToast(`Account created for ${user.name}!`, 'success');
         return true;
       }
     } catch {
-      // Proxy offline fallback
+      // Backend offline fallback
     }
 
-    const user = { name: name || email.split('@')[0], email, role: role || 'sales_rep' };
-    setCurrentUser(user);
-    setRole(user.role);
-    showToast(`Account created for ${user.name}`, 'success');
+    const newUser = { name: name || email.split('@')[0], email: cleanEmail, role: role || 'sales_rep' };
+    setRegisteredUsers(prev => [...prev.filter(u => u.email.toLowerCase() !== cleanEmail), newUser]);
+    setCurrentUser(newUser);
+    setRole(newUser.role);
+    showToast(`Account created for ${newUser.name}!`, 'success');
     return true;
   };
 
   const magicLinkLogin = async (token) => {
+    if (!token || !token.trim()) {
+      showToast('Please enter a valid portal token.', 'warning');
+      return false;
+    }
+
     try {
       const res = await fetch('/api/auth/magic-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token: token.trim() })
       });
       if (res.ok) {
         const body = await res.json();
@@ -242,14 +276,22 @@ export const AppProvider = ({ children }) => {
         return true;
       }
     } catch {
-      // Proxy offline fallback
+      // Backend offline fallback
     }
 
-    const user = { name: 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' };
-    setCurrentUser(user);
-    setRole('customer');
-    showToast('Customer Portal authenticated!', 'success');
-    return true;
+    const matchedQuote = data.quotations.find(q => q.portalToken === token.trim() || q.code === token.trim());
+    if (matchedQuote || token.trim().startsWith('token-') || token.trim().includes('abc')) {
+      if (matchedQuote) setActiveQuoteId(matchedQuote.id);
+      const cust = matchedQuote ? data.customers.find(c => c.id === matchedQuote.customerId) : null;
+      const user = { name: cust?.name || 'ABC Company (Customer)', email: 'procurement@abccorp.com', role: 'customer' };
+      setCurrentUser(user);
+      setRole('customer');
+      showToast(`Welcome to Customer Portal (${user.name})`, 'success');
+      return true;
+    }
+
+    showToast('Invalid or expired customer portal token.', 'error');
+    return false;
   };
 
   const logout = () => {

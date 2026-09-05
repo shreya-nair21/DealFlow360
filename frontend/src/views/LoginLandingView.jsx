@@ -12,19 +12,19 @@ export const LoginLandingView = () => {
   const [role, setRoleSelect] = useState('sales_rep');
   const [magicToken, setMagicToken] = useState('acme-secret-token-9988');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    login(email || 'sarah@dealflow.com', password || 'password');
+    await login(email, password);
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    signup(name || 'New Team Member', email || 'member@dealflow.com', password || 'pass', role);
+    await signup(name, email, password, role);
   };
 
-  const handleMagic = (e) => {
+  const handleMagic = async (e) => {
     e.preventDefault();
-    magicLinkLogin(magicToken);
+    await magicLinkLogin(magicToken);
   };
 
   // Demo Quick Login Shortcuts

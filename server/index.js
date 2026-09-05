@@ -15,12 +15,14 @@ const PORT = process.env.PORT || 5000;
 // Seed Store in Memory
 let storeData = {
   users: [
+    { id: 'u-rahul', name: 'Rahul (Sales Rep)', email: 'rahul@dealflow.com', role: 'sales_rep' },
     { id: 'u-1', name: 'Sarah Rep', email: 'sarah@dealflow.com', role: 'sales_rep' },
     { id: 'u-2', name: 'Mark Manager', email: 'mark@dealflow.com', role: 'sales_manager' },
     { id: 'u-3', name: 'Fiona Finance', email: 'fiona@dealflow.com', role: 'finance' },
     { id: 'u-4', name: 'Alex Admin', email: 'admin@dealflow.com', role: 'admin' }
   ],
   customers: [
+    { id: 'c-abc', name: 'ABC Company', tier: 'Bronze', email: 'procurement@abccorp.com' },
     { id: 'c-1', name: 'Acme Enterprises', tier: 'Gold', email: 'procurement@acme.com' },
     { id: 'c-2', name: 'Beta Industries', tier: 'Silver', email: 'purchasing@betaind.com' },
     { id: 'c-3', name: 'Gamma Logistics', tier: 'Bronze', email: 'ops@gammalog.com' }
