@@ -256,29 +256,26 @@ export const BillingView = () => {
     <div className="space-y-6">
       
       {/* ================= TOP HEADER BANNER ================= */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cream border border-warm p-4 rounded-2xl shadow-2xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-charcoal flex items-center gap-2">
-              <CreditCard className="w-6 h-6 text-emerald-600" /> B7) Hybrid Billing & Subscription Reconciliation
-            </h2>
-            <span className="badge badge-success text-[10px] font-bold">Billing Engine Active</span>
-          </div>
-          <p className="text-xs text-muted mt-0.5">
+          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
+            <CreditCard className="w-7 h-7 text-black" /> Hybrid Billing & Subscription Reconciliation
+          </h2>
+          <p className="text-sm text-[#5e5e5e] mt-1">
             Reconciles one-time hardware and professional service lines alongside recurring cloud subscription schedules on a unified contract.
           </p>
         </div>
 
         {/* Order Selector */}
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-warm shadow-2xs">
-          <span className="text-xs font-semibold text-muted">Order Contract:</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-[#e2e2e2] shadow-xs shrink-0">
+          <span className="text-xs font-semibold text-[#5e5e5e] whitespace-nowrap shrink-0">Order Contract:</span>
           <select
             value={selectedQuoteId}
             onChange={(e) => {
               setSelectedQuoteId(e.target.value);
               setActiveQuoteId(e.target.value);
             }}
-            className="select text-xs font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-charcoal"
+            className="select text-sm font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-black w-auto"
           >
             {data.quotations.map(q => (
               <option key={q.id} value={q.id}>
@@ -293,144 +290,144 @@ export const BillingView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         
         {/* Tile 1: One-Time Upfront Total */}
-        <div className="card p-4 bg-white border border-warm rounded-2xl shadow-2xs space-y-1">
-          <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">One-Time Hardware & Services</span>
-            <Package className="w-4 h-4 text-blue-600" />
+        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+          <div className="flex items-center justify-between text-[#5e5e5e]">
+            <span className="text-xs font-bold uppercase tracking-wider">One-Time Hardware & Services</span>
+            <Package className="w-5 h-5 text-black" />
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-black text-charcoal font-mono">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-black font-mono">
               ${oneTimeTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-xs text-muted font-medium">Due Upfront</span>
+            <span className="text-sm text-[#5e5e5e] font-medium">Due Upfront</span>
           </div>
-          <p className="text-[11px] text-muted">
+          <p className="text-xs text-[#5e5e5e]">
             Billed on Month 1 initial delivery invoice ({oneTimeLines.length} line items).
           </p>
         </div>
 
         {/* Tile 2: Recurring Subscription ARR / MRR */}
-        <div className="card p-4 bg-white border border-warm rounded-2xl shadow-2xs space-y-1">
-          <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">Recurring Cloud MRR</span>
-            <RefreshCw className="w-4 h-4 text-emerald-600" />
+        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+          <div className="flex items-center justify-between text-[#5e5e5e]">
+            <span className="text-xs font-bold uppercase tracking-wider">Recurring Cloud MRR</span>
+            <RefreshCw className="w-5 h-5 text-black" />
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-black text-emerald-700 font-mono">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-black font-mono">
               ${recurringMonthlyTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-xs text-muted font-medium">/ Month</span>
+            <span className="text-sm text-[#5e5e5e] font-medium">/ Month</span>
           </div>
-          <p className="text-[11px] text-muted">
-            Annual recurring contract: <strong>${(recurringMonthlyTotal * 12).toLocaleString(undefined, { minimumFractionDigits: 2 })} / year</strong>
+          <p className="text-xs text-[#5e5e5e]">
+            Annual recurring contract: <strong className="text-black">${(recurringMonthlyTotal * 12).toLocaleString(undefined, { minimumFractionDigits: 2 })} / year</strong>
           </p>
         </div>
 
         {/* Tile 3: First Month Invoice Total */}
-        <div className="card p-4 bg-charcoal text-white rounded-2xl shadow-2xs space-y-1">
+        <div className="card p-5 bg-black text-white rounded-2xl shadow-xs space-y-2">
           <div className="flex items-center justify-between text-white/70">
-            <span className="text-xs font-semibold uppercase tracking-wider">Month 1 Combined Invoice</span>
-            <Receipt className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider">Month 1 Combined Invoice</span>
+            <Receipt className="w-5 h-5 text-white" />
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-black text-emerald-400 font-mono">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-white font-mono">
               ${(oneTimeTotal + recurringMonthlyTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-xs text-white/70 font-medium">Combined Due</span>
+            <span className="text-sm text-white/70 font-medium">Combined Due</span>
           </div>
-          <p className="text-[11px] text-white/70">
+          <p className="text-xs text-white/70">
             One-time setup & equipment + Month 1 Cloud subscription billing.
           </p>
         </div>
 
       </div>
 
-      {/* ================= SECTION 1: SEPARATION OF ONE-TIME VS RECURRING (PDF B7 & QUICK TEST STEP 6) ================= */}
-      <div className="card bg-white border border-warm rounded-2xl p-5 shadow-xs space-y-5">
-        <div className="border-b border-warm pb-3">
-          <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-            <Layers className="w-4 h-4 text-charcoal" />
+      {/* ================= SECTION 1: SEPARATION OF ONE-TIME VS RECURRING ================= */}
+      <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="border-b border-[#e2e2e2] pb-4">
+          <h3 className="text-lg font-bold text-black flex items-center gap-2">
+            <Layers className="w-5 h-5 text-black" />
             <span>Hybrid Order Breakdown: One-Time vs. Recurring Subscriptions</span>
           </h3>
-          <p className="text-xs text-muted">
-            Separates non-recurring capital expenditures from recurring SaaS licenses on a single master order (Quick Test Step 6).
+          <p className="text-xs text-[#5e5e5e] mt-0.5">
+            Separates non-recurring capital expenditures from recurring SaaS licenses on a single master order.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Table A: One-Time Lines */}
-          <div className="border border-warm rounded-xl p-4 bg-cream/40 space-y-3">
+          <div className="border border-[#e2e2e2] rounded-xl p-5 bg-[#fafafa] space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="font-bold text-xs text-charcoal uppercase tracking-wider flex items-center gap-1.5">
-                <Package className="w-3.5 h-3.5 text-blue-600" />
+              <h4 className="font-bold text-xs text-black uppercase tracking-wider flex items-center gap-2">
+                <Package className="w-4 h-4 text-black" />
                 <span>1. One-Time Product & Service Lines</span>
               </h4>
-              <span className="badge badge-neutral text-[10px]">{oneTimeLines.length} Items</span>
+              <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs font-semibold">{oneTimeLines.length} Items</span>
             </div>
 
             {oneTimeLines.length === 0 ? (
-              <p className="text-xs text-muted py-4 text-center">No one-time products in this order.</p>
+              <p className="text-sm text-[#5e5e5e] py-6 text-center">No one-time products in this order.</p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {oneTimeLines.map(line => (
-                  <div key={line.id} className="p-2.5 bg-white border border-warm rounded-lg flex items-center justify-between text-xs shadow-2xs">
+                  <div key={line.id} className="p-3 bg-white border border-[#e2e2e2] rounded-xl flex items-center justify-between text-sm shadow-2xs">
                     <div>
-                      <div className="font-bold text-charcoal">{line.product.name}</div>
-                      <div className="text-[10px] text-muted font-mono">
+                      <div className="font-bold text-black">{line.product.name}</div>
+                      <div className="text-xs text-[#5e5e5e] font-mono">
                         {line.product.sku} • Qty: {line.quantity} • Disc: {line.discountPct}%
                       </div>
                     </div>
-                    <div className="text-right font-mono font-bold text-charcoal">
+                    <div className="text-right font-mono font-bold text-black">
                       ${line.netTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </div>
                   </div>
                 ))}
 
-                <div className="pt-2 border-t border-warm flex items-center justify-between text-xs font-bold text-charcoal">
+                <div className="pt-3 border-t border-[#e2e2e2] flex items-center justify-between text-sm font-bold text-black">
                   <span>One-Time Subtotal:</span>
-                  <span className="font-mono text-blue-800">${oneTimeTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  <span className="font-mono text-base font-bold text-black">${oneTimeTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Table B: Recurring Subscription Lines */}
-          <div className="border border-emerald-200 rounded-xl p-4 bg-emerald-50/20 space-y-3">
+          {/* Table B: Recurring Subscription Lines (Strictly Monochromatic) */}
+          <div className="border border-[#e2e2e2] rounded-xl p-5 bg-[#fafafa] space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="font-bold text-xs text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
-                <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
+              <h4 className="font-bold text-xs text-black uppercase tracking-wider flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 text-black" />
                 <span>2. Recurring Cloud Subscription Lines</span>
               </h4>
-              <span className="badge badge-success text-[10px]">{recurringLines.length} Items</span>
+              <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs font-semibold">{recurringLines.length} Items</span>
             </div>
 
             {recurringLines.length === 0 ? (
-              <p className="text-xs text-muted py-4 text-center">No recurring subscriptions in this order.</p>
+              <p className="text-sm text-[#5e5e5e] py-6 text-center">No recurring subscriptions in this order.</p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {recurringLines.map(line => (
-                  <div key={line.id} className="p-2.5 bg-white border border-emerald-200 rounded-lg flex items-center justify-between text-xs shadow-2xs">
+                  <div key={line.id} className="p-3 bg-white border border-[#e2e2e2] rounded-xl flex items-center justify-between text-sm shadow-2xs">
                     <div>
-                      <div className="font-bold text-charcoal">{line.product.name}</div>
-                      <div className="text-[10px] text-muted font-mono">
+                      <div className="font-bold text-black">{line.product.name}</div>
+                      <div className="text-xs text-[#5e5e5e] font-mono">
                         Billing: Monthly / Annual • Seats: {line.quantity} • Disc: {line.discountPct}%
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-mono font-bold text-emerald-800">
+                      <div className="font-mono font-bold text-black text-sm">
                         ${line.monthlyNetTotal.toFixed(2)} / mo
                       </div>
-                      <div className="text-[10px] text-muted font-mono">
+                      <div className="text-xs text-[#5e5e5e] font-mono">
                         (${line.annualNetTotal.toFixed(2)}/yr)
                       </div>
                     </div>
                   </div>
                 ))}
 
-                <div className="pt-2 border-t border-emerald-200 flex items-center justify-between text-xs font-bold text-emerald-950">
+                <div className="pt-3 border-t border-[#e2e2e2] flex items-center justify-between text-sm font-bold text-black">
                   <span>Recurring Monthly Subtotal:</span>
-                  <span className="font-mono text-emerald-800">${recurringMonthlyTotal.toFixed(2)} / month</span>
+                  <span className="font-mono text-base font-bold text-black">${recurringMonthlyTotal.toFixed(2)} / month</span>
                 </div>
               </div>
             )}
@@ -439,95 +436,89 @@ export const BillingView = () => {
         </div>
       </div>
 
-      {/* ================= SECTION 2: 12-MONTH BILLING SCHEDULE & PAYMENT RECORDING (PDF B7 & QUICK TEST STEP 8) ================= */}
-      <div className="card bg-white border border-warm rounded-2xl p-5 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-warm pb-3">
-          <div>
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-charcoal" />
-              <span>Generated 12-Month Billing Schedule & Ledger</span>
-            </h3>
-            <p className="text-xs text-muted">
-              Live schedule of one-time and recurring payments with interactive payment confirmation (Quick Test Step 8).
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted font-medium">Customer: <strong>{customerName}</strong></span>
-          </div>
+      {/* ================= SECTION 2: 12-MONTH BILLING SCHEDULE & PAYMENT RECORDING ================= */}
+      <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="border-b border-[#e2e2e2] pb-4">
+          <h3 className="text-lg font-bold text-black flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-black" />
+            <span>Generated 12-Month Billing Schedule & Ledger</span>
+          </h3>
+          <p className="text-xs text-[#5e5e5e] mt-0.5">
+            Live schedule of one-time and recurring payments with interactive payment confirmation.
+          </p>
         </div>
 
         {/* Invoice Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left">
+        <div className="overflow-x-auto border border-[#e2e2e2] rounded-xl bg-white">
+          <table className="w-full text-sm text-left">
             <thead>
-              <tr className="border-b border-warm bg-cream text-muted font-semibold text-[11px]">
-                <th className="py-2.5 px-3">Invoice Code</th>
-                <th className="py-2.5 px-3">Billing Period</th>
-                <th className="py-2.5 px-3 text-right">One-Time Upfront</th>
-                <th className="py-2.5 px-3 text-right">Recurring SaaS</th>
-                <th className="py-2.5 px-3 text-right">Total Invoice</th>
-                <th className="py-2.5 px-3 text-center">Payment Status</th>
-                <th className="py-2.5 px-3 text-right">Action / Ledger</th>
+              <tr className="border-b border-[#e2e2e2] bg-[#efefef] text-black font-bold text-xs uppercase tracking-wider">
+                <th className="py-3 px-4">Invoice Code</th>
+                <th className="py-3 px-4">Billing Period</th>
+                <th className="py-3 px-4 text-right">One-Time Upfront</th>
+                <th className="py-3 px-4 text-right">Recurring SaaS</th>
+                <th className="py-3 px-4 text-right">Total Invoice</th>
+                <th className="py-3 px-4 text-center">Payment Status</th>
+                <th className="py-3 px-4 text-right">Action / Ledger</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-warm">
+            <tbody className="divide-y divide-[#e2e2e2]">
               {billingSchedule.map((inv) => {
                 const isPaid = inv.status === 'Paid';
 
                 return (
-                  <tr key={inv.id} className={inv.monthNumber === 1 ? 'bg-emerald-50/20 font-medium' : 'hover:bg-cream/40'}>
-                    <td className="py-3 px-3 font-mono font-bold text-charcoal">
+                  <tr key={inv.id} className={inv.monthNumber === 1 ? 'bg-[#fafafa] font-medium' : 'hover:bg-[#fafafa]'}>
+                    <td className="py-3.5 px-4 font-mono font-bold text-black">
                       {inv.invoiceCode}
                     </td>
 
-                    <td className="py-3 px-3">
-                      <div className="font-semibold text-charcoal">{inv.periodLabel}</div>
-                      <div className="text-[10px] text-muted font-mono">Cycle Month {inv.monthNumber} of 12</div>
+                    <td className="py-3.5 px-4">
+                      <div className="font-semibold text-black">{inv.periodLabel}</div>
+                      <div className="text-xs text-[#5e5e5e] font-mono">Cycle Month {inv.monthNumber} of 12</div>
                     </td>
 
-                    <td className="py-3 px-3 text-right font-mono">
+                    <td className="py-3.5 px-4 text-right font-mono text-black">
                       {inv.oneTimeAmount > 0 
                         ? `$${inv.oneTimeAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}` 
-                        : <span className="text-muted font-normal">$0.00</span>}
+                        : <span className="text-[#5e5e5e] font-normal">$0.00</span>}
                     </td>
 
-                    <td className="py-3 px-3 text-right font-mono font-semibold text-emerald-800">
+                    <td className="py-3.5 px-4 text-right font-mono font-semibold text-black">
                       ${inv.recurringAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
 
-                    <td className="py-3 px-3 text-right font-mono font-bold text-charcoal text-sm">
+                    <td className="py-3.5 px-4 text-right font-mono font-bold text-black text-base">
                       ${inv.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
 
-                    <td className="py-3 px-3 text-center">
+                    <td className="py-3.5 px-4 text-center">
                       {isPaid ? (
-                        <span className="badge badge-success text-[10px] font-bold py-0.5 px-2 flex items-center justify-center gap-1 mx-auto w-fit">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> PAID
+                        <span className="badge bg-black text-white text-xs font-bold py-1 px-3 flex items-center justify-center gap-1.5 mx-auto w-fit">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> PAID
                         </span>
                       ) : (
-                        <span className="badge badge-warning text-[10px] font-semibold py-0.5 px-2 flex items-center justify-center gap-1 mx-auto w-fit">
-                          <Clock className="w-3 h-3" /> {inv.status}
+                        <span className="badge bg-[#efefef] border border-black text-black text-xs font-semibold py-1 px-3 flex items-center justify-center gap-1.5 mx-auto w-fit">
+                          <Clock className="w-3.5 h-3.5" /> {inv.status}
                         </span>
                       )}
                       {inv.paidAt && (
-                        <span className="text-[9px] text-muted block font-mono mt-0.5">{inv.paidAt}</span>
+                        <span className="text-xs text-[#5e5e5e] block font-mono mt-1">{inv.paidAt}</span>
                       )}
                     </td>
 
-                    <td className="py-3 px-3 text-right">
+                    <td className="py-3.5 px-4 text-right">
                       {isPaid ? (
-                        <div className="text-[10px] font-mono text-muted">
-                          Ref: <span className="text-charcoal font-bold">{inv.txnId || 'TXN-PAID'}</span>
+                        <div className="text-xs font-mono text-[#5e5e5e]">
+                          Ref: <span className="text-black font-bold">{inv.txnId || 'TXN-PAID'}</span>
                         </div>
                       ) : (
                         <button
                           type="button"
                           onClick={() => handleRecordPayment(inv)}
-                          className="btn btn-xs btn-primary bg-emerald-800 hover:bg-emerald-900 border-emerald-800 text-[11px] py-1 px-2.5 flex items-center gap-1 ml-auto shadow-2xs cursor-pointer"
+                          className="btn btn-sm btn-primary bg-black hover:bg-[#282828] border-black text-white text-xs py-1.5 px-3 flex items-center gap-1.5 ml-auto shadow-xs cursor-pointer"
                           title="Record customer payment and mark invoice as Paid"
                         >
-                          <CreditCard className="w-3 h-3" />
+                          <CreditCard className="w-3.5 h-3.5 text-white" />
                           <span>Record Payment</span>
                         </button>
                       )}
@@ -540,108 +531,104 @@ export const BillingView = () => {
         </div>
       </div>
 
-      {/* ================= SECTION 3: MID-CYCLE PRORATION & AUTOMATIC CREDIT NOTE ENGINE (PDF B7) ================= */}
+      {/* ================= SECTION 3: MID-CYCLE PRORATION & AUTOMATIC CREDIT NOTE ENGINE ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Proration Calculator (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
-          <div className="card bg-white border border-warm rounded-2xl p-5 shadow-xs space-y-4">
-            <div className="border-b border-warm pb-3 flex items-center justify-between">
+          <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-6 shadow-xs space-y-5">
+            <div className="border-b border-[#e2e2e2] pb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-                  <Calculator className="w-4 h-4 text-emerald-600" />
+                <h3 className="text-lg font-bold text-black flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-black" />
                   <span>Mid-Cycle Subscription Proration & Credit Note Engine</span>
                 </h3>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-[#5e5e5e] mt-0.5">
                   Simulate mid-billing-cycle seat modifications or cancellations with exact pro-rata mathematics and automatic credit note generation.
                 </p>
               </div>
-              <span className="badge badge-neutral text-xs font-mono">30-Day Cycle</span>
+              <span className="badge bg-[#efefef] border border-black text-black text-xs font-mono font-bold">30-Day Cycle</span>
             </div>
 
             {/* Interactive Inputs */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-cream/50 p-4 rounded-xl border border-warm/60">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#fafafa] p-5 rounded-xl border border-[#e2e2e2]">
               <div>
-                <label className="label text-[11px] font-bold text-charcoal">Original Seats / Qty</label>
+                <label className="label text-xs font-bold text-black">Original Seats / Qty</label>
                 <input
                   type="number"
                   min="1"
                   value={prorationOldQty}
                   onChange={(e) => setProrationOldQty(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                  className="input text-xs font-bold text-center w-full bg-white"
+                  className="input text-sm font-bold text-center w-full bg-white border-[#e2e2e2]"
                 />
-                <span className="text-[10px] text-muted block mt-1">Starting active licenses</span>
+                <span className="text-xs text-[#5e5e5e] block mt-1">Starting active licenses</span>
               </div>
 
               <div>
-                <label className="label text-[11px] font-bold text-charcoal">New Modified Seats / Qty</label>
+                <label className="label text-xs font-bold text-black">New Modified Seats / Qty</label>
                 <input
                   type="number"
                   min="0"
                   value={prorationNewQty}
                   onChange={(e) => setProrationNewQty(Math.max(0, parseInt(e.target.value, 10) || 0))}
-                  className="input text-xs font-bold text-center w-full bg-white"
+                  className="input text-sm font-bold text-center w-full bg-white border-[#e2e2e2]"
                 />
-                <span className="text-[10px] text-muted block mt-1">Expanded or downsized licenses</span>
+                <span className="text-xs text-[#5e5e5e] block mt-1">Expanded or downsized licenses</span>
               </div>
 
               <div>
-                <label className="label text-[11px] font-bold text-charcoal">Days Elapsed (into Cycle)</label>
+                <label className="label text-xs font-bold text-black">Days Elapsed (into Cycle)</label>
                 <input
                   type="number"
                   min="1"
                   max="30"
                   value={daysElapsed}
                   onChange={(e) => setDaysElapsed(Math.min(30, Math.max(1, parseInt(e.target.value, 10) || 1)))}
-                  className="input text-xs font-bold text-center w-full bg-white"
+                  className="input text-sm font-bold text-center w-full bg-white border-[#e2e2e2]"
                 />
-                <span className="text-[10px] text-muted block mt-1">
-                  Remaining in cycle: <strong>{prorationCalculations.daysRemaining} days</strong>
+                <span className="text-xs text-[#5e5e5e] block mt-1">
+                  Remaining in cycle: <strong className="text-black">{prorationCalculations.daysRemaining} days</strong>
                 </span>
               </div>
             </div>
 
             {/* Proration Calculation Ledger */}
-            <div className="p-4 bg-charcoal-03 border border-warm rounded-xl text-xs space-y-2">
-              <div className="flex justify-between items-center text-muted">
+            <div className="p-5 bg-[#fafafa] border border-[#e2e2e2] rounded-xl text-sm space-y-2.5">
+              <div className="flex justify-between items-center text-[#5e5e5e]">
                 <span>Original Monthly Invoice:</span>
-                <strong className="font-mono text-charcoal">${prorationCalculations.oldTotalMonth.toFixed(2)}</strong>
+                <strong className="font-mono text-black">${prorationCalculations.oldTotalMonth.toFixed(2)}</strong>
               </div>
-              <div className="flex justify-between items-center text-muted">
+              <div className="flex justify-between items-center text-[#5e5e5e]">
                 <span>Used Consumption ({daysElapsed} Days at {prorationOldQty} seats):</span>
-                <strong className="font-mono text-charcoal">${prorationCalculations.usedCost.toFixed(2)}</strong>
+                <strong className="font-mono text-black">${prorationCalculations.usedCost.toFixed(2)}</strong>
               </div>
-              <div className="flex justify-between items-center text-muted">
+              <div className="flex justify-between items-center text-[#5e5e5e]">
                 <span>New Consumption ({prorationCalculations.daysRemaining} Days at {prorationNewQty} seats):</span>
-                <strong className="font-mono text-charcoal">${prorationCalculations.remainingCost.toFixed(2)}</strong>
+                <strong className="font-mono text-black">${prorationCalculations.remainingCost.toFixed(2)}</strong>
               </div>
               
-              <div className="pt-2 border-t border-warm flex justify-between items-center text-sm font-bold">
-                <span className="text-charcoal">Adjusted Month Final Cost:</span>
-                <span className="font-mono text-charcoal">${prorationCalculations.adjustedMonthCost.toFixed(2)}</span>
+              <div className="pt-3 border-t border-[#e2e2e2] flex justify-between items-center text-base font-bold">
+                <span className="text-black">Adjusted Month Final Cost:</span>
+                <span className="font-mono text-black">${prorationCalculations.adjustedMonthCost.toFixed(2)}</span>
               </div>
 
-              {/* Action Banner: Expansion Surcharge vs Contraction Refund */}
-              <div className={`mt-3 p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                prorationCalculations.isExpansion 
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-950' 
-                  : 'bg-amber-50 border-amber-300 text-amber-950'
-              }`}>
+              {/* Action Banner: Expansion Surcharge vs Contraction Refund (Monochromatic) */}
+              <div className="mt-4 p-4 rounded-xl border-2 border-black bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
                 <div>
-                  <div className="font-bold flex items-center gap-1.5">
+                  <div className="font-bold text-black flex items-center gap-2">
                     {prorationCalculations.isExpansion ? (
                       <>
-                        <TrendingUp className="w-4 h-4 text-emerald-700" />
+                        <TrendingUp className="w-4 h-4 text-black" />
                         <span>Mid-Cycle Expansion Surcharge: +${prorationCalculations.adjustmentDelta.toFixed(2)}</span>
                       </>
                     ) : (
                       <>
-                        <TrendingDown className="w-4 h-4 text-amber-700" />
+                        <TrendingDown className="w-4 h-4 text-black" />
                         <span>Mid-Cycle Contraction Refund Credit: -${Math.abs(prorationCalculations.adjustmentDelta).toFixed(2)}</span>
                       </>
                     )}
                   </div>
-                  <p className="text-[11px] opacity-80 mt-0.5">
+                  <p className="text-xs text-[#5e5e5e] mt-0.5">
                     {prorationCalculations.isExpansion 
                       ? 'Issue supplemental invoice for additional license capacity.'
                       : 'Trigger automatic credit note to refund unused subscription days.'}
@@ -652,18 +639,18 @@ export const BillingView = () => {
                   <button
                     type="button"
                     onClick={handleIssueProratedInvoice}
-                    className="btn btn-sm btn-primary bg-emerald-800 hover:bg-emerald-900 border-emerald-800 text-xs py-1.5 px-3 flex items-center gap-1 shrink-0 shadow-2xs cursor-pointer"
+                    className="btn btn-sm btn-primary bg-black hover:bg-[#282828] border-black text-white text-xs py-2 px-4 flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer"
                   >
-                    <FileText className="w-3.5 h-3.5" />
+                    <FileText className="w-4 h-4 text-white" />
                     <span>Issue Surcharge Invoice</span>
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handleIssueCreditNote}
-                    className="btn btn-sm btn-primary bg-amber-800 hover:bg-amber-900 border-amber-900 text-xs py-1.5 px-3 flex items-center gap-1 shrink-0 shadow-2xs cursor-pointer"
+                    className="btn btn-sm btn-primary bg-black hover:bg-[#282828] border-black text-white text-xs py-2 px-4 flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer"
                   >
-                    <Receipt className="w-3.5 h-3.5" />
+                    <Receipt className="w-4 h-4 text-white" />
                     <span>Trigger Credit Note</span>
                   </button>
                 )}
@@ -677,31 +664,31 @@ export const BillingView = () => {
         <div className="lg:col-span-4 space-y-4">
           
           {/* Credit Notes Generated */}
-          <div className="card bg-white border border-warm rounded-2xl p-4 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-warm pb-2">
-              <h4 className="text-xs font-bold text-charcoal uppercase tracking-wider flex items-center gap-1.5">
-                <Receipt className="w-3.5 h-3.5 text-amber-600" />
+          <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#e2e2e2] pb-3">
+              <h4 className="text-xs font-bold text-black uppercase tracking-wider flex items-center gap-2">
+                <Receipt className="w-4 h-4 text-black" />
                 <span>Issued Credit Notes ({creditNotes.length})</span>
               </h4>
-              <span className="badge badge-neutral text-[10px]">Reconciled</span>
+              <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs">Reconciled</span>
             </div>
 
             {creditNotes.length === 0 ? (
-              <p className="text-xs text-muted py-4 text-center">
+              <p className="text-sm text-[#5e5e5e] py-6 text-center">
                 No credit notes or refunds issued yet. Reduce seats in the proration tool to generate a refund credit.
               </p>
             ) : (
-              <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+              <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
                 {creditNotes.map(cn => (
-                  <div key={cn.id} className="p-2.5 bg-amber-50/50 border border-amber-200 rounded-xl space-y-1 text-xs">
+                  <div key={cn.id} className="p-3 bg-white border border-[#e2e2e2] rounded-xl space-y-1.5 text-sm shadow-2xs">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-charcoal font-mono">{cn.code}</span>
-                      <span className="font-bold text-amber-800 font-mono">
+                      <span className="font-bold text-black font-mono">{cn.code}</span>
+                      <span className="font-bold text-black font-mono">
                         -${cn.amount.toFixed(2)}
                       </span>
                     </div>
-                    <p className="text-[11px] text-muted leading-tight">{cn.reason}</p>
-                    <div className="text-[10px] text-muted flex items-center justify-between pt-1 border-t border-amber-200/50">
+                    <p className="text-xs text-[#5e5e5e] leading-tight">{cn.reason}</p>
+                    <div className="text-xs text-[#5e5e5e] flex items-center justify-between pt-1.5 border-t border-[#e2e2e2]">
                       <span>Customer: {cn.customerName}</span>
                       <span>{cn.issuedAt}</span>
                     </div>
@@ -712,37 +699,37 @@ export const BillingView = () => {
           </div>
 
           {/* Subscription Management Card */}
-          <div className="card bg-white border border-warm rounded-2xl p-4 shadow-xs space-y-3">
-            <h4 className="text-xs font-bold text-charcoal uppercase tracking-wider flex items-center gap-1.5 border-b border-warm pb-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-5 shadow-xs space-y-4">
+            <h4 className="text-xs font-bold text-black uppercase tracking-wider flex items-center gap-2 border-b border-[#e2e2e2] pb-3">
+              <ShieldCheck className="w-4 h-4 text-black" />
               <span>Subscription Lifecycle Policy</span>
             </h4>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-muted">Subscription Status:</span>
-                <span className="badge badge-success text-[10px] font-bold">Active (Auto-Renewing)</span>
+                <span className="text-[#5e5e5e]">Subscription Status:</span>
+                <span className="badge bg-black text-white text-xs font-bold">Active (Auto-Renewing)</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted">Proration Policy:</span>
-                <strong className="text-charcoal">Daily Exact Proration</strong>
+                <span className="text-[#5e5e5e]">Proration Policy:</span>
+                <strong className="text-black">Daily Exact Proration</strong>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted">Billing Cycle:</span>
-                <strong className="text-charcoal">1st of Each Month</strong>
+                <span className="text-[#5e5e5e]">Billing Cycle:</span>
+                <strong className="text-black">1st of Each Month</strong>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-warm flex flex-col gap-1.5">
+            <div className="pt-3 border-t border-[#e2e2e2] flex flex-col gap-2">
               <button
                 type="button"
                 onClick={() => {
                   setProrationNewQty(0);
                   showToast('Canceled subscription simulation loaded into proration engine.', 'info');
                 }}
-                className="btn btn-xs btn-outline text-red-700 border-red-200 hover:bg-red-50 text-[11px] py-1.5 w-full flex items-center justify-center gap-1 cursor-pointer"
+                className="btn btn-sm btn-outline text-black border-black hover:bg-[#efefef] text-xs py-2 w-full flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <XCircle className="w-3 h-3" />
+                <XCircle className="w-4 h-4 text-black" />
                 <span>Cancel Subscription (Full Refund)</span>
               </button>
             </div>

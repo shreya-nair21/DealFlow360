@@ -148,27 +148,24 @@ export const DealHealthView = () => {
     <div className="space-y-6">
       
       {/* ================= TOP HEADER BANNER ================= */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-cream border border-warm p-4 rounded-2xl shadow-2xs">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-charcoal flex items-center gap-2">
-              <Activity className="w-6 h-6 text-red-600" /> B9) Deal Health & Anomaly Command Center
-            </h2>
-            <span className="badge badge-danger text-[10px] font-bold">Live Risk Engine</span>
-          </div>
-          <p className="text-xs text-muted mt-0.5">
+          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
+            <Activity className="w-7 h-7 text-black" /> Deal Health & Anomaly Command Center
+          </h2>
+          <p className="text-sm text-[#5e5e5e] mt-1">
             Proactively identifies stalled deal momentum, discount spikes above sales rep benchmarks, and delivery promise slippage.
           </p>
         </div>
 
         {/* Stalled Threshold Selector */}
-        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-warm shadow-2xs">
-          <Sliders className="w-3.5 h-3.5 text-muted" />
-          <span className="text-xs font-semibold text-muted">Stalled Inactive Threshold:</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-[#e2e2e2] shadow-xs shrink-0">
+          <Sliders className="w-3.5 h-3.5 text-[#5e5e5e] shrink-0" />
+          <span className="text-xs font-semibold text-[#5e5e5e] whitespace-nowrap shrink-0">Stalled Inactive Threshold:</span>
           <select
             value={stalledDaysThreshold}
             onChange={(e) => setStalledDaysThreshold(parseInt(e.target.value, 10) || 5)}
-            className="select text-xs font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-charcoal"
+            className="select text-xs font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-black w-auto"
           >
             <option value="3">3+ Days Inactive</option>
             <option value="5">5+ Days Inactive (Standard)</option>
@@ -184,19 +181,19 @@ export const DealHealthView = () => {
         {/* Card 1: Stalled Deals */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'stalled' ? 'all' : 'stalled')}
-          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs ${
-            activeFilter === 'stalled' ? 'bg-amber-100/60 border-amber-400 ring-2 ring-amber-400/20' : 'bg-amber-50/40 border-amber-200 hover:bg-amber-50/80'
+          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+            activeFilter === 'stalled' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-950 uppercase tracking-wider">Stalled Deals</span>
-            <Clock className="w-4 h-4 text-amber-600" />
+            <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'stalled' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Stalled Deals</span>
+            <Clock className={`w-4 h-4 ${activeFilter === 'stalled' ? 'text-white' : 'text-black'}`} />
           </div>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-amber-950 font-mono">{stalledDeals.length}</span>
-            <span className="text-xs text-amber-800 font-medium">&gt;{stalledDaysThreshold} Days Inactive</span>
+            <span className={`text-3xl font-black font-mono ${activeFilter === 'stalled' ? 'text-white' : 'text-black'}`}>{stalledDeals.length}</span>
+            <span className={`text-xs font-medium ${activeFilter === 'stalled' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>&gt;{stalledDaysThreshold} Days Inactive</span>
           </div>
-          <p className="text-[11px] text-amber-800/80 mt-1">
+          <p className={`text-xs mt-1 ${activeFilter === 'stalled' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
             Quotes lacking sales activity or customer responses. Click to filter.
           </p>
         </div>
@@ -204,19 +201,19 @@ export const DealHealthView = () => {
         {/* Card 2: Discount Anomalies */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'anomaly' ? 'all' : 'anomaly')}
-          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs ${
-            activeFilter === 'anomaly' ? 'bg-red-100/60 border-red-400 ring-2 ring-red-400/20' : 'bg-red-50/40 border-red-200 hover:bg-red-50/80'
+          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+            activeFilter === 'anomaly' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-red-950 uppercase tracking-wider">Discount Anomalies</span>
-            <AlertOctagon className="w-4 h-4 text-red-600" />
+            <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'anomaly' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Discount Anomalies</span>
+            <AlertOctagon className={`w-4 h-4 ${activeFilter === 'anomaly' ? 'text-white' : 'text-black'}`} />
           </div>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-red-950 font-mono">{discountAnomalies.length}</span>
-            <span className="text-xs text-red-800 font-medium">Spikes &ge;15%</span>
+            <span className={`text-3xl font-black font-mono ${activeFilter === 'anomaly' ? 'text-white' : 'text-black'}`}>{discountAnomalies.length}</span>
+            <span className={`text-xs font-medium ${activeFilter === 'anomaly' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>Spikes &ge;15%</span>
           </div>
-          <p className="text-[11px] text-red-800/80 mt-1">
+          <p className={`text-xs mt-1 ${activeFilter === 'anomaly' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
             Quotes with discounts significantly above rep historical average (10%).
           </p>
         </div>
@@ -224,42 +221,42 @@ export const DealHealthView = () => {
         {/* Card 3: Delivery Promise Slippage */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'slippage' ? 'all' : 'slippage')}
-          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs ${
-            activeFilter === 'slippage' ? 'bg-blue-100/60 border-blue-400 ring-2 ring-blue-400/20' : 'bg-blue-50/40 border-blue-200 hover:bg-blue-50/80'
+          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+            activeFilter === 'slippage' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-blue-950 uppercase tracking-wider">Delivery Slippage Risk</span>
-            <Truck className="w-4 h-4 text-blue-600" />
+            <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'slippage' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Delivery Slippage Risk</span>
+            <Truck className={`w-4 h-4 ${activeFilter === 'slippage' ? 'text-white' : 'text-black'}`} />
           </div>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-black text-blue-950 font-mono">{deliverySlippages.length}</span>
-            <span className="text-xs text-blue-800 font-medium">Backorder / Delay</span>
+            <span className={`text-3xl font-black font-mono ${activeFilter === 'slippage' ? 'text-white' : 'text-black'}`}>{deliverySlippages.length}</span>
+            <span className={`text-xs font-medium ${activeFilter === 'slippage' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>Backorder / Delay</span>
           </div>
-          <p className="text-[11px] text-blue-800/80 mt-1">
+          <p className={`text-xs mt-1 ${activeFilter === 'slippage' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
             Orders facing depot capacity shortages or factory lead time delays.
           </p>
         </div>
 
       </div>
 
-      {/* ================= ACTIVE ANOMALY ALERTS FEED (PDF B9) ================= */}
-      <div className="card bg-white border border-warm rounded-2xl p-5 shadow-xs space-y-4">
+      {/* ================= ACTIVE ANOMALY ALERTS FEED ================= */}
+      <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-6 shadow-xs space-y-4">
         
         {/* Feed Header with Filter Chips */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-warm pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e2e2e2] pb-4">
           <div>
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Activity className="w-4 h-4 text-red-600" />
+            <h3 className="text-lg font-bold text-black flex items-center gap-2">
+              <Activity className="w-5 h-5 text-black" />
               <span>Active Deal Health & Governance Anomaly Feed</span>
             </h3>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-[#5e5e5e] mt-0.5">
               Click any alert to jump directly into the quotation or trigger automated nudges.
             </p>
           </div>
 
           <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-muted text-[11px] font-semibold mr-1">Filter:</span>
+            <span className="text-[#5e5e5e] text-xs font-semibold mr-1">Filter:</span>
             {[
               { id: 'all', label: `All (${allAlerts.length})` },
               { id: 'stalled', label: `Stalled (${stalledDeals.length})` },
@@ -270,10 +267,10 @@ export const DealHealthView = () => {
                 key={f.id}
                 type="button"
                 onClick={() => setActiveFilter(f.id)}
-                className={`px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer text-[11px] ${
+                className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer text-xs ${
                   activeFilter === f.id
-                    ? 'bg-charcoal text-white shadow-2xs'
-                    : 'bg-cream text-charcoal hover:bg-warm border border-warm/60'
+                    ? 'bg-black text-white shadow-2xs'
+                    : 'bg-[#efefef] text-black hover:bg-[#e2e2e2] border border-transparent'
                 }`}
               >
                 {f.label}
@@ -284,60 +281,49 @@ export const DealHealthView = () => {
 
         {/* Alerts List */}
         {displayedAlerts.length === 0 ? (
-          <div className="text-center py-12 text-muted space-y-2">
-            <CheckCircle2 className="w-10 h-10 mx-auto text-emerald-600" />
-            <h4 className="font-bold text-sm text-charcoal">All Deals Healthy & Active</h4>
+          <div className="text-center py-12 text-[#5e5e5e] space-y-2">
+            <CheckCircle2 className="w-10 h-10 mx-auto text-black" />
+            <h4 className="font-bold text-sm text-black">All Deals Healthy & Active</h4>
             <p className="text-xs">No deals currently flagged for stalled momentum or discount anomalies.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {displayedAlerts.map((item, idx) => {
-              const isAnomaly = item.type === 'anomaly';
-              const isStalled = item.type === 'stalled';
-              const isSlippage = item.type === 'slippage';
-
-              const badgeColor = 
-                isAnomaly ? 'bg-red-100 text-red-800 border-red-200' :
-                isStalled ? 'bg-amber-100 text-amber-900 border-amber-200' :
-                'bg-blue-100 text-blue-900 border-blue-200';
-
               return (
                 <div 
                   key={`${item.quote.id}-${idx}`}
-                  className="p-4 border border-warm rounded-xl bg-cream/40 hover:bg-white hover:border-interactive transition-all shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
+                  className="p-4 border border-[#e2e2e2] rounded-xl bg-white hover:border-black transition-all shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
                 >
-                  <div className="space-y-1 max-w-2xl">
+                  <div className="space-y-1.5 max-w-2xl">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border uppercase tracking-wider ${badgeColor}`}>
+                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-black bg-black text-white uppercase tracking-wider">
                         {item.type.toUpperCase()}
                       </span>
-                      <h4 className="font-bold text-sm text-charcoal">
-                        {item.title} • <span className="font-mono text-muted">{item.quote.code}</span>
+                      <h4 className="font-bold text-sm text-black">
+                        {item.title} • <span className="font-mono text-[#5e5e5e]">{item.quote.code}</span>
                       </h4>
-                      <span className="badge badge-neutral text-[10px]">
+                      <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-xs font-semibold px-2.5 py-0.5 rounded-full">
                         Customer: {item.customerName}
                       </span>
                     </div>
 
-                    <p className="text-xs text-muted leading-relaxed">
+                    <p className="text-xs text-[#5e5e5e] leading-relaxed">
                       {item.desc}
                     </p>
 
-                    <div className="flex items-center gap-3 text-[11px] text-muted pt-1">
-                      <span>Status: <strong className="text-charcoal">{item.quote.status}</strong></span>
+                    <div className="flex items-center gap-3 text-xs text-[#5e5e5e] pt-1">
+                      <span>Status: <strong className="text-black">{item.quote.status}</strong></span>
                       <span>•</span>
-                      <span>Handling Rep: <strong>{item.quote.repName || 'Rahul'}</strong></span>
-                      <span>•</span>
-                      <span className="font-mono text-charcoal font-semibold">{item.metric}</span>
+                      <span className="font-mono text-black font-semibold">{item.metric}</span>
                     </div>
                   </div>
 
-                  {/* ACTION BUTTONS (PDF Section B9): Open Quote directly + Trigger Nudge */}
+                  {/* ACTION BUTTONS: Open Quote directly + Trigger Nudge */}
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       type="button"
                       onClick={() => handleOpenQuote(item.quote.id)}
-                      className="btn btn-sm btn-outline text-xs py-1.5 px-3 flex items-center gap-1 text-charcoal hover:bg-cream border-warm"
+                      className="btn btn-sm text-xs py-1.5 px-3.5 flex items-center gap-1.5 text-black hover:bg-[#efefef] border border-[#e2e2e2] rounded-full cursor-pointer transition-all"
                       title="Open this quotation directly in the Quote Builder"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -347,7 +333,7 @@ export const DealHealthView = () => {
                     <button
                       type="button"
                       onClick={() => handleTriggerNudge(item)}
-                      className="btn btn-sm btn-primary bg-charcoal hover:bg-black text-white text-xs py-1.5 px-3 flex items-center gap-1 shadow-2xs"
+                      className="btn btn-sm bg-black hover:bg-[#282828] text-white text-xs py-1.5 px-3.5 flex items-center gap-1.5 shadow-2xs rounded-full cursor-pointer transition-all"
                       title="Send automated nudge email to rep and client"
                     >
                       <Send className="w-3.5 h-3.5" />
@@ -358,7 +344,7 @@ export const DealHealthView = () => {
                       <button
                         type="button"
                         onClick={() => handleEscalateToManager(item)}
-                        className="btn btn-sm btn-danger text-xs py-1.5 px-2.5 flex items-center gap-1"
+                        className="btn btn-sm bg-white hover:bg-[#efefef] text-black border-2 border-black text-xs py-1.5 px-3 flex items-center gap-1 rounded-full cursor-pointer transition-all"
                         title="Escalate critical anomaly to Sales Leadership"
                       >
                         <ShieldAlert className="w-3.5 h-3.5" />

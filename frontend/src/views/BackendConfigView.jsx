@@ -77,73 +77,89 @@ export const BackendConfigView = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-cream border border-warm p-4 rounded-xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-xl font-bold text-charcoal flex items-center gap-2">
-            <Sliders className="w-6 h-6 text-charcoal" /> Sales Backend (Configuration Area)
+          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
+            <Sliders className="w-7 h-7 text-black" /> Sales Backend & Engine Configuration
           </h2>
-          <p className="text-xs text-muted">Master engine rules: Product catalog, discount ceilings, approval chains, warehouses, subscriptions & reporting.</p>
+          <p className="text-sm text-[#5e5e5e] mt-1">Master engine rules: Product catalog, discount ceilings, approval chains, warehouses, subscriptions & reporting.</p>
         </div>
 
         <div className="flex items-center gap-2">
           {savedSuccessMsg && (
-            <span className="badge badge-success text-xs animate-fade-in">
-              <CheckCircle2 className="w-3.5 h-3.5" /> {savedSuccessMsg}
+            <span className="badge bg-black text-white text-xs px-3 py-1 font-bold rounded-full animate-fade-in flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-white" /> {savedSuccessMsg}
             </span>
           )}
-          <span className="badge badge-neutral text-xs px-3 py-1 font-bold">Admin Master View</span>
+          <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs px-3.5 py-1.5 font-bold rounded-full">Admin Master View</span>
         </div>
       </div>
 
       {/* Configuration Sub-Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-warm pb-2">
+      <div className="flex flex-wrap gap-2 border-b border-[#e2e2e2] pb-3">
         <button 
           onClick={() => setActiveTab('users')}
-          className={`btn btn-sm ${activeTab === 'users' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'users' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
           <Users className="w-3.5 h-3.5" /> Users & Roles
         </button>
         <button 
           onClick={() => setActiveTab('a1_auth')}
-          className={`btn btn-sm ${activeTab === 'a1_auth' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a1_auth' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <Key className="w-3.5 h-3.5" /> A1. Auth & Portal
+          <Key className="w-3.5 h-3.5" /> Auth & Portal
         </button>
         <button 
           onClick={() => setActiveTab('a2_products')}
-          className={`btn btn-sm ${activeTab === 'a2_products' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a2_products' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <Package className="w-3.5 h-3.5" /> A2. Products & Variants
+          <Package className="w-3.5 h-3.5" /> Products & Variants
         </button>
         <button 
           onClick={() => setActiveTab('a3_discounts')}
-          className={`btn btn-sm ${activeTab === 'a3_discounts' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a3_discounts' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <ShieldAlert className="w-3.5 h-3.5" /> A3. Discount & Approval Chain
+          <ShieldAlert className="w-3.5 h-3.5" /> Discount & Approvals
         </button>
         <button 
           onClick={() => setActiveTab('a4_warehouses')}
-          className={`btn btn-sm ${activeTab === 'a4_warehouses' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a4_warehouses' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <Warehouse className="w-3.5 h-3.5" /> A4. Warehouse & Split Weighting
+          <Warehouse className="w-3.5 h-3.5" /> Warehouses & Logistics
         </button>
         <button 
           onClick={() => setActiveTab('a5_subscriptions')}
-          className={`btn btn-sm ${activeTab === 'a5_subscriptions' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a5_subscriptions' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <RefreshCw className="w-3.5 h-3.5" /> A5. Subscription & Proration
+          <RefreshCw className="w-3.5 h-3.5" /> Subscriptions & Billing
         </button>
         <button 
           onClick={() => setActiveTab('a6_upsells')}
-          className={`btn btn-sm ${activeTab === 'a6_upsells' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a6_upsells' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <Sparkles className="w-3.5 h-3.5" /> A6. Upsell Rules
+          <Sparkles className="w-3.5 h-3.5" /> Upsell Engine
         </button>
         <button 
           onClick={() => setActiveTab('a7_reporting')}
-          className={`btn btn-sm ${activeTab === 'a7_reporting' ? 'btn-primary' : 'btn-ghost'}`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === 'a7_reporting' ? 'bg-black text-white shadow-2xs' : 'bg-[#efefef] text-black hover:bg-[#e2e2e2]'
+          }`}
         >
-          <BarChart3 className="w-3.5 h-3.5" /> A7. Reporting & Exports
+          <BarChart3 className="w-3.5 h-3.5" /> Reports & Exports
         </button>
       </div>
 
@@ -156,8 +172,8 @@ export const BackendConfigView = () => {
       {activeTab === 'a1_auth' && (
         <div className="card space-y-4">
           <div className="card-header border-b border-warm pb-3">
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Key className="w-4 h-4 text-charcoal" /> A1) Authentication & Portal Settings
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
+              <Key className="w-4 h-4 text-black" /> Authentication & Portal Settings
             </h3>
             <p className="text-xs text-muted">Manage internal user login modes and customer portal magic link security.</p>
           </div>
@@ -202,8 +218,8 @@ export const BackendConfigView = () => {
       {activeTab === 'a2_products' && (
         <div className="card space-y-4">
           <div className="card-header border-b border-warm pb-3">
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Package className="w-4 h-4 text-charcoal" /> A2) Product Catalog & Price Lists
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
+              <Package className="w-4 h-4 text-black" /> Product Catalog & Price Lists
             </h3>
             <p className="text-xs text-muted">Manage product attributes, variants, tax rates, and customer tier pricing.</p>
           </div>
@@ -248,8 +264,8 @@ export const BackendConfigView = () => {
         <div className="space-y-4">
           <div className="card space-y-4">
             <div className="card-header border-b border-warm pb-3">
-              <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-charcoal" /> A3) Category & Customer Tier Discount Ceilings
+              <h3 className="text-base font-bold text-black flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-black" /> Category & Customer Tier Discount Ceilings
               </h3>
               <p className="text-xs text-muted">Define maximum allowed discount percentages before routing for Manager or Finance approvals.</p>
             </div>
@@ -370,8 +386,8 @@ export const BackendConfigView = () => {
       {activeTab === 'a4_warehouses' && (
         <div className="card space-y-4">
           <div className="card-header border-b border-warm pb-3">
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Warehouse className="w-4 h-4 text-charcoal" /> A4) Warehouse & Fulfillment Split Rules
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
+              <Warehouse className="w-4 h-4 text-black" /> Warehouse & Fulfillment Split Rules
             </h3>
             <p className="text-xs text-muted">Configure shipping cost weighting and stock split priority across regional depots.</p>
           </div>
@@ -403,8 +419,8 @@ export const BackendConfigView = () => {
       {activeTab === 'a5_subscriptions' && (
         <div className="card space-y-4">
           <div className="card-header border-b border-warm pb-3">
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <RefreshCw className="w-4 h-4 text-charcoal" /> A5) Subscription Plans & Proration Rules
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
+              <RefreshCw className="w-4 h-4 text-black" /> Subscription Plans & Proration Rules
             </h3>
             <p className="text-xs text-muted">Configure monthly/annual SaaS recurring plans, mid-cycle seat additions, and credit refund policies.</p>
           </div>
@@ -435,8 +451,8 @@ export const BackendConfigView = () => {
       {activeTab === 'a6_upsells' && (
         <div className="card space-y-4">
           <div className="card-header border-b border-warm pb-3">
-            <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-charcoal" /> A6) Upsell & Cross-Sell Recommendation Setup
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-black" /> Upsell & Cross-Sell Recommendation Setup
             </h3>
             <p className="text-xs text-muted">Historical co-purchase pairings, promoted item ranking, and minimum margin thresholds.</p>
           </div>
@@ -471,8 +487,8 @@ export const BackendConfigView = () => {
         <div className="space-y-6">
           <div className="card space-y-4">
             <div className="card-header border-b border-warm pb-3">
-              <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-charcoal" /> A7) Reporting Controls & Filter Console
+              <h3 className="text-base font-bold text-black flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-black" /> Reporting Controls & Filter Console
               </h3>
               <p className="text-xs text-muted">Filter deals by period, sales rep, approval status, and category. Export PDF/XLS packages.</p>
             </div>

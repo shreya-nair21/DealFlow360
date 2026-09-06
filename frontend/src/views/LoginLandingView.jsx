@@ -70,17 +70,17 @@ export const LoginLandingView = () => {
               <button
                 type="button"
                 onClick={() => fillCredentials('client')}
-                className="btn btn-sm btn-outline text-xs rounded-full px-3.5 py-1.5 flex items-center gap-1.5 hover:bg-white"
+                className="btn btn-sm text-xs rounded-full px-4 py-1.5 flex items-center gap-1.5 bg-white border border-[#e2e2e2] text-black hover:bg-[#efefef] transition-all cursor-pointer shadow-2xs"
               >
-                <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <UserCheck className="w-3.5 h-3.5 text-black" />
                 <span>Client Portal Demo</span>
               </button>
               <button
                 type="button"
                 onClick={() => fillCredentials('admin')}
-                className="btn btn-sm btn-outline text-xs rounded-full px-3.5 py-1.5 flex items-center gap-1.5 hover:bg-white"
+                className="btn btn-sm text-xs rounded-full px-4 py-1.5 flex items-center gap-1.5 bg-white border border-[#e2e2e2] text-black hover:bg-[#efefef] transition-all cursor-pointer shadow-2xs"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-black" />
                 <span>Admin Workspace Demo</span>
               </button>
             </div>

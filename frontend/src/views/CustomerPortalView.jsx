@@ -20,7 +20,8 @@ import {
   Shield,
   TrendingUp,
   Gift,
-  ShoppingCart
+  ShoppingCart,
+  Percent
 } from 'lucide-react';
 
 export const CustomerPortalView = () => {
@@ -76,8 +77,8 @@ export const CustomerPortalView = () => {
   const tierInfo = (TIER_CONFIG && TIER_CONFIG[currentTier]) || {
     label: currentTier,
     discountCeiling: '10%',
-    badgeColor: 'bg-slate-200 text-slate-800 border-slate-400',
-    headerBadge: 'bg-slate-200 text-slate-900 border-slate-400',
+    badgeColor: 'bg-black text-white border-black',
+    headerBadge: 'bg-black text-white border-black',
     emoji: '🥈',
     nextTier: 'Gold',
     nextThreshold: 8,
@@ -231,368 +232,235 @@ export const CustomerPortalView = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#faf8f5] text-charcoal font-sans">
+    <div className="space-y-6 text-left">
       
-      {/* ================= PURPLE CLIENT SIDEBAR ================= */}
-      <aside className="w-64 bg-[#380e43] text-white flex flex-col justify-between p-5 shrink-0 select-none shadow-xl">
-        <div className="space-y-6">
-          {/* Brand Header */}
-          <div className="border-b border-purple-800/60 pb-5">
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              DealFlow360
-            </h1>
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-300 block mt-1">
-              CLIENT PORTAL
-            </span>
-          </div>
-
-          {/* Nav Section */}
-          <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300/60 block px-3">
-              CLIENT WORKSPACE
-            </span>
-            <button
-              onClick={() => setSelectedQuoteId(null)}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[#521860] text-white font-semibold text-xs shadow-inner transition-all hover:bg-[#5f1c6f]"
-            >
-              <Users className="w-4 h-4 text-purple-200" />
-              <span>My Quotations</span>
-            </button>
-            <button
-              onClick={() => setView('builder')}
-              className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl bg-purple-950/40 text-purple-200 hover:text-white hover:bg-[#521860] font-medium text-xs transition-all border border-purple-400/20"
-              title="Go to Quotations Tab"
-            >
-              <ShoppingCart className="w-4 h-4 text-amber-300" />
-              <span>Quotations Tab</span>
-            </button>
-          </div>
-
-          {/* Sidebar Customer Loyalty Box */}
-          <div className="p-3.5 bg-[#521860]/80 border border-purple-400/20 rounded-xl space-y-2.5 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-200">
-                Loyalty Tier
-              </span>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tierInfo.badgeColor} flex items-center gap-1 shadow-2xs`}>
-                <span>{tierInfo.emoji}</span>
-                <span>{currentTier}</span>
-              </span>
-            </div>
-            
-            <div className="text-[11px] text-purple-100 flex items-center justify-between">
-              <span className="text-purple-300">Orders Completed:</span>
-              <span className="font-mono font-bold text-white">{currentOrders} Orders</span>
-            </div>
-
-            {/* Progress to Next Tier */}
-            {tierInfo.nextTier ? (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-[10px] text-purple-300">
-                  <span>Next: {tierInfo.nextTier}</span>
-                  <span>{currentOrders} / {tierInfo.nextThreshold}</span>
-                </div>
-                <div className="h-1.5 w-full bg-purple-950/60 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(100, (currentOrders / tierInfo.nextThreshold) * 100)}%` }}
-                  />
-                </div>
-                <span className="text-[9px] text-purple-200/90 block mt-0.5">
-                  {ordersNeeded} more order{ordersNeeded > 1 ? 's' : ''} to {tierInfo.nextTier}!
-                </span>
-              </div>
-            ) : (
-              <div className="text-[10px] text-purple-200 font-semibold flex items-center gap-1">
-                <span>💎</span> Top Tier (Platinum) Achieved!
-              </div>
-            )}
-          </div>
+      {/* Top Banner */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
+        <div>
+          <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+            My Quotations & Loyalty Tier
+          </h2>
+          <p className="text-xs md:text-sm text-[#5e5e5e] mt-0.5">
+            Create custom pricing proposals, monitor loyalty discount ceilings, and submit quotes for instant approval.
+          </p>
         </div>
 
-        {/* User Pill at Bottom */}
-        <div className="pt-4 border-t border-purple-800/60 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-[#521860] border border-purple-400/30 text-white font-bold text-xs flex items-center justify-center shrink-0">
-            {getInitials(customerName || currentUser?.name)}
-          </div>
-          <div className="overflow-hidden">
-            <div className="text-xs font-bold text-white truncate">
-              {customerName || currentUser?.name || 'Google User'}
-            </div>
-            <div className="text-[10px] text-purple-300 truncate">
-              Customer Account
-            </div>
-          </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border ${tierInfo.headerBadge} flex items-center gap-1.5 shadow-2xs`}>
+            <span>{currentTier.toUpperCase()} TIER ({currentOrders} ORDERS)</span>
+          </span>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-black hover:bg-[#282828] text-white px-5 py-2.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4 text-white" />
+            <span>Create New Quotation</span>
+          </button>
         </div>
-      </aside>
-
-      {/* ================= MAIN CONTENT WRAPPER ================= */}
-      <div className="flex-1 flex flex-col min-w-0">
-        
-        {/* Top Header Bar */}
-        <header className="h-16 bg-white border-b border-[#eceae4] px-8 flex items-center justify-between shrink-0 shadow-2xs">
+      </div>
+          
+      {/* ================= CUSTOMER LOYALTY TIER STATUS & MILESTONES ================= */}
+      <div className="bg-white rounded-2xl p-6 border border-[#e2e2e2] shadow-xs space-y-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e2e2e2] pb-4">
           <div>
-            <h2 className="text-lg font-bold text-charcoal leading-tight">
-              Customer Portal
-            </h2>
-            <p className="text-xs text-muted">
-              Self-service quotation management and submission
+            <h3 className="text-xl font-bold text-black flex items-center gap-2">
+              <span>Customer Tier: {currentTier} Member ({currentOrders} Orders Completed)</span>
+            </h3>
+            <p className="text-xs text-[#5e5e5e] mt-0.5">
+              Your discount privileges scale with your completed orders: <strong>3 Orders (Bronze)</strong> • <strong>5 Orders (Silver)</strong> • <strong>8 Orders (Gold)</strong> • <strong>10+ Orders (Platinum)</strong>.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${tierInfo.headerBadge} flex items-center gap-1.5 shadow-2xs`}>
-              <span>{tierInfo.emoji}</span>
-              <span>{currentTier.toUpperCase()} TIER ({currentOrders} ORDERS)</span>
+          {/* Quick Tier Switcher / Order Simulator */}
+          <div className="flex items-center gap-2 p-2 bg-[#fafafa] border border-[#e2e2e2] rounded-full self-start md:self-auto shrink-0">
+            <span className="text-[11px] font-semibold text-[#5e5e5e] px-2 flex items-center gap-1">
+              <TrendingUp className="w-3.5 h-3.5 text-black" /> Orders:
             </span>
-            <span className="bg-[#edeaf4] text-[#4f3b78] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-              CUSTOMER ACCOUNT
-            </span>
-            <span className="text-xs font-semibold text-charcoal">
-              {customerName || currentUser?.name || 'Google User'}
-            </span>
-            <span className="text-muted text-xs">|</span>
             <button
-              onClick={() => setView('builder')}
-              className="btn btn-xs bg-[#521860] hover:bg-[#3d1248] text-white py-1 px-3 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-2xs cursor-pointer border border-purple-400/30"
-              title="Open Quotations Workspace to evaluate badges and configure pricing"
+              onClick={() => updateCustomerOrderCount(customerRecord.id, Math.max(0, currentOrders - 1))}
+              title="Decrease order count (-1 Order)"
+              className="w-7 h-7 rounded-full bg-white border border-[#e2e2e2] hover:bg-[#efefef] flex items-center justify-center font-bold text-xs text-black shadow-2xs cursor-pointer transition-all"
             >
-              <ShoppingCart className="w-3.5 h-3.5 text-amber-300" />
-              <span>Quotations Tab</span>
+              -
             </button>
-            <span className="text-muted text-xs">|</span>
+            <span className="font-mono font-bold text-xs px-2 min-w-[28px] text-center text-black">
+              {currentOrders}
+            </span>
             <button
-              onClick={logout}
-              className="text-xs text-charcoal/80 hover:text-danger font-medium transition-colors cursor-pointer"
+              onClick={() => updateCustomerOrderCount(customerRecord.id, currentOrders + 1)}
+              title="Increase order count (+1 Order)"
+              className="w-7 h-7 rounded-full bg-black text-white hover:bg-[#282828] flex items-center justify-center font-bold text-xs shadow-2xs cursor-pointer transition-all"
             >
-              Sign out
+              +
             </button>
+
+            <div className="h-4 w-[1px] bg-[#e2e2e2] mx-1 hidden sm:block" />
+
+            {/* Quick Jump Buttons for 3, 5, 8, 10 */}
+            <div className="hidden sm:flex items-center gap-1 text-[10px]">
+              {[
+                { count: 3, tier: 'Bronze' },
+                { count: 5, tier: 'Silver' },
+                { count: 8, tier: 'Gold' },
+                { count: 10, tier: 'Platinum' }
+              ].map(t => (
+                <button
+                  key={t.tier}
+                  onClick={() => updateCustomerOrderCount(customerRecord.id, t.count)}
+                  title={`Jump to ${t.count} orders (${t.tier} Tier)`}
+                  className={`px-2.5 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+                    currentOrders === t.count
+                      ? 'bg-black text-white shadow-2xs font-bold'
+                      : 'bg-white border border-[#e2e2e2] hover:bg-[#efefef] text-black'
+                  }`}
+                >
+                  {t.tier} ({t.count})
+                </button>
+              ))}
+            </div>
           </div>
-        </header>
+        </div>
 
-        {/* View Body */}
-        <main className="flex-1 p-8 overflow-y-auto max-w-6xl w-full mx-auto space-y-6">
-          
-          {/* ================= CUSTOMER LOYALTY TIER STATUS & MILESTONES ================= */}
-          <div className="bg-white rounded-2xl p-6 border border-[#eceae4] shadow-xs space-y-5">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#f2efe9] pb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-purple-100 text-purple-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-purple-200 flex items-center gap-1">
-                    <Crown className="w-3 h-3" /> LOYALTY & REWARDS PROGRAM
-                  </span>
-                  <span className="text-xs text-muted">Tier Status Engine</span>
-                </div>
-                <h3 className="text-xl font-bold text-charcoal flex items-center gap-2">
-                  <span>{tierInfo.emoji}</span>
-                  <span>Customer Tier: {currentTier} Member ({currentOrders} Orders Completed)</span>
-                </h3>
-                <p className="text-xs text-muted mt-0.5">
-                  Your discount privileges scale with your completed orders: <strong>3 Orders (Bronze)</strong> • <strong>5 Orders (Silver)</strong> • <strong>8 Orders (Gold)</strong> • <strong>10+ Orders (Platinum)</strong>.
-                </p>
-              </div>
+        {/* Milestone Cards Grid (4 Milestones) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {milestones.map((m) => {
+            const isReached = currentOrders >= m.count;
+            const isCurrent = currentTier === m.tier;
 
-              {/* Quick Tier Switcher / Order Simulator */}
-              <div className="flex items-center gap-2 p-2 bg-[#faf9f6] border border-[#eceae4] rounded-xl self-start md:self-auto shrink-0">
-                <span className="text-[11px] font-semibold text-muted px-1 flex items-center gap-1">
-                  <TrendingUp className="w-3.5 h-3.5 text-charcoal" /> Orders:
-                </span>
-                <button
-                  onClick={() => updateCustomerOrderCount(customerRecord.id, Math.max(0, currentOrders - 1))}
-                  title="Decrease order count (-1 Order)"
-                  className="w-7 h-7 rounded-lg bg-white border border-warm hover:bg-charcoal-03 flex items-center justify-center font-bold text-xs text-charcoal shadow-2xs cursor-pointer transition-all"
-                >
-                  -
-                </button>
-                <span className="font-mono font-bold text-xs px-2 min-w-[28px] text-center text-charcoal">
-                  {currentOrders}
-                </span>
-                <button
-                  onClick={() => updateCustomerOrderCount(customerRecord.id, currentOrders + 1)}
-                  title="Increase order count (+1 Order)"
-                  className="w-7 h-7 rounded-lg bg-charcoal text-white hover:bg-black flex items-center justify-center font-bold text-xs shadow-2xs cursor-pointer transition-all"
-                >
-                  +
-                </button>
-
-                <div className="h-4 w-[1px] bg-warm mx-1 hidden sm:block" />
-
-                {/* Quick Jump Buttons for 3, 5, 8, 10 */}
-                <div className="hidden sm:flex items-center gap-1 text-[10px]">
-                  {[
-                    { count: 3, tier: 'Bronze', emoji: '🥉' },
-                    { count: 5, tier: 'Silver', emoji: '🥈' },
-                    { count: 8, tier: 'Gold', emoji: '🥇' },
-                    { count: 10, tier: 'Platinum', emoji: '💎' }
-                  ].map(t => (
-                    <button
-                      key={t.tier}
-                      onClick={() => updateCustomerOrderCount(customerRecord.id, t.count)}
-                      title={`Jump to ${t.count} orders (${t.tier} Tier)`}
-                      className={`px-2 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                        currentOrders === t.count
-                          ? 'bg-charcoal text-white shadow-2xs font-bold'
-                          : 'bg-white border border-[#e5e0d8] hover:bg-charcoal-03 text-charcoal'
-                      }`}
-                    >
-                      {t.emoji} {t.count}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Milestone Cards Grid (4 Milestones) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-              {milestones.map((m) => {
-                const isReached = currentOrders >= m.count;
-                const isCurrent = currentTier === m.tier;
-
-                return (
-                  <div
-                    key={m.tier}
-                    onClick={() => updateCustomerOrderCount(customerRecord.id, m.count)}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer text-left relative overflow-hidden ${
-                      isCurrent
-                        ? 'border-charcoal bg-charcoal-03 ring-2 ring-charcoal/20 shadow-xs'
-                        : isReached
-                        ? 'border-emerald-200 bg-emerald-50/40 hover:border-emerald-300'
-                        : 'border-[#eceae4] bg-white hover:border-warm opacity-80'
-                    }`}
-                  >
-                    {isCurrent && (
-                      <span className="absolute top-2 right-2 text-[9px] font-bold bg-charcoal text-white px-2 py-0.5 rounded-full">
-                        CURRENT
-                      </span>
-                    )}
-
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">{m.emoji}</span>
-                      <div>
-                        <div className="font-bold text-xs text-charcoal flex items-center gap-1.5">
-                          {m.tier} Tier
-                        </div>
-                        <span className="text-[10px] text-muted font-mono">{m.count}+ Orders</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs pt-1 border-t border-[#f0ede6]">
-                      <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-muted">Discount Ceiling:</span>
-                        <strong className="text-charcoal font-mono">{m.ceiling}</strong>
-                      </div>
-                      <div className="text-[10px] text-muted line-clamp-1">
-                        {m.desc}
-                      </div>
-                      <div className="pt-1">
-                        {isReached ? (
-                          <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-1">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Unlocked
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-medium text-muted">
-                            {m.count - currentOrders} more order{m.count - currentOrders > 1 ? 's' : ''} needed
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Overall Progression Bar */}
-            <div className="p-3.5 bg-[#faf9f6] border border-[#eceae4] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-              <div className="w-full sm:w-2/3 space-y-1.5">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-bold text-charcoal flex items-center gap-1">
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-600" /> Overall Loyalty Progress
-                  </span>
-                  <span className="text-muted font-mono">
-                    {currentOrders} / 10 Orders to Maximum Tier (Platinum)
-                  </span>
-                </div>
-                <div className="h-2 w-full bg-[#e8e4dc] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-amber-500 via-emerald-500 to-purple-600 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(100, Math.round((currentOrders / 10) * 100))}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="w-full sm:w-auto text-right text-xs">
-                {tierInfo.nextTier ? (
-                  <span className="text-muted">
-                    Next Upgrade: <strong className="text-charcoal">{tierInfo.nextTier}</strong> in <strong>{ordersNeeded}</strong> more order{ordersNeeded > 1 ? 's' : ''}!
-                  </span>
-                ) : (
-                  <span className="text-purple-700 font-bold flex items-center gap-1">
-                    <Sparkles className="w-4 h-4 text-purple-600" /> Max Platinum Tier Unlocked!
+            return (
+              <div
+                key={m.tier}
+                onClick={() => updateCustomerOrderCount(customerRecord.id, m.count)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer text-left relative overflow-hidden ${
+                  isCurrent
+                    ? 'border-2 border-black bg-[#fafafa] shadow-xs'
+                    : isReached
+                    ? 'border-black bg-white hover:border-black'
+                    : 'border-[#e2e2e2] bg-[#fafafa] hover:border-[#afafaf] opacity-70'
+                }`}
+              >
+                {isCurrent && (
+                  <span className="absolute top-2 right-2 text-[9px] font-bold bg-black text-white px-2 py-0.5 rounded-full">
+                    CURRENT
                   </span>
                 )}
+
+                <div className="mb-2">
+                  <div className="font-bold text-sm text-black flex items-center gap-1.5">
+                    {m.tier} Tier
+                  </div>
+                  <span className="text-[10px] text-[#5e5e5e] font-mono">{m.count}+ Orders</span>
+                </div>
+
+                <div className="space-y-1.5 text-xs pt-1 border-t border-[#e2e2e2]">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-[#5e5e5e]">Discount Ceiling:</span>
+                    <strong className="text-black font-mono">{m.ceiling}</strong>
+                  </div>
+                  <div className="text-[10px] text-[#5e5e5e] line-clamp-1">
+                    {m.desc}
+                  </div>
+                  <div className="pt-1">
+                    {isReached ? (
+                      <span className="text-[10px] font-bold text-black flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-black" /> Unlocked
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-medium text-[#5e5e5e]">
+                        {m.count - currentOrders} more order{m.count - currentOrders > 1 ? 's' : ''} needed
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Overall Progression Bar */}
+        <div className="p-4 bg-[#fafafa] border border-[#e2e2e2] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="w-full sm:w-2/3 space-y-1.5">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="font-bold text-black flex items-center gap-1">
+                <TrendingUp className="w-3.5 h-3.5 text-black" /> Overall Loyalty Progress
+              </span>
+              <span className="text-[#5e5e5e] font-mono">
+                {currentOrders} / 10 Orders to Maximum Tier (Platinum)
+              </span>
+            </div>
+            <div className="h-2.5 w-full bg-[#e2e2e2] rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-black rounded-full transition-all duration-500"
+                style={{ width: `${Math.min(100, Math.round((currentOrders / 10) * 100))}%` }}
+              />
             </div>
           </div>
 
-          {/* Main Container Card */}
-          <div className="bg-white rounded-2xl p-6 border border-[#eceae4] shadow-xs space-y-5">
-            
-            {/* Card Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#f2efe9] pb-4">
-              <div>
-                <span className="inline-block bg-[#e6f4ea] text-[#137333] text-[10px] font-bold tracking-widest uppercase px-2.5 py-0.5 rounded-full mb-1.5">
-                  CLIENT SELF-SERVICE PORTAL
-                </span>
-                <h3 className="text-2xl font-bold text-charcoal">
-                  My Quotations
-                </h3>
-                <p className="text-xs text-muted mt-0.5">
-                  Create custom pricing proposals, save drafts, and submit for instant Admin review.
-                </p>
-              </div>
-
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-[#053125] hover:bg-[#094233] text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-sm transition-all shrink-0 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create New Quotation</span>
-              </button>
-            </div>
-
-            {/* Empty State */}
-            {userQuotes.length === 0 ? (
-              <div className="border-2 border-dashed border-[#dfdbd3] rounded-2xl py-16 px-6 flex flex-col items-center justify-center text-center my-4 bg-[#faf9f6]/50">
-                <div className="w-14 h-14 rounded-2xl bg-[#ebf5f1] text-[#2c7a68] flex items-center justify-center mb-3.5 shadow-2xs">
-                  <FilePlus2 className="w-7 h-7" />
-                </div>
-                <h4 className="text-base font-bold text-charcoal">
-                  No quotations found.
-                </h4>
-                <p className="text-xs text-muted max-w-md mt-1 mb-5 leading-relaxed">
-                  You haven't created any custom quotations yet. Click below to start building your first quotation.
-                </p>
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-[#387a6c] hover:bg-[#2c6559] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow-sm flex items-center gap-2 transition-all cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Create Your First Quotation</span>
-                </button>
-              </div>
+          <div className="w-full sm:w-auto text-right text-xs">
+            {tierInfo.nextTier ? (
+              <span className="text-[#5e5e5e]">
+                Next Upgrade: <strong className="text-black">{tierInfo.nextTier}</strong> in <strong>{ordersNeeded}</strong> more order{ordersNeeded > 1 ? 's' : ''}!
+              </span>
             ) : (
-              /* Quotation List & Details */
-              <div className="space-y-6">
-                
-                {/* Quotation Cards */}
+              <span className="text-black font-bold flex items-center gap-1">
+                <Sparkles className="w-4 h-4 text-black" /> Max Platinum Tier Unlocked!
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Container Card */}
+      <div className="bg-white rounded-2xl p-6 border border-[#e2e2e2] shadow-xs space-y-5">
+        
+        {/* Quotations List Header */}
+        <div className="flex items-center justify-between border-b border-[#e2e2e2] pb-4">
+          <div>
+            <h3 className="text-xl font-bold text-black flex items-center gap-2">
+              <ShoppingCart className="w-5 h-5 text-black" /> Quotations & Proposals
+            </h3>
+            <p className="text-xs text-[#5e5e5e] mt-0.5">
+              Select a quotation below to inspect breakdown details and negotiate terms.
+            </p>
+          </div>
+          <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs font-semibold px-3 py-1 rounded-full">
+            {userQuotes.length} Proposal{userQuotes.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        {/* Empty State */}
+        {userQuotes.length === 0 ? (
+          <div className="border-2 border-dashed border-[#e2e2e2] rounded-2xl py-16 px-6 flex flex-col items-center justify-center text-center my-4 bg-[#fafafa]">
+            <div className="w-14 h-14 rounded-full bg-[#efefef] text-black flex items-center justify-center mb-3.5 shadow-2xs border border-[#e2e2e2]">
+              <FilePlus2 className="w-7 h-7 text-black" />
+            </div>
+            <h4 className="text-base font-bold text-black">
+              No quotations found.
+            </h4>
+            <p className="text-xs text-[#5e5e5e] max-w-md mt-1 mb-5 leading-relaxed">
+              You haven't created any custom quotations yet. Click below to start building your first quotation.
+            </p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-black hover:bg-[#282828] text-white px-6 py-2.5 rounded-full text-xs font-semibold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4 text-white" />
+              <span>Create Your First Quotation</span>
+            </button>
+          </div>
+        ) : (
+          /* Quotation List & Details */
+          <div className="space-y-6">
+            
+            {/* Quotation Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {userQuotes.map(quote => {
                     const isSelected = activeQuote?.id === quote.id;
                     const statusColors = {
-                      'Approved': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                      'Pending Approval': 'bg-amber-50 text-amber-700 border-amber-200',
-                      'Confirmed': 'bg-blue-50 text-blue-700 border-blue-200',
-                      'Draft': 'bg-gray-100 text-gray-700 border-gray-200'
+                      'Approved': 'bg-black text-white border-black',
+                      'Pending Approval': 'bg-[#efefef] text-black border-black',
+                      'Confirmed': 'bg-black text-white border-black',
+                      'Draft': 'bg-[#efefef] text-[#5e5e5e] border-[#e2e2e2]'
                     };
                     const statusClass = statusColors[quote.status] || statusColors['Draft'];
                     const displayTotal = quote.grandTotal || (quote.lines || []).reduce((s, l) => s + ((l.quantity || 1) * (l.unitPrice || 0)), 0);
@@ -601,28 +469,28 @@ export const CustomerPortalView = () => {
                       <div
                         key={quote.id}
                         onClick={() => setSelectedQuoteId(quote.id)}
-                        className={`p-4 rounded-xl border transition-all cursor-pointer text-left ${
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer text-left ${
                           isSelected 
-                            ? 'border-charcoal bg-charcoal-03 ring-1 ring-charcoal/20 shadow-xs' 
-                            : 'border-[#eceae4] bg-white hover:border-warm'
+                            ? 'border-2 border-black bg-[#fafafa] shadow-xs' 
+                            : 'border-[#e2e2e2] bg-white hover:border-black'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-mono font-bold text-xs text-charcoal">{quote.code}</span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusClass}`}>
+                          <span className="font-mono font-bold text-xs text-black">{quote.code}</span>
+                          <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${statusClass}`}>
                             {quote.status}
                           </span>
                         </div>
-                        <div className="font-bold text-xs text-charcoal truncate mb-1">
+                        <div className="font-bold text-xs text-black truncate mb-1">
                           {quote.title || 'Enterprise Proposal'}
                         </div>
-                        <div className="text-base font-bold text-charcoal">
+                        <div className="text-base font-bold text-black">
                           ${Number(displayTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-[11px] text-muted mt-1 flex items-center justify-between">
+                        <div className="text-[11px] text-[#5e5e5e] mt-1 flex items-center justify-between">
                           <span>{(quote.lines || []).length} Item{(quote.lines || []).length !== 1 ? 's' : ''}</span>
-                          <span className="text-[10px] flex items-center gap-1 font-mono">
-                            <Clock className="w-3 h-3" /> {quote.validUntil || 'Active'}
+                          <span className="text-[10px] flex items-center gap-1 font-mono text-[#5e5e5e]">
+                            <Clock className="w-3 h-3 text-[#5e5e5e]" /> {quote.validUntil || 'Active'}
                           </span>
                         </div>
                       </div>
@@ -632,17 +500,17 @@ export const CustomerPortalView = () => {
 
                 {/* Active Quote Inspector */}
                 {activeQuote && (
-                  <div className="border border-[#eceae4] rounded-2xl p-6 bg-[#faf9f6]/40 space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#eceae4] pb-4">
+                  <div className="border border-[#e2e2e2] rounded-2xl p-6 bg-white space-y-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e2e2e2] pb-4">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-sm font-bold text-charcoal">{activeQuote.code}</span>
-                          <span className="badge badge-warning text-xs font-semibold">{activeQuote.status}</span>
+                          <span className="font-mono text-sm font-bold text-black">{activeQuote.code}</span>
+                          <span className="bg-black text-white text-xs font-bold px-3 py-0.5 rounded-full">{activeQuote.status}</span>
                         </div>
-                        <h4 className="text-base font-bold text-charcoal mt-1">
+                        <h4 className="text-base font-bold text-black mt-1">
                           {activeQuote.title || 'Custom Enterprise Quotation'}
                         </h4>
-                        <p className="text-xs text-muted">
+                        <p className="text-xs text-[#5e5e5e]">
                           Prepared for <strong>{activeQuote.companyName || activeQuote.customerName}</strong> • Valid until {activeQuote.validUntil || '19-09-2026'}
                         </p>
                       </div>
@@ -685,43 +553,43 @@ export const CustomerPortalView = () => {
                               showToast('🎉 Quotation confirmed! Order passed governance and moved directly to fulfillment.', 'success');
                             }
                           }}
-                          className="btn btn-primary btn-md flex items-center gap-2 shadow-sm bg-emerald-800 hover:bg-emerald-900 border-emerald-800 text-white cursor-pointer"
+                          className="btn btn-primary btn-md flex items-center gap-2 shadow-xs bg-black hover:bg-[#282828] border-black text-white rounded-full cursor-pointer px-5 py-2 font-semibold"
                         >
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Confirm & Accept Quotation
+                          <CheckCircle2 className="w-4 h-4 text-white" /> Confirm & Accept Quotation
                         </button>
                       )}
                     </div>
 
                     {/* Scope / Description */}
                     {activeQuote.scope && (
-                      <div className="p-3 bg-white border border-[#eceae4] rounded-xl text-xs space-y-1">
-                        <span className="font-bold text-muted text-[10px] uppercase tracking-wider block">Scope Description:</span>
-                        <p className="text-charcoal">{activeQuote.scope}</p>
+                      <div className="p-3.5 bg-[#fafafa] border border-[#e2e2e2] rounded-xl text-xs space-y-1">
+                        <span className="font-bold text-[#5e5e5e] text-[10px] uppercase tracking-wider block">Scope Description:</span>
+                        <p className="text-black">{activeQuote.scope}</p>
                       </div>
                     )}
 
                     {/* Line Items Table */}
-                    <div className="overflow-x-auto bg-white rounded-xl border border-[#eceae4]">
+                    <div className="overflow-x-auto bg-white rounded-2xl border border-[#e2e2e2]">
                       <table className="w-full text-xs text-left">
                         <thead>
-                          <tr className="border-b border-[#eceae4] bg-cream text-muted text-[11px]">
-                            <th className="py-2.5 px-4 font-medium">Product / Service</th>
-                            <th className="py-2.5 px-4 font-medium">Description</th>
-                            <th className="py-2.5 px-4 font-medium text-center">Qty</th>
-                            <th className="py-2.5 px-4 font-medium text-right">Unit Price</th>
-                            <th className="py-2.5 px-4 font-medium text-right">Total</th>
+                          <tr className="border-b border-[#e2e2e2] bg-[#fafafa] text-black text-[11px] font-semibold">
+                            <th className="py-2.5 px-4 font-semibold">Product / Service</th>
+                            <th className="py-2.5 px-4 font-semibold">Description</th>
+                            <th className="py-2.5 px-4 font-semibold text-center">Qty</th>
+                            <th className="py-2.5 px-4 font-semibold text-right">Unit Price</th>
+                            <th className="py-2.5 px-4 font-semibold text-right">Total</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-[#eceae4]">
+                        <tbody className="divide-y divide-[#e2e2e2]">
                           {(activeQuote.lines || []).map((line, idx) => {
                             const lineTotal = line.total || ((line.quantity || 1) * (line.unitPrice || 0));
                             return (
-                              <tr key={idx} className="hover:bg-charcoal-03/40">
-                                <td className="py-3 px-4 font-semibold text-charcoal">{line.name || line.productId}</td>
-                                <td className="py-3 px-4 text-muted">{line.description || '—'}</td>
-                                <td className="py-3 px-4 text-center font-mono">{line.quantity || 1}</td>
-                                <td className="py-3 px-4 text-right font-mono">${Number(line.unitPrice || 0).toFixed(2)}</td>
-                                <td className="py-3 px-4 text-right font-mono font-bold text-charcoal">${Number(lineTotal).toFixed(2)}</td>
+                              <tr key={idx} className="hover:bg-[#fafafa]">
+                                <td className="py-3 px-4 font-semibold text-black">{line.name || line.productId}</td>
+                                <td className="py-3 px-4 text-[#5e5e5e]">{line.description || '—'}</td>
+                                <td className="py-3 px-4 text-center font-mono text-black">{line.quantity || 1}</td>
+                                <td className="py-3 px-4 text-right font-mono text-black">${Number(line.unitPrice || 0).toFixed(2)}</td>
+                                <td className="py-3 px-4 text-right font-mono font-bold text-black">${Number(lineTotal).toFixed(2)}</td>
                               </tr>
                             );
                           })}
@@ -729,63 +597,63 @@ export const CustomerPortalView = () => {
                       </table>
 
                       {/* Financial Calculation Bar in quote viewer */}
-                      <div className="p-4 border-t border-[#eceae4] bg-[#f4f7f6] flex flex-col sm:flex-row items-end justify-between gap-4 text-xs">
-                        <div className="text-muted">
+                      <div className="p-4 border-t border-[#e2e2e2] bg-[#fafafa] flex flex-col sm:flex-row items-end justify-between gap-4 text-xs">
+                        <div className="text-[#5e5e5e]">
                           {activeQuote.discountPct > 0 && (
-                            <span>Applied Discount: <strong className="text-emerald-700 font-mono">{activeQuote.discountPct}%</strong></span>
+                            <span>Applied Discount: <strong className="text-black font-mono font-bold">{activeQuote.discountPct}%</strong></span>
                           )}
                         </div>
                         <div className="flex items-center gap-6 text-right">
                           <div>
-                            <span className="text-[10px] text-muted block uppercase">Subtotal</span>
-                            <span className="font-mono font-bold text-charcoal">${Number(activeQuote.subtotal || (activeQuote.lines || []).reduce((s,l)=>s+((l.quantity || 1)*(l.unitPrice || 0)),0)).toFixed(2)}</span>
+                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Subtotal</span>
+                            <span className="font-mono font-bold text-black">${Number(activeQuote.subtotal || (activeQuote.lines || []).reduce((s,l)=>s+((l.quantity || 1)*(l.unitPrice || 0)),0)).toFixed(2)}</span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-muted block uppercase">Tax (10%)</span>
-                            <span className="font-mono font-bold text-charcoal">${Number(activeQuote.tax || (activeQuote.subtotal || 0) * 0.1).toFixed(2)}</span>
+                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Tax (10%)</span>
+                            <span className="font-mono font-bold text-black">${Number(activeQuote.tax || (activeQuote.subtotal || 0) * 0.1).toFixed(2)}</span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-muted block uppercase">Grand Total</span>
-                            <span className="font-mono font-bold text-base text-[#1a705e]">${Number(activeQuote.grandTotal || (activeQuote.subtotal || 0) * 1.1).toFixed(2)}</span>
+                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Grand Total</span>
+                            <span className="font-mono font-bold text-base text-black">${Number(activeQuote.grandTotal || (activeQuote.subtotal || 0) * 1.1).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Negotiation Thread */}
-                    <div className="bg-white border border-[#eceae4] p-4 rounded-xl space-y-3">
-                      <h5 className="text-xs font-bold text-charcoal flex items-center gap-2 border-b border-[#eceae4] pb-2">
-                        <MessageSquare className="w-3.5 h-3.5 text-charcoal" /> Remarks & Proposal Negotiation
+                    <div className="bg-white border border-[#e2e2e2] p-5 rounded-2xl space-y-4">
+                      <h5 className="text-xs font-bold text-black flex items-center gap-2 border-b border-[#e2e2e2] pb-2">
+                        <MessageSquare className="w-3.5 h-3.5 text-black" /> Remarks & Proposal Negotiation
                       </h5>
 
                       <div className="space-y-2 max-h-[160px] overflow-y-auto">
                         {(activeQuote.comments || []).length === 0 ? (
-                          <p className="text-xs text-muted italic">No remarks recorded yet.</p>
+                          <p className="text-xs text-[#5e5e5e] italic">No remarks recorded yet.</p>
                         ) : (
                           activeQuote.comments.map(c => (
-                            <div key={c.id} className="p-2 rounded-lg border border-[#eceae4] bg-cream text-xs space-y-1">
+                            <div key={c.id} className="p-2.5 rounded-xl border border-[#e2e2e2] bg-[#fafafa] text-xs space-y-1">
                               <div className="flex items-center justify-between font-semibold">
-                                <span className={c.role === 'customer' ? 'text-charcoal' : 'text-purple-700'}>
+                                <span className="text-black font-bold">
                                   {c.sender} {c.role !== 'customer' && '(Admin)'}
                                 </span>
-                                <span className="text-[10px] text-muted font-mono">{new Date(c.timestamp).toLocaleTimeString()}</span>
+                                <span className="text-[10px] text-[#5e5e5e] font-mono">{new Date(c.timestamp).toLocaleTimeString()}</span>
                               </div>
-                              <p className="text-charcoal text-xs">{c.text}</p>
+                              <p className="text-black text-xs">{c.text}</p>
                             </div>
                           ))
                         )}
                       </div>
 
                       {/* Counter Discount Proposal & Change Request Form (PDF B8 & Quick Test Step 7) */}
-                      <div className="pt-3 border-t border-[#eceae4] space-y-3">
-                        <div className="p-3 bg-cream/70 border border-warm rounded-xl space-y-2">
+                      <div className="pt-3 border-t border-[#e2e2e2] space-y-3">
+                        <div className="p-4 bg-[#fafafa] border border-[#e2e2e2] rounded-2xl space-y-2">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <label className="text-xs font-bold text-charcoal flex items-center gap-1.5">
-                              <Percent className="w-3.5 h-3.5 text-amber-700" />
+                            <label className="text-xs font-bold text-black flex items-center gap-1.5">
+                              <Percent className="w-3.5 h-3.5 text-black" />
                               <span>Propose Counter Discount Percentage:</span>
                             </label>
-                            <span className="text-[11px] text-muted">
-                              Current: <strong>{activeQuote.discountPct || 0}%</strong> • {currentTier} Max: <strong>{data.discountRules?.globalTierCeilings?.[currentTier] || 10}%</strong>
+                            <span className="text-[11px] text-[#5e5e5e]">
+                              Current: <strong className="text-black">{activeQuote.discountPct || 0}%</strong> • {currentTier} Max: <strong className="text-black">{data.discountRules?.globalTierCeilings?.[currentTier] || 10}%</strong>
                             </span>
                           </div>
 
@@ -797,10 +665,10 @@ export const CustomerPortalView = () => {
                                 max="100" 
                                 value={counterDiscount}
                                 onChange={(e) => setCounterDiscount(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
-                                className="input text-xs font-bold font-mono pl-7 w-full bg-white"
+                                className="input text-xs font-bold font-mono pl-7 w-full bg-white border border-[#e2e2e2] rounded-full text-black"
                                 placeholder="Target discount %"
                               />
-                              <span className="absolute left-2.5 top-2 text-xs text-muted font-bold">%</span>
+                              <span className="absolute left-3 top-2 text-xs text-[#5e5e5e] font-bold">%</span>
                             </div>
 
                             <button 
@@ -837,10 +705,10 @@ export const CustomerPortalView = () => {
                                 setCommentText('');
                                 showToast(`📩 Counter-discount proposal (${proposed}%) submitted! Quotation automatically returned to Manager Approval Queue.`, 'info');
                               }}
-                              className="btn btn-sm btn-primary bg-charcoal text-white hover:bg-black flex items-center gap-1.5 text-xs px-3 shadow-2xs cursor-pointer shrink-0"
+                              className="bg-black hover:bg-[#282828] text-white flex items-center gap-1.5 text-xs px-4 py-2 rounded-full font-semibold shadow-xs cursor-pointer shrink-0 transition-all"
                               title="Submit counter-discount proposal and automatically re-route quotation back to approval queue"
                             >
-                              <Send className="w-3.5 h-3.5" />
+                              <Send className="w-3.5 h-3.5 text-white" />
                               <span>Submit Request</span>
                             </button>
                           </div>
@@ -852,7 +720,7 @@ export const CustomerPortalView = () => {
                             type="text" 
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
-                            className="input text-xs flex-1 bg-white" 
+                            className="input text-xs flex-1 bg-white border border-[#e2e2e2] rounded-full px-4 text-black" 
                             placeholder="Optional line-level question or negotiation remarks for the Sales Manager..."
                           />
                           <button 
@@ -872,9 +740,9 @@ export const CustomerPortalView = () => {
                               setCommentText('');
                               showToast('Remarks posted to Sales Rep.', 'info');
                             }}
-                            className="btn btn-sm btn-outline text-xs px-2.5 flex items-center gap-1 text-charcoal hover:bg-cream"
+                            className="bg-[#efefef] hover:bg-[#e2e2e2] text-black border border-[#e2e2e2] rounded-full text-xs px-4 py-2 font-semibold flex items-center gap-1 cursor-pointer transition-all"
                           >
-                            <MessageSquare className="w-3.5 h-3.5" />
+                            <MessageSquare className="w-3.5 h-3.5 text-black" />
                             <span>Post Note</span>
                           </button>
                         </div>
@@ -888,27 +756,25 @@ export const CustomerPortalView = () => {
             )}
 
           </div>
-        </main>
-      </div>
 
-      {/* ================= MODAL: CREATE NEW QUOTATION (EXACT SCREENSHOT IMPLEMENTATION) ================= */}
+      {/* ================= MODAL: CREATE NEW QUOTATION ================= */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-2xs p-4 overflow-y-auto">
-          <div className="bg-white border border-[#eceae4] rounded-2xl max-w-3xl w-full p-7 shadow-2xl space-y-5 text-left my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white border border-[#e2e2e2] rounded-2xl max-w-3xl w-full p-7 shadow-2xl space-y-5 text-left my-8">
             
             {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-[#eceae4] pb-3">
+            <div className="flex items-start justify-between border-b border-[#e2e2e2] pb-3">
               <div>
-                <h3 className="text-2xl font-bold text-charcoal">
+                <h3 className="text-2xl font-bold text-black">
                   Create New Quotation
                 </h3>
-                <p className="text-xs text-muted mt-0.5">
+                <p className="text-xs text-[#5e5e5e] mt-0.5">
                   Add line items, quantities, and pricing to generate a proposal.
                 </p>
               </div>
               <button 
                 onClick={() => setShowCreateModal(false)}
-                className="text-muted hover:text-charcoal p-1 rounded-lg transition-colors cursor-pointer"
+                className="text-[#5e5e5e] hover:text-black p-1 rounded-full hover:bg-[#efefef] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -917,7 +783,7 @@ export const CustomerPortalView = () => {
             {/* Header Fields Grid: Customer Name & Company Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-charcoal mb-1.5">
+                <label className="block text-xs font-semibold text-black mb-1.5">
                   Customer Name
                 </label>
                 <input
@@ -925,20 +791,20 @@ export const CustomerPortalView = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Google User"
-                  className="w-full border border-[#d8d5cf] rounded-xl px-3.5 py-2 text-xs text-charcoal bg-white focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
+                  className="w-full border border-[#e2e2e2] rounded-xl px-3.5 py-2 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-charcoal mb-1.5">
-                  Company Name <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-black mb-1.5">
+                  Company Name <span className="text-black font-bold">*</span>
                 </label>
                 <input
                   type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="Google User Corp"
-                  className="w-full border border-[#d8d5cf] rounded-xl px-3.5 py-2 text-xs text-charcoal bg-white focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
+                  className="w-full border border-[#e2e2e2] rounded-xl px-3.5 py-2 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   required
                 />
               </div>
@@ -947,21 +813,21 @@ export const CustomerPortalView = () => {
             {/* Quotation Title & Valid Until Date */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-charcoal mb-1.5">
-                  Quotation Title <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-black mb-1.5">
+                  Quotation Title <span className="text-black font-bold">*</span>
                 </label>
                 <input
                   type="text"
                   value={quotationTitle}
                   onChange={(e) => setQuotationTitle(e.target.value)}
                   placeholder="Custom Enterprise Quotation"
-                  className="w-full border border-[#d8d5cf] rounded-xl px-3.5 py-2 text-xs text-charcoal bg-white focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
+                  className="w-full border border-[#e2e2e2] rounded-xl px-3.5 py-2 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-charcoal mb-1.5">
+                <label className="block text-xs font-semibold text-black mb-1.5">
                   Valid Until Date
                 </label>
                 <div className="relative">
@@ -969,7 +835,7 @@ export const CustomerPortalView = () => {
                     type="date"
                     value={validUntilDate}
                     onChange={(e) => setValidUntilDate(e.target.value)}
-                    className="w-full border border-[#d8d5cf] rounded-xl px-3.5 py-2 text-xs text-charcoal bg-white focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
+                    className="w-full border border-[#e2e2e2] rounded-xl px-3.5 py-2 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   />
                 </div>
               </div>
@@ -977,7 +843,7 @@ export const CustomerPortalView = () => {
 
             {/* Proposal Description / Scope */}
             <div>
-              <label className="block text-xs font-semibold text-charcoal mb-1.5">
+              <label className="block text-xs font-semibold text-black mb-1.5">
                 Proposal Description / Scope
               </label>
               <textarea
@@ -985,20 +851,20 @@ export const CustomerPortalView = () => {
                 onChange={(e) => setProposalScope(e.target.value)}
                 placeholder="Request for enterprise software licenses and implementation services."
                 rows={2}
-                className="w-full border border-[#d8d5cf] rounded-xl px-3.5 py-2 text-xs font-mono text-charcoal bg-white focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal resize-y"
+                className="w-full border border-[#e2e2e2] rounded-xl px-3.5 py-2 text-xs font-mono text-black bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black resize-y"
               />
             </div>
 
             {/* Line Items Section */}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-charcoal">
+                <span className="text-xs font-bold text-black">
                   Product / Service Line Items
                 </span>
                 <button
                   type="button"
                   onClick={handleAddLineItem}
-                  className="border border-[#265e52] text-[#265e52] hover:bg-[#265e52]/10 rounded-lg px-3 py-1.5 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                  className="border border-black text-black hover:bg-[#efefef] rounded-full px-3.5 py-1.5 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Line Item</span>
@@ -1015,7 +881,7 @@ export const CustomerPortalView = () => {
                   return (
                     <div 
                       key={item.id}
-                      className="p-2.5 bg-white border border-[#eceae4] rounded-xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs shadow-2xs"
+                      className="p-2.5 bg-white border border-[#e2e2e2] rounded-xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs shadow-2xs"
                     >
                       {/* Item Name */}
                       <input
@@ -1023,7 +889,7 @@ export const CustomerPortalView = () => {
                         value={item.name}
                         onChange={(e) => handleUpdateLineItem(item.id, 'name', e.target.value)}
                         placeholder="Item name (e.g. Software License)"
-                        className="flex-1 border border-[#d8d5cf] rounded-lg px-3 py-1.5 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-charcoal"
+                        className="flex-1 border border-[#e2e2e2] rounded-lg px-3 py-1.5 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                       />
 
                       {/* Description */}
@@ -1032,7 +898,7 @@ export const CustomerPortalView = () => {
                         value={item.description}
                         onChange={(e) => handleUpdateLineItem(item.id, 'description', e.target.value)}
                         placeholder="Description (e.g. Annual subscription)"
-                        className="flex-1 border border-[#d8d5cf] rounded-lg px-3 py-1.5 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-charcoal"
+                        className="flex-1 border border-[#e2e2e2] rounded-lg px-3 py-1.5 text-xs text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                       />
 
                       {/* Quantity */}
@@ -1042,7 +908,7 @@ export const CustomerPortalView = () => {
                         value={item.quantity}
                         onChange={(e) => handleUpdateLineItem(item.id, 'quantity', e.target.value)}
                         placeholder="Qty"
-                        className="w-16 border border-[#d8d5cf] rounded-lg px-2 py-1.5 text-xs text-center font-mono bg-white focus:outline-none focus:ring-1 focus:ring-charcoal"
+                        className="w-16 border border-[#e2e2e2] rounded-lg px-2 py-1.5 text-xs text-center font-mono text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                       />
 
                       {/* Unit Price */}
@@ -1052,11 +918,11 @@ export const CustomerPortalView = () => {
                         value={item.unitPrice}
                         onChange={(e) => handleUpdateLineItem(item.id, 'unitPrice', e.target.value)}
                         placeholder="Price"
-                        className="w-24 border border-[#d8d5cf] rounded-lg px-2.5 py-1.5 text-xs font-mono bg-white focus:outline-none focus:ring-1 focus:ring-charcoal"
+                        className="w-24 border border-[#e2e2e2] rounded-lg px-2.5 py-1.5 text-xs font-mono text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                       />
 
                       {/* Row Total Display */}
-                      <div className="w-24 text-right font-bold text-xs text-charcoal font-mono px-1">
+                      <div className="w-24 text-right font-bold text-xs text-black font-mono px-1">
                         ${rowTotal.toFixed(2)}
                       </div>
 
@@ -1064,7 +930,7 @@ export const CustomerPortalView = () => {
                       <button
                         type="button"
                         onClick={() => handleRemoveLineItem(item.id)}
-                        className="text-red-500 hover:text-red-700 p-1.5 rounded-lg hover:bg-red-50 transition-colors cursor-pointer shrink-0"
+                        className="text-[#5e5e5e] hover:text-black p-1.5 rounded-lg hover:bg-[#efefef] transition-colors cursor-pointer shrink-0"
                         title="Delete line item"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1075,15 +941,14 @@ export const CustomerPortalView = () => {
               </div>
             </div>
 
-            {/* Bottom Financial Bar (Matches screenshot with Discount, Subtotal, Tax 10%, Grand Total) */}
-            <div className="bg-[#f4f7f6] rounded-xl p-4 border border-[#e2ece8] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Bottom Financial Bar */}
+            <div className="bg-[#fafafa] rounded-2xl p-4 border border-[#e2e2e2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <label className="block text-xs font-medium text-muted">
+                  <label className="block text-xs font-medium text-[#5e5e5e]">
                     Discount (%)
                   </label>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tierInfo.badgeColor} flex items-center gap-1`}>
-                    <span>{tierInfo.emoji}</span>
                     <span>{currentTier} Max: {tierInfo.discountCeiling}</span>
                   </span>
                 </div>
@@ -1094,10 +959,10 @@ export const CustomerPortalView = () => {
                   value={discountPercent}
                   onChange={(e) => setDiscountPercent(e.target.value)}
                   placeholder="0"
-                  className="w-28 border border-[#d8d5cf] rounded-lg px-3 py-1.5 text-xs font-mono bg-white focus:outline-none focus:ring-1 focus:ring-charcoal"
+                  className="w-28 border border-[#e2e2e2] rounded-lg px-3 py-1.5 text-xs font-mono text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                 />
                 {parseFloat(discountPercent) > parseInt(tierInfo.discountCeiling) && (
-                  <span className="text-[10px] text-amber-700 block mt-1 font-medium">
+                  <span className="text-[10px] text-[#5e5e5e] block mt-1 font-medium">
                     ⚠️ Above your {currentTier} ceiling ({tierInfo.discountCeiling}). Will route for Sales Manager review.
                   </span>
                 )}
@@ -1105,22 +970,22 @@ export const CustomerPortalView = () => {
 
               <div className="flex items-center gap-6 self-end sm:self-center">
                 <div className="text-right">
-                  <span className="block text-[11px] text-muted">Subtotal</span>
-                  <span className="font-mono font-bold text-xs sm:text-sm text-charcoal">
+                  <span className="block text-[11px] text-[#5e5e5e]">Subtotal</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-black">
                     ${subtotal.toFixed(2)}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="block text-[11px] text-muted">Tax (10%)</span>
-                  <span className="font-mono font-bold text-xs sm:text-sm text-charcoal">
+                  <span className="block text-[11px] text-[#5e5e5e]">Tax (10%)</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-black">
                     ${taxAmount.toFixed(2)}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="block text-[11px] text-muted">Grand Total</span>
-                  <span className="font-mono font-bold text-base sm:text-lg text-[#236b5d]">
+                  <span className="block text-[11px] text-[#5e5e5e]">Grand Total</span>
+                  <span className="font-mono font-bold text-base sm:text-lg text-black">
                     ${grandTotal.toFixed(2)}
                   </span>
                 </div>
@@ -1128,25 +993,25 @@ export const CustomerPortalView = () => {
             </div>
 
             {/* Modal Actions Footer */}
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-[#eceae4]">
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-[#e2e2e2]">
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-xs font-medium text-muted hover:text-charcoal transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-[#5e5e5e] hover:text-black transition-colors cursor-pointer rounded-full"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => handleSaveQuotation('Draft')}
-                className="border border-[#265e52] text-[#265e52] hover:bg-[#265e52]/10 rounded-lg px-4 py-2 text-xs font-semibold transition-all cursor-pointer"
+                className="border border-black text-black hover:bg-[#efefef] rounded-full px-5 py-2 text-xs font-semibold transition-all cursor-pointer"
               >
                 Save as Draft
               </button>
               <button
                 type="button"
                 onClick={() => handleSaveQuotation('Pending Approval')}
-                className="bg-[#063327] hover:bg-[#0b4737] text-white rounded-lg px-5 py-2 text-xs font-semibold shadow-sm transition-all cursor-pointer"
+                className="bg-black hover:bg-[#282828] text-white rounded-full px-6 py-2 text-xs font-semibold shadow-xs transition-all cursor-pointer"
               >
                 Submit for Approval
               </button>

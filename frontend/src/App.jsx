@@ -23,17 +23,7 @@ export const AppContent = () => {
     return <LoginLandingView />;
   }
 
-  // Client / Customer Workspace: opens directly to Customer Portal by default
-  if (currentUser.role === 'customer' && currentView !== 'builder' && currentView !== 'fulfillment') {
-    return (
-      <div className="min-h-screen bg-white">
-        <ToastContainer />
-        <CustomerPortalView />
-      </div>
-    );
-  }
-
-  // Internal Staff / Admin Workspace: Full Operations Dashboard
+  const userRole = currentUser?.role || 'admin';
   const navItems = [
     { id: 'pipeline', roles: ['sales_rep', 'sales_manager', 'admin'] },
     { id: 'builder', roles: ['sales_rep', 'sales_manager', 'admin', 'customer'] },
@@ -46,9 +36,9 @@ export const AppContent = () => {
     { id: 'config', roles: ['admin', 'sales_manager'] }
   ];
 
-  const userRole = currentUser?.role || 'admin';
   const allowedViews = navItems.filter(item => item.roles.includes(userRole)).map(i => i.id);
-  const activeView = allowedViews.includes(currentView) ? currentView : (allowedViews[0] || 'builder');
+  const defaultViewForRole = userRole === 'customer' ? 'portal' : 'pipeline';
+  const activeView = allowedViews.includes(currentView) ? currentView : (allowedViews.includes(defaultViewForRole) ? defaultViewForRole : allowedViews[0]);
 
   const renderView = () => {
     switch (activeView) {
