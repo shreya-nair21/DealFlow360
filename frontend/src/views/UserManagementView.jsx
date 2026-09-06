@@ -120,41 +120,41 @@ export const UserManagementView = () => {
             <span className="bg-black text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
               Admin Governance
             </span>
-            <span className="text-sm text-muted font-medium">Role-Based Access Control (RBAC)</span>
+            <span className="text-xs text-muted font-medium">Role-Based Access Control (RBAC)</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-black flex items-center gap-3">
-            <Users className="w-7 h-7 text-black" /> User Management & Role Assignment
+          <h2 className="text-xl font-bold text-black flex items-center gap-2.5">
+            <Users className="w-5 h-5 text-black" /> User Management & Role Assignment
           </h2>
-          <p className="text-sm md:text-base text-[#5e5e5e] mt-2 max-w-2xl leading-relaxed">
+          <p className="text-xs text-[#5e5e5e] mt-1 max-w-2xl leading-relaxed">
             Admin console to audit all active platform users. Assign or reassign roles in real time to grant or restrict access to sales operations workspaces and client portals.
           </p>
         </div>
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-black hover:bg-[#282828] text-white text-sm md:text-base font-semibold flex items-center gap-2 shrink-0 shadow-xs cursor-pointer px-6 py-3 rounded-full transition-all"
+          className="bg-black hover:bg-[#282828] text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer px-4 py-2 rounded-full transition-all"
         >
-          <UserPlus className="w-5 h-5 text-white" /> Provision New User
+          <UserPlus className="w-4 h-4 text-white" /> Provision New User
         </button>
       </div>
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
-          <span className="text-[#5e5e5e] text-xs md:text-sm font-semibold uppercase tracking-wider block">Total Accounts</span>
-          <span className="text-3xl font-bold text-black mt-1 block">{registeredUsers?.length || 0}</span>
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
+          <span className="text-[#5e5e5e] text-xs font-bold uppercase tracking-wider block">Total Accounts</span>
+          <span className="text-2xl font-bold text-black mt-1 block">{registeredUsers?.length || 0}</span>
         </div>
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
-          <span className="text-[#5e5e5e] text-xs md:text-sm font-semibold uppercase tracking-wider block">Enterprise Staff</span>
-          <span className="text-3xl font-bold text-black mt-1 block">{staffCount}</span>
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
+          <span className="text-[#5e5e5e] text-xs font-bold uppercase tracking-wider block">Enterprise Staff</span>
+          <span className="text-2xl font-bold text-black mt-1 block">{staffCount}</span>
         </div>
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
-          <span className="text-[#5e5e5e] text-xs md:text-sm font-semibold uppercase tracking-wider block">Client Users</span>
-          <span className="text-3xl font-bold text-black mt-1 block">{clientCount}</span>
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
+          <span className="text-[#5e5e5e] text-xs font-bold uppercase tracking-wider block">Client Users</span>
+          <span className="text-2xl font-bold text-black mt-1 block">{clientCount}</span>
         </div>
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
-          <span className="text-[#5e5e5e] text-xs md:text-sm font-semibold uppercase tracking-wider block">Access Tiers</span>
-          <span className="text-3xl font-bold text-black mt-1 block">5 Roles</span>
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-2xs">
+          <span className="text-[#5e5e5e] text-xs font-bold uppercase tracking-wider block">Access Tiers</span>
+          <span className="text-2xl font-bold text-black mt-1 block">5 Roles</span>
         </div>
       </div>
 

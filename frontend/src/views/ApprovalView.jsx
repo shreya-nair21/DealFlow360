@@ -125,15 +125,15 @@ export const ApprovalView = () => {
       {/* ================= TOP HEADER BANNER ================= */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <ShieldCheck className="w-7 h-7 text-black" /> Multi-Tier Discount Governance & Approval Queue
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <ShieldCheck className="w-6 h-6 text-black" /> Multi-Tier Discount Governance & Approval Queue
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">
+          <p className="text-xs text-[#5e5e5e] mt-0.5">
             Evaluates blended discount risk scores across product lines and auto-routes for Sales Manager or dual Sales Manager + Finance approval.
           </p>
         </div>
 
-        <span className="badge bg-[#efefef] border border-black text-black text-sm px-4 py-1.5 font-mono font-bold shadow-xs">
+        <span className="badge bg-[#efefef] border border-black text-black text-xs px-3.5 py-1 font-mono font-bold shadow-xs">
           {reviewQuotes.length} Deals Pending In Review Queue
         </span>
       </div>
@@ -212,8 +212,8 @@ export const ApprovalView = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#e2e2e2] pb-5">
                   <div>
                     <div className="flex items-center gap-3">
-                      <h3 className="text-xl font-bold text-black">{displayQuote.code} Commercial Risk Review</h3>
-                      <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-sm font-bold">{displayQuote.status}</span>
+                      <h3 className="text-lg font-bold text-black">{displayQuote.code} Commercial Risk Review</h3>
+                      <span className="badge bg-[#efefef] border border-[#e2e2e2] text-black text-xs font-bold">{displayQuote.status}</span>
                     </div>
                     <p className="text-sm text-[#5e5e5e] mt-1">
                       Client: <strong className="text-black">{customer?.name || displayQuote.customerName || 'Corporate Client'}</strong> ({customerTier} Tier)
@@ -222,7 +222,7 @@ export const ApprovalView = () => {
 
                   {/* Calculated Blended Risk Score Pill - Monochromatic */}
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-mono font-bold px-4 py-2 rounded-full border border-black bg-black text-white flex items-center gap-2 shadow-xs">
+                    <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-full border border-black bg-black text-white flex items-center gap-2 shadow-xs">
                       <ShieldAlert className="w-4 h-4 text-white" />
                       <span>Blended Risk Score: <strong>{riskAnalysis.score}</strong></span>
                     </span>
@@ -314,32 +314,32 @@ export const ApprovalView = () => {
                     Product Line Ceiling & Overage Audit:
                   </span>
                   <div className="overflow-x-auto border border-[#e2e2e2] rounded-xl bg-white">
-                    <table className="w-full text-sm text-left">
+                    <table className="w-full text-xs text-left">
                       <thead>
                         <tr className="border-b border-[#e2e2e2] bg-[#efefef] text-black font-bold text-xs uppercase tracking-wider">
-                          <th className="py-3 px-4">Product Name</th>
-                          <th className="py-3 px-4">Category</th>
-                          <th className="py-3 px-4 text-right">Discount Given</th>
-                          <th className="py-3 px-4 text-right">Allowed Ceiling</th>
-                          <th className="py-3 px-4 text-right">Overage</th>
-                          <th className="py-3 px-4 text-center">Status</th>
+                          <th className="py-2.5 px-3.5">Product Name</th>
+                          <th className="py-2.5 px-3.5">Category</th>
+                          <th className="py-2.5 px-3.5 text-right">Discount Given</th>
+                          <th className="py-2.5 px-3.5 text-right">Allowed Ceiling</th>
+                          <th className="py-2.5 px-3.5 text-right">Overage</th>
+                          <th className="py-2.5 px-3.5 text-center">Status</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#e2e2e2]">
                         {riskAnalysis.lineAudits.map((item, idx) => (
                           <tr key={idx} className="hover:bg-[#f9f9f9]">
-                            <td className="py-3 px-4 font-semibold text-black">{item.name}</td>
-                            <td className="py-3 px-4 font-mono text-[#5e5e5e]">{item.category}</td>
-                            <td className="py-3 px-4 text-right font-mono font-bold text-black">
+                            <td className="py-2 px-3.5 font-semibold text-black">{item.name}</td>
+                            <td className="py-2 px-3.5 font-mono text-[#5e5e5e]">{item.category}</td>
+                            <td className="py-2 px-3.5 text-right font-mono font-bold text-black">
                               {item.discountGiven}%
                             </td>
-                            <td className="py-3 px-4 text-right font-mono text-[#5e5e5e]">
+                            <td className="py-2 px-3.5 text-right font-mono text-[#5e5e5e]">
                               {item.allowedCeiling}%
                             </td>
-                            <td className="py-3 px-4 text-right font-mono font-bold text-black">
+                            <td className="py-2 px-3.5 text-right font-mono font-bold text-black">
                               {item.overage > 0 ? `+${item.overage}%` : '0%'}
                             </td>
-                            <td className="py-3 px-4 text-center">
+                            <td className="py-2 px-3.5 text-center">
                               {item.isExceeded ? (
                                 <span className="badge bg-black text-white text-xs font-bold">Over Limit</span>
                               ) : (

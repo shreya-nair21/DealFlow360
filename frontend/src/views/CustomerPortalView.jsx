@@ -33,6 +33,7 @@ export const CustomerPortalView = () => {
     addApprovalLog, 
     showToast, 
     setData,
+    addQuotation,
     calculateCustomerTier,
     TIER_CONFIG,
     updateCustomerOrderCount,
@@ -98,10 +99,12 @@ export const CustomerPortalView = () => {
 
   // Find user's quotations
   const userQuotes = (data.quotations || []).filter(q => 
+    q.id === selectedQuoteId ||
+    q.customerId === customerRecord?.id ||
     q.customerId === currentUser?.id || 
     q.customerId === 'c-client' || 
     (currentUser?.email && q.customerEmail === currentUser.email) ||
-    q.customerName === currentUser?.name
+    (currentUser?.name && q.customerName === currentUser.name)
   );
 
   const activeQuote = (data.quotations || []).find(q => q.id === (selectedQuoteId || userQuotes[0]?.id));
@@ -148,32 +151,35 @@ export const CustomerPortalView = () => {
 
   // Submit/Save Quotation
   const handleSaveQuotation = (status = 'Pending Approval') => {
-    if (!companyName.trim()) {
+    if (!companyName || !companyName.trim()) {
       showToast('Please enter a Company Name.', 'warning');
       return;
     }
-    if (!quotationTitle.trim()) {
+    if (!quotationTitle || !quotationTitle.trim()) {
       showToast('Please enter a Quotation Title.', 'warning');
       return;
     }
-    if (lineItems.length === 0) {
+    if (!lineItems || lineItems.length === 0) {
       showToast('Please add at least one line item.', 'warning');
       return;
     }
 
     const newQuoteId = 'q-' + Date.now();
-    const newCode = `QT-2026-${String(data.quotations.length + 1).padStart(3, '0')}`;
+    const newCode = `QT-2026-${String(((data?.quotations || []).length) + 1).padStart(3, '0')}`;
+    const custName = customerName?.trim() || currentUser?.name || customerRecord?.name || 'Google User';
+    const custEmail = currentUser?.email || customerRecord?.email || 'client@dealflow.com';
+    const custId = customerRecord?.id || currentUser?.id || 'c-client';
     
     const newQuote = {
       id: newQuoteId,
       code: newCode,
-      title: quotationTitle,
-      companyName: companyName,
-      customerName: customerName || currentUser?.name || 'Google User',
-      customerEmail: currentUser?.email || 'client@dealflow.com',
-      customerId: currentUser?.id || 'c-client',
-      validUntil: validUntilDate,
-      scope: proposalScope,
+      title: quotationTitle.trim(),
+      companyName: companyName.trim(),
+      customerName: custName,
+      customerEmail: custEmail,
+      customerId: custId,
+      validUntil: validUntilDate || '2026-09-19',
+      scope: proposalScope || '',
       status: status,
       discountPct: discountVal,
       subtotal: subtotal,
@@ -181,8 +187,8 @@ export const CustomerPortalView = () => {
       grandTotal: grandTotal,
       lines: lineItems.map((item, idx) => ({
         id: `ql-${Date.now()}-${idx}`,
-        name: item.name || 'Custom Product / Service',
-        description: item.description || '',
+        name: item.name?.trim() || 'Custom Product / Service',
+        description: item.description?.trim() || '',
         quantity: parseFloat(item.quantity) || 1,
         unitPrice: parseFloat(item.unitPrice) || 0,
         total: (parseFloat(item.quantity) || 1) * (parseFloat(item.unitPrice) || 0),
@@ -190,27 +196,40 @@ export const CustomerPortalView = () => {
       })),
       comments: proposalScope ? [{
         id: 'cm-' + Date.now(),
-        sender: customerName || currentUser?.name || 'Google User',
+        sender: custName,
         role: 'customer',
         text: `Proposal Scope: ${proposalScope}`,
         timestamp: new Date().toISOString()
       }] : []
     };
 
-    setData(prev => ({
-      ...prev,
-      quotations: [newQuote, ...prev.quotations],
-      activeQuoteId: newQuoteId
-    }));
+    if (typeof addQuotation === 'function') {
+      addQuotation(newQuote);
+    } else if (typeof setData === 'function') {
+      setData(prev => ({
+        ...prev,
+        quotations: [newQuote, ...(prev.quotations || [])],
+        activeQuoteId: newQuoteId
+      }));
+    }
 
-    if (status === 'Pending Approval') {
+    if (status === 'Pending Approval' && typeof addApprovalLog === 'function') {
       addApprovalLog({
         quoteId: newQuoteId,
-        user: customerName || currentUser?.name || 'Google User',
+        user: custName,
         role: 'customer',
         action: 'Submitted Quotation for Approval',
         blendedRiskScore: discountVal > 10 ? 14.5 : 4.2,
         reason: `New client proposal: "${quotationTitle}" from ${companyName}. Total: $${grandTotal.toFixed(2)}`
+      });
+    } else if (status === 'Draft' && typeof addApprovalLog === 'function') {
+      addApprovalLog({
+        quoteId: newQuoteId,
+        user: custName,
+        role: 'customer',
+        action: 'Created Draft Quotation',
+        blendedRiskScore: 0,
+        reason: `New draft client proposal: "${quotationTitle}" from ${companyName}. Total: $${grandTotal.toFixed(2)}`
       });
     }
 
@@ -237,10 +256,10 @@ export const CustomerPortalView = () => {
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
             My Quotations & Loyalty Tier
           </h2>
-          <p className="text-xs md:text-sm text-[#5e5e5e] mt-0.5">
+          <p className="text-xs text-[#5e5e5e] mt-0.5">
             Create custom pricing proposals, monitor loyalty discount ceilings, and submit quotes for instant approval.
           </p>
         </div>
@@ -263,7 +282,7 @@ export const CustomerPortalView = () => {
       <div className="bg-white rounded-2xl p-6 border border-[#e2e2e2] shadow-xs space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e2e2e2] pb-4">
           <div>
-            <h3 className="text-xl font-bold text-black flex items-center gap-2">
+            <h3 className="text-base font-bold text-black flex items-center gap-2">
               <span>Customer Tier: {currentTier} Member ({currentOrders} Orders Completed)</span>
             </h3>
             <p className="text-xs text-[#5e5e5e] mt-0.5">
@@ -273,7 +292,7 @@ export const CustomerPortalView = () => {
 
           {/* Quick Tier Switcher / Order Simulator */}
           <div className="flex items-center gap-2 p-2 bg-[#fafafa] border border-[#e2e2e2] rounded-full self-start md:self-auto shrink-0">
-            <span className="text-[11px] font-semibold text-[#5e5e5e] px-2 flex items-center gap-1">
+            <span className="text-xs font-semibold text-[#5e5e5e] px-2 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-black" /> Orders:
             </span>
             <button
@@ -297,7 +316,7 @@ export const CustomerPortalView = () => {
             <div className="h-4 w-[1px] bg-[#e2e2e2] mx-1 hidden sm:block" />
 
             {/* Quick Jump Buttons for 3, 5, 8, 10 */}
-            <div className="hidden sm:flex items-center gap-1 text-[10px]">
+            <div className="hidden sm:flex items-center gap-1 text-xs">
               {[
                 { count: 3, tier: 'Bronze' },
                 { count: 5, tier: 'Silver' },
@@ -340,7 +359,7 @@ export const CustomerPortalView = () => {
                 }`}
               >
                 {isCurrent && (
-                  <span className="absolute top-2 right-2 text-[9px] font-bold bg-black text-white px-2 py-0.5 rounded-full">
+                  <span className="absolute top-2 right-2 text-xs font-bold bg-black text-white px-2 py-0.5 rounded-full">
                     CURRENT
                   </span>
                 )}
@@ -349,24 +368,24 @@ export const CustomerPortalView = () => {
                   <div className="font-bold text-sm text-black flex items-center gap-1.5">
                     {m.tier} Tier
                   </div>
-                  <span className="text-[10px] text-[#5e5e5e] font-mono">{m.count}+ Orders</span>
+                  <span className="text-xs text-[#5e5e5e] font-mono">{m.count}+ Orders</span>
                 </div>
 
                 <div className="space-y-1.5 text-xs pt-1 border-t border-[#e2e2e2]">
-                  <div className="flex items-center justify-between text-[11px]">
+                  <div className="flex items-center justify-between text-xs">
                     <span className="text-[#5e5e5e]">Discount Ceiling:</span>
                     <strong className="text-black font-mono">{m.ceiling}</strong>
                   </div>
-                  <div className="text-[10px] text-[#5e5e5e] line-clamp-1">
+                  <div className="text-xs text-[#5e5e5e] line-clamp-1">
                     {m.desc}
                   </div>
                   <div className="pt-1">
                     {isReached ? (
-                      <span className="text-[10px] font-bold text-black flex items-center gap-1">
+                      <span className="text-xs font-bold text-black flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5 text-black" /> Unlocked
                       </span>
                     ) : (
-                      <span className="text-[10px] font-medium text-[#5e5e5e]">
+                      <span className="text-xs font-medium text-[#5e5e5e]">
                         {m.count - currentOrders} more order{m.count - currentOrders > 1 ? 's' : ''} needed
                       </span>
                     )}
@@ -380,7 +399,7 @@ export const CustomerPortalView = () => {
         {/* Overall Progression Bar */}
         <div className="p-4 bg-[#fafafa] border border-[#e2e2e2] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="w-full sm:w-2/3 space-y-1.5">
-            <div className="flex items-center justify-between text-[11px]">
+            <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-black flex items-center gap-1">
                 <TrendingUp className="w-3.5 h-3.5 text-black" /> Overall Loyalty Progress
               </span>
@@ -477,7 +496,7 @@ export const CustomerPortalView = () => {
                       >
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="font-mono font-bold text-xs text-black">{quote.code}</span>
-                          <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${statusClass}`}>
+                          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${statusClass}`}>
                             {quote.status}
                           </span>
                         </div>
@@ -487,9 +506,9 @@ export const CustomerPortalView = () => {
                         <div className="text-base font-bold text-black">
                           ${Number(displayTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-[11px] text-[#5e5e5e] mt-1 flex items-center justify-between">
+                        <div className="text-xs text-[#5e5e5e] mt-1 flex items-center justify-between">
                           <span>{(quote.lines || []).length} Item{(quote.lines || []).length !== 1 ? 's' : ''}</span>
-                          <span className="text-[10px] flex items-center gap-1 font-mono text-[#5e5e5e]">
+                          <span className="text-xs flex items-center gap-1 font-mono text-[#5e5e5e]">
                             <Clock className="w-3 h-3 text-[#5e5e5e]" /> {quote.validUntil || 'Active'}
                           </span>
                         </div>
@@ -563,7 +582,7 @@ export const CustomerPortalView = () => {
                     {/* Scope / Description */}
                     {activeQuote.scope && (
                       <div className="p-3.5 bg-[#fafafa] border border-[#e2e2e2] rounded-xl text-xs space-y-1">
-                        <span className="font-bold text-[#5e5e5e] text-[10px] uppercase tracking-wider block">Scope Description:</span>
+                        <span className="font-bold text-[#5e5e5e] text-xs uppercase tracking-wider block">Scope Description:</span>
                         <p className="text-black">{activeQuote.scope}</p>
                       </div>
                     )}
@@ -572,7 +591,7 @@ export const CustomerPortalView = () => {
                     <div className="overflow-x-auto bg-white rounded-2xl border border-[#e2e2e2]">
                       <table className="w-full text-xs text-left">
                         <thead>
-                          <tr className="border-b border-[#e2e2e2] bg-[#fafafa] text-black text-[11px] font-semibold">
+                          <tr className="border-b border-[#e2e2e2] bg-[#fafafa] text-black text-xs font-semibold">
                             <th className="py-2.5 px-4 font-semibold">Product / Service</th>
                             <th className="py-2.5 px-4 font-semibold">Description</th>
                             <th className="py-2.5 px-4 font-semibold text-center">Qty</th>
@@ -605,15 +624,15 @@ export const CustomerPortalView = () => {
                         </div>
                         <div className="flex items-center gap-6 text-right">
                           <div>
-                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Subtotal</span>
+                            <span className="text-xs text-[#5e5e5e] block uppercase">Subtotal</span>
                             <span className="font-mono font-bold text-black">${Number(activeQuote.subtotal || (activeQuote.lines || []).reduce((s,l)=>s+((l.quantity || 1)*(l.unitPrice || 0)),0)).toFixed(2)}</span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Tax (10%)</span>
+                            <span className="text-xs text-[#5e5e5e] block uppercase">Tax (10%)</span>
                             <span className="font-mono font-bold text-black">${Number(activeQuote.tax || (activeQuote.subtotal || 0) * 0.1).toFixed(2)}</span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[#5e5e5e] block uppercase">Grand Total</span>
+                            <span className="text-xs text-[#5e5e5e] block uppercase">Grand Total</span>
                             <span className="font-mono font-bold text-base text-black">${Number(activeQuote.grandTotal || (activeQuote.subtotal || 0) * 1.1).toFixed(2)}</span>
                           </div>
                         </div>
@@ -636,7 +655,7 @@ export const CustomerPortalView = () => {
                                 <span className="text-black font-bold">
                                   {c.sender} {c.role !== 'customer' && '(Admin)'}
                                 </span>
-                                <span className="text-[10px] text-[#5e5e5e] font-mono">{new Date(c.timestamp).toLocaleTimeString()}</span>
+                                <span className="text-xs text-[#5e5e5e] font-mono">{new Date(c.timestamp).toLocaleTimeString()}</span>
                               </div>
                               <p className="text-black text-xs">{c.text}</p>
                             </div>
@@ -652,7 +671,7 @@ export const CustomerPortalView = () => {
                               <Percent className="w-3.5 h-3.5 text-black" />
                               <span>Propose Counter Discount Percentage:</span>
                             </label>
-                            <span className="text-[11px] text-[#5e5e5e]">
+                            <span className="text-xs text-[#5e5e5e]">
                               Current: <strong className="text-black">{activeQuote.discountPct || 0}%</strong> • {currentTier} Max: <strong className="text-black">{data.discountRules?.globalTierCeilings?.[currentTier] || 10}%</strong>
                             </span>
                           </div>
@@ -765,7 +784,7 @@ export const CustomerPortalView = () => {
             {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-[#e2e2e2] pb-3">
               <div>
-                <h3 className="text-2xl font-bold text-black">
+                <h3 className="text-xl font-bold text-black">
                   Create New Quotation
                 </h3>
                 <p className="text-xs text-[#5e5e5e] mt-0.5">
@@ -948,7 +967,7 @@ export const CustomerPortalView = () => {
                   <label className="block text-xs font-medium text-[#5e5e5e]">
                     Discount (%)
                   </label>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tierInfo.badgeColor} flex items-center gap-1`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${tierInfo.badgeColor} flex items-center gap-1`}>
                     <span>{currentTier} Max: {tierInfo.discountCeiling}</span>
                   </span>
                 </div>
@@ -962,7 +981,7 @@ export const CustomerPortalView = () => {
                   className="w-28 border border-[#e2e2e2] rounded-lg px-3 py-1.5 text-xs font-mono text-black bg-white focus:outline-none focus:ring-1 focus:ring-black"
                 />
                 {parseFloat(discountPercent) > parseInt(tierInfo.discountCeiling) && (
-                  <span className="text-[10px] text-[#5e5e5e] block mt-1 font-medium">
+                  <span className="text-xs text-[#5e5e5e] block mt-1 font-medium">
                     ⚠️ Above your {currentTier} ceiling ({tierInfo.discountCeiling}). Will route for Sales Manager review.
                   </span>
                 )}
@@ -970,22 +989,22 @@ export const CustomerPortalView = () => {
 
               <div className="flex items-center gap-6 self-end sm:self-center">
                 <div className="text-right">
-                  <span className="block text-[11px] text-[#5e5e5e]">Subtotal</span>
+                  <span className="block text-xs text-[#5e5e5e]">Subtotal</span>
                   <span className="font-mono font-bold text-xs sm:text-sm text-black">
                     ${subtotal.toFixed(2)}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="block text-[11px] text-[#5e5e5e]">Tax (10%)</span>
+                  <span className="block text-xs text-[#5e5e5e]">Tax (10%)</span>
                   <span className="font-mono font-bold text-xs sm:text-sm text-black">
                     ${taxAmount.toFixed(2)}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="block text-[11px] text-[#5e5e5e]">Grand Total</span>
-                  <span className="font-mono font-bold text-base sm:text-lg text-black">
+                  <span className="block text-xs text-[#5e5e5e]">Grand Total</span>
+                  <span className="font-mono font-bold text-base text-black">
                     ${grandTotal.toFixed(2)}
                   </span>
                 </div>

@@ -150,10 +150,10 @@ export const DealHealthView = () => {
       {/* ================= TOP HEADER BANNER ================= */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <Activity className="w-7 h-7 text-black" /> Deal Health & Anomaly Command Center
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <Activity className="w-5 h-5 text-black" /> Deal Health & Anomaly Command Center
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">
+          <p className="text-xs text-[#5e5e5e] mt-1">
             Proactively identifies stalled deal momentum, discount spikes above sales rep benchmarks, and delivery promise slippage.
           </p>
         </div>
@@ -181,7 +181,7 @@ export const DealHealthView = () => {
         {/* Card 1: Stalled Deals */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'stalled' ? 'all' : 'stalled')}
-          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-xs ${
             activeFilter === 'stalled' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
@@ -189,8 +189,8 @@ export const DealHealthView = () => {
             <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'stalled' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Stalled Deals</span>
             <Clock className={`w-4 h-4 ${activeFilter === 'stalled' ? 'text-white' : 'text-black'}`} />
           </div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className={`text-3xl font-black font-mono ${activeFilter === 'stalled' ? 'text-white' : 'text-black'}`}>{stalledDeals.length}</span>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <span className={`text-2xl font-bold font-mono ${activeFilter === 'stalled' ? 'text-white' : 'text-black'}`}>{stalledDeals.length}</span>
             <span className={`text-xs font-medium ${activeFilter === 'stalled' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>&gt;{stalledDaysThreshold} Days Inactive</span>
           </div>
           <p className={`text-xs mt-1 ${activeFilter === 'stalled' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
@@ -201,7 +201,7 @@ export const DealHealthView = () => {
         {/* Card 2: Discount Anomalies */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'anomaly' ? 'all' : 'anomaly')}
-          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-xs ${
             activeFilter === 'anomaly' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
@@ -209,8 +209,8 @@ export const DealHealthView = () => {
             <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'anomaly' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Discount Anomalies</span>
             <AlertOctagon className={`w-4 h-4 ${activeFilter === 'anomaly' ? 'text-white' : 'text-black'}`} />
           </div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className={`text-3xl font-black font-mono ${activeFilter === 'anomaly' ? 'text-white' : 'text-black'}`}>{discountAnomalies.length}</span>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <span className={`text-2xl font-bold font-mono ${activeFilter === 'anomaly' ? 'text-white' : 'text-black'}`}>{discountAnomalies.length}</span>
             <span className={`text-xs font-medium ${activeFilter === 'anomaly' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>Spikes &ge;15%</span>
           </div>
           <p className={`text-xs mt-1 ${activeFilter === 'anomaly' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
@@ -221,7 +221,7 @@ export const DealHealthView = () => {
         {/* Card 3: Delivery Promise Slippage */}
         <div 
           onClick={() => setActiveFilter(activeFilter === 'slippage' ? 'all' : 'slippage')}
-          className={`card p-5 rounded-2xl border transition-all cursor-pointer shadow-xs ${
+          className={`card p-4 rounded-2xl border transition-all cursor-pointer shadow-xs ${
             activeFilter === 'slippage' ? 'bg-black text-white border-black' : 'bg-white border-[#e2e2e2] hover:border-black'
           }`}
         >
@@ -229,8 +229,8 @@ export const DealHealthView = () => {
             <span className={`text-xs font-bold uppercase tracking-wider ${activeFilter === 'slippage' ? 'text-white/80' : 'text-[#5e5e5e]'}`}>Delivery Slippage Risk</span>
             <Truck className={`w-4 h-4 ${activeFilter === 'slippage' ? 'text-white' : 'text-black'}`} />
           </div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className={`text-3xl font-black font-mono ${activeFilter === 'slippage' ? 'text-white' : 'text-black'}`}>{deliverySlippages.length}</span>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <span className={`text-2xl font-bold font-mono ${activeFilter === 'slippage' ? 'text-white' : 'text-black'}`}>{deliverySlippages.length}</span>
             <span className={`text-xs font-medium ${activeFilter === 'slippage' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>Backorder / Delay</span>
           </div>
           <p className={`text-xs mt-1 ${activeFilter === 'slippage' ? 'text-white/70' : 'text-[#5e5e5e]'}`}>
@@ -296,7 +296,7 @@ export const DealHealthView = () => {
                 >
                   <div className="space-y-1.5 max-w-2xl">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-black bg-black text-white uppercase tracking-wider">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full border border-black bg-black text-white uppercase tracking-wider">
                         {item.type.toUpperCase()}
                       </span>
                       <h4 className="font-bold text-sm text-black">

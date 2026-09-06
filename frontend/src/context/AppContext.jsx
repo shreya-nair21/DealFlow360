@@ -655,6 +655,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider value={{
       data,
+      setData,
       currentUser,
       currentRole: data.currentRole,
       currentView: data.currentView,

@@ -79,10 +79,10 @@ export const BackendConfigView = () => {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <Sliders className="w-7 h-7 text-black" /> Sales Backend & Engine Configuration
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <Sliders className="w-6 h-6 text-black" /> Sales Backend & Engine Configuration
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">Master engine rules: Product catalog, discount ceilings, approval chains, warehouses, subscriptions & reporting.</p>
+          <p className="text-xs text-[#5e5e5e] mt-0.5">Master engine rules: Product catalog, discount ceilings, approval chains, warehouses, subscriptions & reporting.</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export const BackendConfigView = () => {
                 <label className="flex items-center gap-2">
                   <input type="radio" name="portal_mode" className="radio" /> Customer Account Password Portal
                 </label>
-                <p className="text-[11px] text-muted">Magic links expire after 30 days unless renewed by Sales Rep.</p>
+                <p className="text-xs text-muted">Magic links expire after 30 days unless renewed by Sales Rep.</p>
               </div>
             </div>
           </div>
@@ -242,12 +242,12 @@ export const BackendConfigView = () => {
                   <tr key={p.id}>
                     <td className="font-bold text-charcoal">{p.name}</td>
                     <td className="font-mono text-muted">{p.sku}</td>
-                    <td><span className="badge badge-neutral text-[10px]">{p.category}</span></td>
+                    <td><span className="badge badge-neutral text-xs">{p.category}</span></td>
                     <td className="font-bold">${p.listPrice}</td>
                     <td className="text-muted">${p.costPrice}</td>
                     <td>18% GST</td>
                     <td>
-                      <span className="badge badge-info text-[10px]">
+                      <span className="badge badge-info text-xs">
                         {p.category === 'Hardware' ? 'Attribute: RAM / Storage (+ $150)' : 'Standard Plan'}
                       </span>
                     </td>
@@ -355,7 +355,7 @@ export const BackendConfigView = () => {
                         /> %
                       </td>
                       <td>
-                        <span className="badge badge-warning text-[10px]">
+                        <span className="badge badge-warning text-xs">
                           {cat === 'Service' ? 'Sales Manager -> Finance' : 'Sales Manager Only'}
                         </span>
                       </td>
@@ -367,10 +367,10 @@ export const BackendConfigView = () => {
 
             <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1">
               <strong>Blended Risk Score Formula:</strong>
-              <p className="font-mono text-[11px]">
+              <p className="font-mono text-xs">
                 Score = (Sum(Line Overage Pct × Line Revenue) / Total Net Revenue) × 10 + (Max Single Line Overage × 0.5)
               </p>
-              <p className="text-[11px]">Quotes with Risk Score &gt; 0.0 require Manager approval; Risk Score &gt; 10.0 require Finance approval.</p>
+              <p className="text-xs">Quotes with Risk Score &gt; 0.0 require Manager approval; Risk Score &gt; 10.0 require Finance approval.</p>
             </div>
 
             <div className="flex justify-end">
@@ -397,7 +397,7 @@ export const BackendConfigView = () => {
               <div key={w.id} className="p-4 border border-warm rounded-lg bg-cream space-y-2 text-xs">
                 <div className="flex items-center justify-between">
                   <h4 className="font-bold text-charcoal text-sm">{w.name} ({w.code})</h4>
-                  <span className="badge badge-neutral text-[10px]">{w.location}</span>
+                  <span className="badge badge-neutral text-xs">{w.location}</span>
                 </div>
                 <p className="text-muted">Weighting Factor: <strong>1.0 (Standard Priority)</strong></p>
                 <div className="pt-2 flex items-center justify-between font-mono">
@@ -429,19 +429,19 @@ export const BackendConfigView = () => {
             <div className="p-3 border border-warm rounded-lg bg-cream space-y-2">
               <h4 className="font-bold text-charcoal">Monthly Subscription Plan</h4>
               <p className="text-muted">$25 / seat / month</p>
-              <span className="badge badge-info text-[10px]">Proration: Per-Day Exact</span>
+              <span className="badge badge-info text-xs">Proration: Per-Day Exact</span>
             </div>
 
             <div className="p-3 border border-warm rounded-lg bg-cream space-y-2">
               <h4 className="font-bold text-charcoal">Annual Subscription Plan</h4>
               <p className="text-muted">$250 / seat / year (2 Months Free)</p>
-              <span className="badge badge-info text-[10px]">Proration: Monthly Rounding</span>
+              <span className="badge badge-info text-xs">Proration: Monthly Rounding</span>
             </div>
 
             <div className="p-3 border border-warm rounded-lg bg-cream space-y-2">
               <h4 className="font-bold text-charcoal">Cancellation & Refund Policy</h4>
               <p className="text-muted">Partial credit note issued within 14 days of mid-cycle cancellation.</p>
-              <span className="badge badge-warning text-[10px]">Credit Note Refund</span>
+              <span className="badge badge-warning text-xs">Credit Note Refund</span>
             </div>
           </div>
         </div>
@@ -461,12 +461,12 @@ export const BackendConfigView = () => {
             {data.upsellRules.map(rule => (
               <div key={rule.triggerProductId} className="p-3 border border-warm rounded-lg bg-cream flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
-                  <span className="badge badge-warning text-[10px] mr-2">+{rule.marginDelta}% Margin Delta</span>
+                  <span className="badge badge-warning text-xs mr-2">+{rule.marginDelta}% Margin Delta</span>
                   <strong className="text-charcoal">{data.products.find(p => p.id === rule.suggestedProductId)?.name}</strong>
-                  <p className="text-muted text-[11px] mt-0.5">{rule.reason}</p>
+                  <p className="text-muted text-xs mt-0.5">{rule.reason}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-1 text-[11px]">
+                  <label className="flex items-center gap-1 text-xs">
                     <input 
                       type="radio" 
                       name="promoted_item" 
@@ -496,7 +496,7 @@ export const BackendConfigView = () => {
             {/* Filter Bar */}
             <div className="p-3 bg-cream border border-warm rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
               <div>
-                <label className="label text-[11px] font-bold">Period</label>
+                <label className="label text-xs font-bold">Period</label>
                 <select value={filterPeriod} onChange={e => setFilterPeriod(e.target.value)} className="select w-full text-xs">
                   <option value="all">All Time</option>
                   <option value="today">Today</option>
@@ -506,7 +506,7 @@ export const BackendConfigView = () => {
               </div>
 
               <div>
-                <label className="label text-[11px] font-bold">Sales Rep / Team</label>
+                <label className="label text-xs font-bold">Sales Rep / Team</label>
                 <select value={filterRep} onChange={e => setFilterRep(e.target.value)} className="select w-full text-xs">
                   <option value="all">All Reps</option>
                   <option value="u-rahul">Rahul (Sales Rep)</option>
@@ -515,7 +515,7 @@ export const BackendConfigView = () => {
               </div>
 
               <div>
-                <label className="label text-[11px] font-bold">Approval Status</label>
+                <label className="label text-xs font-bold">Approval Status</label>
                 <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="select w-full text-xs">
                   <option value="all">All Statuses</option>
                   <option value="Draft">Draft</option>
@@ -526,7 +526,7 @@ export const BackendConfigView = () => {
               </div>
 
               <div>
-                <label className="label text-[11px] font-bold">Export Package</label>
+                <label className="label text-xs font-bold">Export Package</label>
                 <div className="flex gap-2 pt-0.5">
                   <button onClick={exportPDF} className="btn btn-sm btn-outline text-red-700 flex-1 flex items-center justify-center gap-1">
                     <FileText className="w-3.5 h-3.5" /> PDF
@@ -560,7 +560,7 @@ export const BackendConfigView = () => {
                         <span className={`badge ${
                           q.status === 'Approved' ? 'badge-success' :
                           q.status === 'Pending Approval' ? 'badge-warning' : 'badge-neutral'
-                        } text-[10px]`}>
+                        } text-xs`}>
                           {q.status}
                         </span>
                       </td>

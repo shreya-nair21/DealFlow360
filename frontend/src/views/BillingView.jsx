@@ -258,10 +258,10 @@ export const BillingView = () => {
       {/* ================= TOP HEADER BANNER ================= */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <CreditCard className="w-7 h-7 text-black" /> Hybrid Billing & Subscription Reconciliation
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <CreditCard className="w-5 h-5 text-black" /> Hybrid Billing & Subscription Reconciliation
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">
+          <p className="text-xs text-[#5e5e5e] mt-1">
             Reconciles one-time hardware and professional service lines alongside recurring cloud subscription schedules on a unified contract.
           </p>
         </div>
@@ -275,7 +275,7 @@ export const BillingView = () => {
               setSelectedQuoteId(e.target.value);
               setActiveQuoteId(e.target.value);
             }}
-            className="select text-sm font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-black w-auto"
+            className="select text-xs font-bold border-none bg-transparent py-0 px-1 focus:ring-0 cursor-pointer text-black w-auto"
           >
             {data.quotations.map(q => (
               <option key={q.id} value={q.id}>
@@ -290,16 +290,16 @@ export const BillingView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         
         {/* Tile 1: One-Time Upfront Total */}
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-1.5">
           <div className="flex items-center justify-between text-[#5e5e5e]">
             <span className="text-xs font-bold uppercase tracking-wider">One-Time Hardware & Services</span>
-            <Package className="w-5 h-5 text-black" />
+            <Package className="w-4 h-4 text-black" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-black font-mono">
+            <span className="text-2xl font-bold text-black font-mono">
               ${oneTimeTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-sm text-[#5e5e5e] font-medium">Due Upfront</span>
+            <span className="text-xs text-[#5e5e5e] font-medium">Due Upfront</span>
           </div>
           <p className="text-xs text-[#5e5e5e]">
             Billed on Month 1 initial delivery invoice ({oneTimeLines.length} line items).
@@ -307,36 +307,36 @@ export const BillingView = () => {
         </div>
 
         {/* Tile 2: Recurring Subscription ARR / MRR */}
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-1.5">
           <div className="flex items-center justify-between text-[#5e5e5e]">
             <span className="text-xs font-bold uppercase tracking-wider">Recurring Cloud MRR</span>
-            <RefreshCw className="w-5 h-5 text-black" />
+            <RefreshCw className="w-4 h-4 text-black" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-black font-mono">
+            <span className="text-2xl font-bold text-black font-mono">
               ${recurringMonthlyTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-sm text-[#5e5e5e] font-medium">/ Month</span>
+            <span className="text-xs text-[#5e5e5e] font-medium">/ Month</span>
           </div>
           <p className="text-xs text-[#5e5e5e]">
-            Annual recurring contract: <strong className="text-black">${(recurringMonthlyTotal * 12).toLocaleString(undefined, { minimumFractionDigits: 2 })} / year</strong>
+            Contract ARR: ${(recurringMonthlyTotal * 12).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / year.
           </p>
         </div>
 
-        {/* Tile 3: First Month Invoice Total */}
-        <div className="card p-5 bg-black text-white rounded-2xl shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-white/70">
-            <span className="text-xs font-bold uppercase tracking-wider">Month 1 Combined Invoice</span>
-            <Receipt className="w-5 h-5 text-white" />
+        {/* Tile 3: Total First-Year Contract Value (TCV) */}
+        <div className="card p-4 bg-black border border-black rounded-2xl shadow-xs space-y-1.5 text-white">
+          <div className="flex items-center justify-between text-[#afafaf]">
+            <span className="text-xs font-bold uppercase tracking-wider">Total Contract Value (TCV)</span>
+            <ShieldCheck className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-white font-mono">
-              ${(oneTimeTotal + recurringMonthlyTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <span className="text-2xl font-bold text-white font-mono">
+              ${annualContractValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-sm text-white/70 font-medium">Combined Due</span>
+            <span className="text-xs text-[#afafaf] font-medium">Total Contract</span>
           </div>
-          <p className="text-xs text-white/70">
-            One-time setup & equipment + Month 1 Cloud subscription billing.
+          <p className="text-xs text-[#afafaf]">
+            Unified billing schedule active across 12 scheduled invoices.
           </p>
         </div>
 

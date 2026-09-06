@@ -350,10 +350,10 @@ export const FulfillmentView = () => {
       {/* ================= TOP HEADER BANNER ================= */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <Truck className="w-7 h-7 text-black" /> Multi-Warehouse Fulfillment & Stock Split Engine
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <Truck className="w-5 h-5 text-black" /> Multi-Warehouse Fulfillment & Stock Split Engine
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">
+          <p className="text-xs text-[#5e5e5e] mt-1">
             Dynamically splits orders across regional depots based on live inventory to minimize shipment count, freight expense, and lead times.
           </p>
         </div>
@@ -467,16 +467,16 @@ export const FulfillmentView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Metric 1: Estimated Shipment Count */}
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-1.5">
           <div className="flex items-center justify-between text-[#5e5e5e]">
             <span className="text-xs font-bold uppercase tracking-wider">Estimated Shipment Count</span>
-            <Boxes className="w-5 h-5 text-black" />
+            <Boxes className="w-4 h-4 text-black" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-black font-mono">
+            <span className="text-2xl font-bold text-black font-mono">
               {shipmentMetrics.shipmentCount}
             </span>
-            <span className="text-sm text-[#5e5e5e] font-medium">
+            <span className="text-xs text-[#5e5e5e] font-medium">
               Regional Shipment{shipmentMetrics.shipmentCount !== 1 ? 's' : ''}
             </span>
           </div>
@@ -488,16 +488,16 @@ export const FulfillmentView = () => {
         </div>
 
         {/* Metric 2: Estimated Shipment Cost */}
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-1.5">
           <div className="flex items-center justify-between text-[#5e5e5e]">
             <span className="text-xs font-bold uppercase tracking-wider">Estimated Shipment Cost</span>
-            <DollarSign className="w-5 h-5 text-black" />
+            <DollarSign className="w-4 h-4 text-black" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-black font-mono">
+            <span className="text-2xl font-bold text-black font-mono">
               ${shipmentMetrics.totalFreightCost.toFixed(2)}
             </span>
-            <span className="text-sm text-[#5e5e5e] font-medium">Total Freight</span>
+            <span className="text-xs text-[#5e5e5e] font-medium">Total Freight</span>
           </div>
           <p className="text-xs text-[#5e5e5e]">
             Includes base dispatch fees + distance-weight handling.
@@ -505,16 +505,16 @@ export const FulfillmentView = () => {
         </div>
 
         {/* Metric 3: Total Physical Units Fulfilled */}
-        <div className="card p-5 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-2">
+        <div className="card p-4 bg-white border border-[#e2e2e2] rounded-2xl shadow-xs space-y-1.5">
           <div className="flex items-center justify-between text-[#5e5e5e]">
             <span className="text-xs font-bold uppercase tracking-wider">Physical Units to Ship</span>
-            <Package className="w-5 h-5 text-black" />
+            <Package className="w-4 h-4 text-black" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-black font-mono">
+            <span className="text-2xl font-bold text-black font-mono">
               {shipmentMetrics.totalUnitsShipped}
             </span>
-            <span className="text-sm text-[#5e5e5e] font-medium">
+            <span className="text-xs text-[#5e5e5e] font-medium">
               Units In-Stock
             </span>
           </div>

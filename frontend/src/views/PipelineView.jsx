@@ -17,10 +17,10 @@ export const PipelineView = () => {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e2e2] p-5 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2.5">
-            <Kanban className="w-7 h-7 text-black" /> Quotation List & Pipeline Kanban View
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <Kanban className="w-6 h-6 text-black" /> Quotation List & Pipeline Kanban View
           </h2>
-          <p className="text-sm text-[#5e5e5e] mt-1">Selectable deal cards categorized by lifecycle stage. Click any card to launch the Quote Builder.</p>
+          <p className="text-xs text-[#5e5e5e] mt-0.5">Selectable deal cards categorized by lifecycle stage. Click any card to launch the Quote Builder.</p>
         </div>
 
         <span className="badge bg-black text-white text-xs px-3.5 py-1.5 font-mono font-bold rounded-full shadow-xs">
@@ -40,7 +40,7 @@ export const PipelineView = () => {
                   {stage.id === 'Approved' && <CheckCircle2 className="w-3.5 h-3.5 text-black" />}
                   {stage.title}
                 </h3>
-                <span className="badge bg-white border border-[#e2e2e2] text-black text-[10px] font-mono font-bold px-2 py-0.5 rounded-full">{stageQuotes.length}</span>
+                <span className="badge bg-white border border-[#e2e2e2] text-black text-xs font-mono font-bold px-2 py-0.5 rounded-full">{stageQuotes.length}</span>
               </div>
 
               <div className="space-y-3">
@@ -63,7 +63,7 @@ export const PipelineView = () => {
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-xs font-bold text-black">{q.code}</span>
-                        <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-[10px] px-2 py-0.5 rounded-full font-semibold">{customer?.tier || 'Bronze'}</span>
+                        <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-xs px-2 py-0.5 rounded-full font-semibold">{customer?.tier || 'Bronze'}</span>
                       </div>
 
                       <h4 className="font-bold text-sm text-black group-hover:text-black transition-colors">
@@ -75,7 +75,7 @@ export const PipelineView = () => {
                         <span className="font-bold text-black font-mono">${totalNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-black font-semibold pt-1">
+                      <div className="flex items-center justify-between text-xs text-black font-semibold pt-1">
                         <span className="text-[#5e5e5e]">Status: {q.status}</span>
                         <span className="flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
                           Open Builder <ArrowRight className="w-3 h-3 text-black" />

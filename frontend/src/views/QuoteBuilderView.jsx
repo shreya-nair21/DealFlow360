@@ -261,11 +261,6 @@ export const QuoteBuilderView = () => {
 
   const requiresApproval = blendedRiskScore > 0 || maxSingleLineOverage > 0;
 
-  const cartProductIds = (quote.lines || []).map(l => l.productId);
-  const applicableUpsells = (data.upsellRules || []).filter(r => 
-    cartProductIds.includes(r.triggerProductId) && !cartProductIds.includes(r.suggestedProductId)
-  );
-
   return (
     <div className="space-y-6">
       {/* Sales Rep Header Bar */}
@@ -355,206 +350,131 @@ export const QuoteBuilderView = () => {
         </div>
       </div>
 
-      {/* ================= CUSTOMER PROFILE & TIER BADGE DETERMINATION ================= */}
-      <div className="card bg-white border border-warm rounded-2xl p-6 md:p-7 shadow-xs space-y-5">
+      {/* ================= CUSTOMER DETAILS ================= */}
+      <div className="card bg-white border border-warm rounded-2xl p-5 md:p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-warm pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center font-bold text-sm shadow-2xs shrink-0">
-              <User className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-black text-white flex items-center justify-center font-bold text-sm shadow-2xs shrink-0">
+              <User className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base md:text-lg font-bold text-black flex items-center gap-2">
-                Customer Details & Loyalty Badge Determination
-              </h3>
-              <p className="text-xs md:text-sm text-[#5e5e5e] mt-0.5">
-                Enter customer profile & order count to evaluate their status badge and assign compliant discounts.
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-base font-bold text-black">
+                  Customer Details
+                </h3>
+                {/* Dynamic Customer Badge according to orders */}
+                <span className="badge bg-black text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs">
+                  <Shield className="w-3.5 h-3.5 text-white" />
+                  <span>{tier.toUpperCase()} TIER</span>
+                  <span className="text-white/80 font-mono font-normal">({customerOrders} {customerOrders === 1 ? 'Order' : 'Orders'})</span>
+                </span>
+                <span className="text-xs text-[#5e5e5e] bg-[#fafafa] border border-[#e2e2e2] px-2.5 py-0.5 rounded-full font-mono">
+                  Ceiling: <strong>{tierMeta.discountCeiling}</strong>
+                </span>
+              </div>
+              <p className="text-xs text-[#5e5e5e] mt-0.5">
+                Select a saved account or enter customer information for this quotation.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0">
-            <span className="text-xs md:text-sm text-[#5e5e5e] font-semibold whitespace-nowrap shrink-0">Saved Accounts:</span>
+            <span className="text-xs text-[#5e5e5e] font-semibold whitespace-nowrap shrink-0">Saved Accounts:</span>
             <select
               value={quote.customerId || ''}
               onChange={(e) => handleSelectCustomer(e.target.value)}
-              className="select text-xs md:text-sm font-semibold border-warm bg-[#efefef] py-2 px-3.5 min-h-[42px] leading-normal rounded-xl cursor-pointer w-auto"
+              className="select text-xs font-semibold border-warm bg-[#efefef] py-2 px-3.5 min-h-[38px] leading-normal rounded-xl cursor-pointer w-auto"
             >
-              {(data.customers || []).map(c => (
-                <option key={c.id} value={c.id}>
-                  {c.name} ({c.tier || 'Bronze'} • {c.orderCount || 0} orders)
-                </option>
-              ))}
+              {(data.customers || []).map(c => {
+                const cTier = calculateCustomerTier ? calculateCustomerTier(c.orderCount || 0) : (c.tier || 'Bronze');
+                return (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({cTier} • {c.orderCount || 0} Orders)
+                  </option>
+                );
+              })}
               <option value="new">+ Enter Custom / New Customer</option>
             </select>
           </div>
         </div>
 
-        {/* 3 Columns: 1) Details, 2) Order Count Stepper & Milestones, 3) Assigned Badge & Discount Matrix */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          
-          {/* Col 1: Customer Name & Email (4 cols) */}
-          <div className="md:col-span-4 space-y-4">
-            <div>
-              <label className="label text-xs md:text-sm font-bold text-black">Customer / Company Name</label>
-              <input
-                type="text"
-                value={customer.name}
-                onChange={(e) => handleCustomerFieldChange('name', e.target.value)}
-                placeholder="e.g. Acme Global Corp"
-                className="input text-sm md:text-base py-2.5 px-3.5 w-full rounded-xl bg-[#efefef] border border-warm text-black"
-              />
-            </div>
-            <div>
-              <label className="label text-xs md:text-sm font-bold text-black">Work Email Address</label>
-              <input
-                type="email"
-                value={customer.email || ''}
-                onChange={(e) => handleCustomerFieldChange('email', e.target.value)}
-                placeholder="procurement@acme.com"
-                className="input text-sm md:text-base py-2.5 px-3.5 w-full rounded-xl bg-[#efefef] border border-warm text-black font-mono"
-              />
-            </div>
+        {/* Customer Fields: 3 Columns Grid with dedicated Tier Badge box */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div className="md:col-span-5">
+            <label className="label text-xs font-bold text-black mb-1">Customer / Company Name</label>
+            <input
+              type="text"
+              value={customer.name}
+              onChange={(e) => handleCustomerFieldChange('name', e.target.value)}
+              placeholder="e.g. Acme Global Corp"
+              className="input text-sm py-2 px-3 w-full rounded-xl bg-[#efefef] border border-warm text-black"
+            />
           </div>
-
-          {/* Col 2: Completed Orders & Milestone Engine (4 cols) */}
-          <div className="md:col-span-4 p-4 md:p-5 bg-[#f8f8f8] rounded-2xl border border-warm space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs md:text-sm font-bold text-black flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4 text-black" />
-                Completed Orders History
-              </label>
-              <span className="text-xs font-mono text-muted">Tier Trigger</span>
-            </div>
-
-            {/* Stepper Input */}
-            <div className="flex items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => handleSetCustomerOrders(Math.max(0, customerOrders - 1))}
-                className="w-10 h-10 rounded-xl bg-white border border-warm hover:bg-[#e2e2e2] flex items-center justify-center font-bold text-base text-black shadow-2xs transition-all cursor-pointer"
-                title="Decrease order count"
-              >
-                -
-              </button>
-              <input
-                type="number"
-                min="0"
-                value={customerOrders}
-                onChange={(e) => handleSetCustomerOrders(e.target.value)}
-                className="input text-base py-2 px-3 text-center font-mono font-bold w-24 bg-white rounded-xl border border-warm text-black"
-              />
-              <button
-                type="button"
-                onClick={() => handleSetCustomerOrders(customerOrders + 1)}
-                className="w-10 h-10 rounded-xl bg-black text-white hover:bg-[#282828] flex items-center justify-center font-bold text-base shadow-2xs transition-all cursor-pointer"
-                title="Increase order count"
-              >
-                +
-              </button>
-
-              <span className="text-sm font-semibold text-black">
-                Order{customerOrders !== 1 ? 's' : ''}
-              </span>
-            </div>
-
-            {/* Quick Milestone Buttons */}
-            <div>
-              <span className="text-xs text-muted block mb-1.5 font-medium">Quick Milestone Jump:</span>
-              <div className="grid grid-cols-4 gap-1.5 text-xs">
-                {[
-                  { count: 3, tier: 'Bronze', emoji: '🥉' },
-                  { count: 5, tier: 'Silver', emoji: '🥈' },
-                  { count: 8, tier: 'Gold', emoji: '🥇' },
-                  { count: 10, tier: 'Platinum', emoji: '💎' }
-                ].map(t => (
-                  <button
-                    key={t.tier}
-                    type="button"
-                    onClick={() => handleSetCustomerOrders(t.count)}
-                    className={`p-2 rounded-xl text-center font-bold transition-all border cursor-pointer ${
-                      customerOrders === t.count
-                        ? 'bg-black text-white border-black shadow-xs'
-                        : 'bg-white border-warm text-black hover:bg-[#efefef]'
-                    }`}
-                  >
-                    {t.tier} ({t.count})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <p className="text-xs text-muted leading-tight">
-              Thresholds: <strong>3</strong>=Bronze • <strong>5</strong>=Silver • <strong>8</strong>=Gold • <strong>10+</strong>=Platinum
-            </p>
+          <div className="md:col-span-4">
+            <label className="label text-xs font-bold text-black mb-1">Work Email Address</label>
+            <input
+              type="email"
+              value={customer.email || ''}
+              onChange={(e) => handleCustomerFieldChange('email', e.target.value)}
+              placeholder="procurement@acme.com"
+              className="input text-sm py-2 px-3 w-full rounded-xl bg-[#efefef] border border-warm text-black font-mono"
+            />
           </div>
-
-          {/* Col 3: Determined Badge & Category Discount Policy (4 cols) */}
-          <div className="md:col-span-4 p-4 md:p-5 bg-white rounded-2xl border border-warm space-y-3 shadow-2xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-muted uppercase tracking-wider">
-                Determined Badge
+          <div className="md:col-span-3">
+            <label className="label text-xs font-bold text-black mb-1">Customer Tier & Standing</label>
+            <div className="flex items-center justify-between gap-2 px-3 py-1.5 bg-[#efefef] border border-warm rounded-xl min-h-[38px]">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black text-white text-xs font-bold shadow-2xs shrink-0">
+                <Shield className="w-3 h-3 text-white" />
+                <span>{tier}</span>
               </span>
-              <span className="text-xs md:text-sm font-bold px-3.5 py-1.5 rounded-full bg-black text-white border border-black flex items-center gap-1.5 shadow-2xs">
-                <span>{tier.toUpperCase()} TIER</span>
-              </span>
-            </div>
-
-            {/* Allowed discount per product category */}
-            <div className="space-y-1.5 text-xs pt-2 border-t border-warm">
-              <div className="text-xs md:text-sm font-bold text-black mb-1.5 flex items-center justify-between">
-                <span>Product Discount Ceilings:</span>
-                <span className="text-xs text-muted font-normal">Status: {tier}</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-[#efefef] border border-warm">
-                  <span className="text-[#5e5e5e] text-xs font-medium block">Hardware</span>
-                  <strong className="text-black font-mono text-sm md:text-base font-bold">{categoryCeilings['Hardware']}%</strong>
-                </div>
-                <div className="p-2 rounded-xl bg-[#efefef] border border-warm">
-                  <span className="text-[#5e5e5e] text-xs font-medium block">Service</span>
-                  <strong className="text-black font-mono text-sm md:text-base font-bold">{categoryCeilings['Service']}%</strong>
-                </div>
-                <div className="p-2 rounded-xl bg-[#efefef] border border-warm">
-                  <span className="text-[#5e5e5e] text-xs font-medium block">Subscription</span>
-                  <strong className="text-black font-mono text-sm md:text-base font-bold">{categoryCeilings['Subscription']}%</strong>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleSetCustomerOrders(Math.max(0, customerOrders - 1))}
+                  title="Decrease completed orders (-1 Order)"
+                  className="w-5 h-5 rounded-full bg-white border border-[#e2e2e2] hover:bg-[#e2e2e2] flex items-center justify-center font-bold text-xs text-black cursor-pointer transition-all leading-none"
+                >
+                  -
+                </button>
+                <span className="font-mono text-xs font-bold text-black min-w-[20px] text-center" title={`${customerOrders} completed orders`}>
+                  {customerOrders}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleSetCustomerOrders(customerOrders + 1)}
+                  title="Increase completed orders (+1 Order)"
+                  className="w-5 h-5 rounded-full bg-black text-white hover:bg-[#282828] flex items-center justify-center font-bold text-xs cursor-pointer transition-all leading-none"
+                >
+                  +
+                </button>
+                <span className="text-xs text-[#5e5e5e] font-medium hidden xl:inline">Orders</span>
               </div>
             </div>
-
-            {/* Master Action Button */}
-            <button
-              type="button"
-              onClick={handleApplyAllTierDiscounts}
-              className="w-full btn btn-primary text-xs md:text-sm py-2.5 flex items-center justify-center gap-2 bg-black text-white hover:bg-[#282828] shadow-xs cursor-pointer rounded-full font-semibold"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Assign {tier} Discounts to All Products</span>
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Layout Grid */}
+      {/* Main Layout Grid: Only 2 required cards: Product Catalog + Cart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Product Catalog Picker (4 cols) */}
-        <div className="lg:col-span-4 space-y-4">
+        {/* Product Catalog Picker (5 cols) */}
+        <div className="lg:col-span-5 space-y-4">
           <div className="card">
             <div className="card-header border-b border-warm pb-3">
               <div>
-                <h3 className="text-base font-bold text-charcoal flex items-center gap-2">
-                  <Package className="w-4 h-4 text-charcoal" /> Product & Service Catalog
+                <h3 className="text-base font-bold text-black flex items-center gap-2">
+                  <Package className="w-4 h-4 text-black" /> Product & Service Catalog
                 </h3>
-                <p className="text-[11px] text-muted">
-                  Discounts tailored for customer status: <strong className="text-charcoal">{tier}</strong>
+                <p className="text-xs text-[#5e5e5e]">
+                  Available hardware, software, and professional service lines
                 </p>
               </div>
-              <span className="text-xs font-mono font-semibold text-muted">
+              <span className="text-xs font-mono font-semibold text-[#5e5e5e]">
                 {data.products.length} Products
               </span>
             </div>
             
-            <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1 mt-3">
+            <div className="space-y-3 max-h-[580px] overflow-y-auto pr-1 mt-3">
               {data.products.map(product => {
                 const prodAllowedDiscount = getAllowedDiscountForProduct(product, tier);
 
@@ -563,26 +483,26 @@ export const QuoteBuilderView = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="font-bold text-sm md:text-base text-black">{product.name}</h4>
+                          <h4 className="font-bold text-sm text-black">{product.name}</h4>
                           <span className="text-xs font-semibold px-2 py-0.5 rounded-full border border-warm bg-[#efefef] text-black">
                             {product.category}
                           </span>
                         </div>
-                        <p className="text-xs text-muted font-mono mt-0.5">{product.sku}</p>
+                        <p className="text-xs text-[#5e5e5e] font-mono mt-0.5">{product.sku}</p>
                       </div>
                       <span className="font-bold text-sm text-black bg-[#efefef] px-2.5 py-1 rounded-xl border border-warm font-mono">
                         ${product.listPrice.toLocaleString()}
                       </span>
                     </div>
 
-                    <p className="text-xs md:text-sm text-muted line-clamp-2 leading-relaxed">{product.description}</p>
+                    <p className="text-xs text-[#5e5e5e] line-clamp-2 leading-relaxed">{product.description}</p>
 
                     {/* Status & Category Ceiling Info */}
                     <div className="flex items-center justify-between text-xs bg-[#efefef] p-2 rounded-xl border border-warm">
                       <span className="text-black font-medium flex items-center gap-1.5">
-                        <span>{tier} Ceiling ({product.category}):</span>
+                        <span>Category Discount Limit ({product.category}):</span>
                       </span>
-                      <strong className="text-black font-mono font-bold text-xs md:text-sm">
+                      <strong className="text-black font-mono font-bold text-xs">
                         {prodAllowedDiscount}% max discount
                       </strong>
                     </div>
@@ -601,7 +521,7 @@ export const QuoteBuilderView = () => {
                         type="button"
                         onClick={() => handleAddProductToQuote(product, prodAllowedDiscount)}
                         className="btn btn-sm btn-primary py-2 px-3 text-xs flex-1 bg-black text-white hover:bg-[#282828] border-black flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer rounded-full font-semibold"
-                        title={`Add with recommended ${prodAllowedDiscount}% ${tier} tier discount`}
+                        title={`Add with recommended ${prodAllowedDiscount}% discount`}
                       >
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Add ({prodAllowedDiscount}%)</span>
@@ -614,19 +534,16 @@ export const QuoteBuilderView = () => {
           </div>
         </div>
 
-        {/* Cart & Live Margin Meter (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Cart & Pricing Governance (7 cols) */}
+        <div className="lg:col-span-7 space-y-4">
           <div className="card">
             <div className="card-header border-b border-warm pb-3">
               <div>
-                <h3 className="text-base md:text-lg font-bold text-black flex items-center gap-2">
+                <h3 className="text-base font-bold text-black flex items-center gap-2">
                   <span>{customer?.name || 'Customer'} Cart</span>
-                  <span className="text-xs font-bold px-3 py-1 rounded-full bg-black text-white border border-black">
-                    {tier}
-                  </span>
                 </h3>
-                <p className="text-xs md:text-sm text-muted mt-0.5">
-                  Assign line discounts based on customer status & product policy
+                <p className="text-xs text-[#5e5e5e] mt-0.5">
+                  Review line items, assign compliant discounts, and verify margins
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -645,45 +562,45 @@ export const QuoteBuilderView = () => {
               </div>
             </div>
 
-            <div className="space-y-3 my-4 max-h-[420px] overflow-y-auto pr-1">
+            <div className="space-y-3 my-4 max-h-[460px] overflow-y-auto pr-1">
               {(quote.lines || []).length === 0 ? (
-                <div className="text-center py-10 text-muted space-y-2">
-                  <Package className="w-8 h-8 mx-auto text-warm" />
-                  <p className="text-xs">No line items in this quotation.</p>
-                  <p className="text-[11px]">Select a product from the catalog on the left to add items.</p>
+                <div className="text-center py-10 text-[#5e5e5e] space-y-2">
+                  <Package className="w-8 h-8 mx-auto text-[#afafaf]" />
+                  <p className="text-sm font-semibold">No line items in this quotation.</p>
+                  <p className="text-xs">Select a product from the catalog on the left to add items.</p>
                 </div>
               ) : lineDetails.map(line => (
                 <div 
                   key={line.id} 
-                  className={`p-3 border rounded-xl space-y-2.5 transition-all shadow-2xs ${
+                  className={`p-3.5 border rounded-xl space-y-2.5 transition-all shadow-2xs ${
                     line.hasViolation 
-                      ? 'border-amber-400 bg-amber-50/40' 
+                      ? 'border-black bg-[#f3f3f3]' 
                       : 'border-warm bg-white'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-xs text-charcoal">{line.product.name}</span>
-                        <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-charcoal-03 text-muted border border-warm">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-black">{line.product.name}</span>
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#efefef] text-black border border-warm">
                           {line.product.category}
                         </span>
                       </div>
                       
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <span className="text-[11px] text-muted font-mono">
+                        <span className="text-xs text-[#5e5e5e] font-mono">
                           ${line.unitPrice} / {line.product.unit || 'unit'}
                         </span>
                         
                         {line.hasViolation ? (
-                          <span className="badge bg-black text-white text-[10px] py-0.5 px-2 font-bold flex items-center gap-1 rounded-full">
+                          <span className="badge bg-black text-white text-xs py-0.5 px-2.5 font-bold flex items-center gap-1 rounded-full">
                             <AlertTriangle className="w-3 h-3 text-white" />
-                            Over {tier} Limit: {line.allowedDiscountPct}% (+{line.overagePct}%)
+                            Over Limit: {line.allowedDiscountPct}% (+{line.overagePct}%)
                           </span>
                         ) : (
-                          <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-[10px] py-0.5 px-2 font-semibold flex items-center gap-1 rounded-full">
+                          <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-xs py-0.5 px-2.5 font-semibold flex items-center gap-1 rounded-full">
                             <CheckCircle2 className="w-3 h-3 text-black" />
-                            {tier} Status Ceiling: {line.allowedDiscountPct}%
+                            Policy Limit: {line.allowedDiscountPct}%
                           </span>
                         )}
                       </div>
@@ -696,7 +613,7 @@ export const QuoteBuilderView = () => {
                           q.lines = (q.lines || []).filter(l => l.id !== line.id);
                         });
                       }}
-                      className="text-muted hover:text-red-600 p-1 transition-colors cursor-pointer"
+                      className="text-[#5e5e5e] hover:text-black p-1 transition-colors cursor-pointer"
                       title="Remove product"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -704,8 +621,8 @@ export const QuoteBuilderView = () => {
                   </div>
 
                   {/* Quick Discount Assignment Chips */}
-                  <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-cream/70 rounded-lg border border-warm/60 text-[10px]">
-                    <span className="text-muted font-semibold">Assign Discount:</span>
+                  <div className="flex flex-wrap items-center gap-1.5 p-2 bg-[#f8f8f8] rounded-xl border border-warm text-xs">
+                    <span className="text-[#5e5e5e] font-semibold">Assign Discount:</span>
                     
                     <button
                       type="button"
@@ -715,10 +632,10 @@ export const QuoteBuilderView = () => {
                           if (l) l.discountPct = 0;
                         });
                       }}
-                      className={`px-1.5 py-0.5 rounded border transition-all cursor-pointer font-medium ${
+                      className={`px-2.5 py-1 rounded-full border transition-all cursor-pointer font-semibold ${
                         line.discountPct === 0 
-                          ? 'bg-charcoal text-white border-charcoal font-bold shadow-2xs' 
-                          : 'bg-white border-warm text-charcoal hover:bg-cream'
+                          ? 'bg-black text-white border-black font-bold shadow-2xs' 
+                          : 'bg-white border-warm text-black hover:bg-[#efefef]'
                       }`}
                     >
                       0% (List)
@@ -733,10 +650,10 @@ export const QuoteBuilderView = () => {
                           if (l) l.discountPct = half;
                         });
                       }}
-                      className={`px-1.5 py-0.5 rounded border transition-all cursor-pointer font-medium ${
+                      className={`px-2.5 py-1 rounded-full border transition-all cursor-pointer font-semibold ${
                         line.discountPct === Math.round(line.allowedDiscountPct / 2) && line.discountPct > 0
-                          ? 'bg-charcoal text-white border-charcoal font-bold shadow-2xs' 
-                          : 'bg-white border-warm text-charcoal hover:bg-cream'
+                          ? 'bg-black text-white border-black font-bold shadow-2xs' 
+                          : 'bg-white border-warm text-black hover:bg-[#efefef]'
                       }`}
                     >
                       Half ({Math.round(line.allowedDiscountPct / 2)}%)
@@ -750,21 +667,21 @@ export const QuoteBuilderView = () => {
                           if (l) l.discountPct = line.allowedDiscountPct;
                         });
                       }}
-                      className={`px-2 py-0.5 rounded-full border transition-all cursor-pointer flex items-center gap-1 text-[10px] ${
+                      className={`px-2.5 py-1 rounded-full border transition-all cursor-pointer flex items-center gap-1 font-semibold ${
                         line.discountPct === line.allowedDiscountPct
                           ? 'bg-black text-white border-black font-bold shadow-2xs' 
-                          : 'bg-[#efefef] text-black border-[#e2e2e2] hover:bg-[#e2e2e2] font-semibold'
+                          : 'bg-[#efefef] text-black border-[#e2e2e2] hover:bg-[#e2e2e2]'
                       }`}
                     >
-                      <Sparkles className="w-2.5 h-2.5" />
-                      <span>Set {tier} Max ({line.allowedDiscountPct}%)</span>
+                      <Sparkles className="w-3 h-3" />
+                      <span>Set Max ({line.allowedDiscountPct}%)</span>
                     </button>
                   </div>
 
                   {/* Quantity, Discount Input & Calculated Net Total */}
-                  <div className="grid grid-cols-3 gap-2 items-center bg-white p-2 rounded-lg border border-[#e2e2e2] text-xs">
+                  <div className="grid grid-cols-3 gap-3 items-center bg-white p-2.5 rounded-xl border border-[#e2e2e2] text-xs">
                     <div>
-                      <label className="label text-[10px] font-semibold text-black">Quantity</label>
+                      <label className="label text-xs font-semibold text-black mb-1">Quantity</label>
                       <input 
                         type="number" 
                         min="1" 
@@ -776,14 +693,14 @@ export const QuoteBuilderView = () => {
                             if (l) l.quantity = val;
                           });
                         }}
-                        className="input py-1 px-1.5 text-xs text-center font-bold bg-[#fafafa] border border-[#e2e2e2] rounded-md text-black"
+                        className="input py-1.5 px-2 text-sm text-center font-bold bg-[#fafafa] border border-[#e2e2e2] rounded-lg text-black"
                       />
                     </div>
 
                     <div>
-                      <label className="label text-[10px] font-semibold text-black flex items-center justify-between">
+                      <label className="label text-xs font-semibold text-black mb-1 flex items-center justify-between">
                         <span>Discount %</span>
-                        <span className="text-[9px] text-[#5e5e5e] font-normal">Cap: {line.allowedDiscountPct}%</span>
+                        <span className="text-xs text-[#5e5e5e] font-normal">Cap: {line.allowedDiscountPct}%</span>
                       </label>
                       <div className="relative">
                         <input 
@@ -798,7 +715,7 @@ export const QuoteBuilderView = () => {
                               if (l) l.discountPct = val;
                             });
                           }}
-                          className={`input py-1 px-1.5 text-xs text-center font-bold w-full rounded-md ${
+                          className={`input py-1.5 px-2 text-sm text-center font-bold w-full rounded-lg ${
                             line.hasViolation 
                               ? 'border-2 border-black font-bold text-black bg-[#fafafa]' 
                               : 'border border-[#e2e2e2] text-black bg-white'
@@ -808,8 +725,8 @@ export const QuoteBuilderView = () => {
                     </div>
 
                     <div className="text-right">
-                      <label className="label text-[10px] font-semibold text-charcoal">Net Total</label>
-                      <span className="font-bold text-sm text-charcoal block font-mono">
+                      <label className="label text-xs font-semibold text-black mb-1">Net Total</label>
+                      <span className="font-bold text-sm text-black block font-mono">
                         ${line.lineNetTotal.toLocaleString()}
                       </span>
                     </div>
@@ -819,18 +736,18 @@ export const QuoteBuilderView = () => {
             </div>
 
             {/* Risk & Margin Meter */}
-            <div className="border-t border-warm pt-4 space-y-3 bg-charcoal-03 p-3.5 rounded-xl">
+            <div className="border-t border-warm pt-4 space-y-3 bg-[#f8f8f8] p-4 rounded-xl">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Quotation Net Total:</span>
-                <span className="text-lg font-bold text-charcoal font-mono">${totalNetRevenue.toLocaleString()}</span>
+                <span className="text-lg font-bold text-black font-mono">${totalNetRevenue.toLocaleString()}</span>
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-xs mb-1">
+                <div className="flex items-center justify-between text-xs mb-1.5">
                   <span className="font-semibold text-black">
-                    Pricing Governance Status: {' '}
+                    Pricing Governance Status:{' '}
                     <strong className="text-black font-bold">
-                      {blendedRiskScore > 0 ? `Flagged (${blendedRiskScore} Risk Score)` : 'Tier Compliant'}
+                      {blendedRiskScore > 0 ? `Flagged (${blendedRiskScore} Risk Score)` : 'Policy Compliant'}
                     </strong>
                   </span>
                   <span className="text-[#5e5e5e] font-mono">Gross Margin: <strong className="text-black">{overallGrossMarginPct.toFixed(1)}%</strong></span>
@@ -847,13 +764,13 @@ export const QuoteBuilderView = () => {
                 <div className="p-3 rounded-xl bg-[#efefef] border border-black text-xs text-black flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 text-black shrink-0 mt-0.5" />
                   <div>
-                    <strong>Tier Ceilings Exceeded:</strong> One or more line items have discounts exceeding the customer's {tier} status ceiling ({maxSingleLineOverage}% over). Submit for Manager approval.
+                    <strong>Pricing Limits Exceeded:</strong> One or more line items have discounts exceeding allowed ceilings ({maxSingleLineOverage}% over). Submit for Manager approval.
                   </div>
                 </div>
               ) : (
                 <div className="p-3 rounded-xl bg-[#fafafa] border border-[#e2e2e2] text-xs text-black flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-black shrink-0" />
-                  <span>Quotation strictly complies with {tier} badge policies & category limits. Ready for submission.</span>
+                  <span>Quotation strictly complies with pricing policies & category limits. Ready for submission.</span>
                 </div>
               )}
 
@@ -870,7 +787,7 @@ export const QuoteBuilderView = () => {
                           role: 'sales_rep',
                           action: 'Routed Risky Quote for Approval',
                           blendedRiskScore,
-                          reason: `Line discount exceeds ${tier} status ceiling by ${maxSingleLineOverage} points.`
+                          reason: `Line discount exceeds category ceiling by ${maxSingleLineOverage} points.`
                         });
                         showToast('Risky quotation submitted into Manager Approval Queue.', 'warning');
                       }}
@@ -889,7 +806,7 @@ export const QuoteBuilderView = () => {
                           role: 'sales_rep',
                           action: 'Submitted Standard Quote',
                           blendedRiskScore: 0,
-                          reason: `Quote adheres strictly to ${tier} status discount limits.`
+                          reason: `Quote adheres strictly to pricing discount limits.`
                         });
                         showToast('Quotation submitted successfully!', 'success');
                       }}
@@ -900,64 +817,6 @@ export const QuoteBuilderView = () => {
                   )}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Upsell Drawer (3 cols) */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="card bg-white border border-[#e2e2e2] rounded-2xl p-4 shadow-xs">
-            <div className="card-header border-b border-[#e2e2e2] pb-2">
-              <h3 className="text-sm font-bold text-black flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-black" /> Live Upsell Drawer
-              </h3>
-            </div>
-
-            <div className="space-y-3 mt-3">
-              {applicableUpsells.length === 0 ? (
-                <div className="text-xs text-[#5e5e5e] py-6 text-center">
-                  Laptop added to cart! Check recommendations.
-                </div>
-              ) : applicableUpsells.map(rule => {
-                const sug = data.products.find(p => p.id === rule.suggestedProductId);
-                if (!sug) return null;
-                const sugAllowedDiscount = getAllowedDiscountForProduct(sug, tier);
-
-                return (
-                  <div key={rule.triggerProductId} className="p-3 bg-[#fafafa] border border-[#e2e2e2] rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="badge bg-[#efefef] text-black border border-[#e2e2e2] text-[10px] font-bold">+{rule.marginDelta}% Margin Delta</span>
-                      {rule.isPromoted && <span className="badge bg-black text-white text-[10px] font-bold">🔥 Promoted</span>}
-                    </div>
-
-                    <h4 className="font-bold text-xs text-black">{sug.name}</h4>
-                    <p className="text-[11px] text-[#5e5e5e] line-clamp-2">{rule.reason}</p>
-
-                    <div className="flex items-center gap-1 pt-1">
-                      <span className="font-bold text-xs text-black mr-auto font-mono">${sug.listPrice}</span>
-                      <button 
-                        type="button"
-                        onClick={() => {
-                          handleAddProductToQuote(sug, sugAllowedDiscount);
-                        }}
-                        className="btn btn-sm btn-primary text-[11px] py-1 px-3 bg-black hover:bg-[#282828] border-black text-white rounded-full cursor-pointer"
-                        title={`Add with ${tier} discount (${sugAllowedDiscount}%)`}
-                      >
-                        + Add ({sugAllowedDiscount}%)
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={(e) => {
-                          e.currentTarget.closest('.p-3').style.display = 'none';
-                        }}
-                        className="btn btn-sm btn-ghost text-[11px] py-0.5 px-2 text-muted hover:text-charcoal"
-                      >
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>

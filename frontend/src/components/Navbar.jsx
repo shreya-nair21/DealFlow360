@@ -74,7 +74,7 @@ export const Navbar = () => {
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#efefef] text-black border border-[#e2e2e2] text-xs font-semibold">
               <UserCheck className="w-3.5 h-3.5 text-black" />
               <span>{currentUser.name}</span>
-              <span className="text-[10px] text-[#5e5e5e] uppercase font-bold tracking-wider">
+              <span className="text-xs text-[#5e5e5e] uppercase font-bold tracking-wider">
                 ({activeRole.replace('_', ' ')})
               </span>
             </span>
